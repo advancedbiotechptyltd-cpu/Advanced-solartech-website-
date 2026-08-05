@@ -13,6 +13,21 @@
       }
       #cms-fallback h1 { color: #0a2540; font-size: 22px; }
       #cms-fallback code { background: #eef4fa; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+
+      /* Attached to <html>, not <body> — the CMS replaces the body when it
+         boots, and anything inside it goes too. */
+      #signin-hint {
+        position: fixed; inset: 0 0 auto 0; z-index: 2147483647;
+        display: flex; gap: 12px; align-items: baseline; justify-content: center;
+        padding: 12px 16px; background: #0a2540; color: #fff;
+        font: 14px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+      }
+      #signin-hint b { color: #ffb020; }
+      #signin-hint button {
+        border: 1px solid rgba(255,255,255,.4); background: none; color: #fff;
+        border-radius: 999px; padding: 2px 10px; font: inherit; cursor: pointer;
+      }
+      @media (max-width: 640px) { #signin-hint { flex-wrap: wrap; text-align: center; } }
     </style>
   </head>
   <body>
@@ -50,6 +65,43 @@
           if (el && document.querySelector('.sui, #nc-root, .sveltia-cms')) el.remove()
         }, 1500)
       })
+
+      /*
+       * The sign-in screen offers "Sign In with GitHub", and on this setup that
+       * button is a dead end: with no OAuth proxy configured, the editor falls
+       * back to Netlify's auth service, which has no site registered for this
+       * domain and answers "Not Found". The button cannot be removed through
+       * configuration, so say so before anyone clicks it.
+       *
+       * Mounted on <html> so it survives the CMS taking over <body>, and
+       * dismissed once — whoever signs in daily should not be nagged.
+       */
+      ;(function () {
+        var KEY = 'ast-signin-hint-dismissed'
+        try { if (localStorage.getItem(KEY)) return } catch (e) {}
+
+        var bar = document.createElement('div')
+        bar.id = 'signin-hint'
+        bar.innerHTML =
+          '<span>Sign in with <b>Sign In Using Access Token</b>. ' +
+          'The “Sign In with GitHub” button needs an OAuth server this site does not run.</span>'
+
+        var close = document.createElement('button')
+        close.type = 'button'
+        close.textContent = 'Got it'
+        close.addEventListener('click', function () {
+          try { localStorage.setItem(KEY, '1') } catch (e) {}
+          bar.remove()
+        })
+        bar.appendChild(close)
+
+        document.documentElement.appendChild(bar)
+
+        // Once a session exists the hint has done its job.
+        setInterval(function () {
+          if (document.querySelector('[data-collection], .sui-app, nav[aria-label]')) bar.remove()
+        }, 2000)
+      })()
     </script>
   </body>
 </html>
