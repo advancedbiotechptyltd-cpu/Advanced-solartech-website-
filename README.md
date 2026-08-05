@@ -62,14 +62,18 @@ Staff edit at /admin/  →  commit to GitHub  →  GitHub Action builds
 git-based CMS just files changes nobody ships — the edit happens, the website
 doesn't change, and staff stop trusting the tool inside a week.
 
-**Setup (once).** Add three repository secrets under
+**Setup (once).** Add four repository secrets under
 Settings → Secrets and variables → Actions:
 
 | Secret | Value |
 |---|---|
-| `CPANEL_FTP_SERVER` | e.g. `ftp.advancedsolartec.com.au` |
-| `CPANEL_FTP_USERNAME` | a **dedicated** cPanel FTP account |
-| `CPANEL_FTP_PASSWORD` | that account's password |
+| `FTP_SERVER` | e.g. `ftp.advancedsolartec.com.au` |
+| `FTP_USERNAME` | a **dedicated** cPanel FTP account |
+| `FTP_PASSWORD` | that account's password |
+| `FTP_SERVER_DIR` | the production web root, e.g. `/public_html/` |
+
+Staging deploys to `<FTP_SERVER_DIR>new/`, derived rather than hard-coded, so
+this works on a host whose web root is not `public_html`.
 
 Create the FTP account in cPanel scoped to the directory it deploys into — don't
 use the main cPanel login. These credentials live in GitHub, and a scoped

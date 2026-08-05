@@ -7,9 +7,11 @@
 #
 # ── Setup (once) ──────────────────────────────────────────────────────────────
 # Add these repository secrets (Settings → Secrets and variables → Actions):
-#   CPANEL_FTP_SERVER    ftp.advancedsolartec.com.au
-#   CPANEL_FTP_USERNAME  the cPanel FTP user
-#   CPANEL_FTP_PASSWORD  that user's password
+#   FTP_SERVER      ftp.advancedsolartec.com.au
+#   FTP_USERNAME    the cPanel FTP user
+#   FTP_PASSWORD    that user's password
+#   FTP_SERVER_DIR  the production web root, e.g. /public_html/
+#                   (staging deploys to <root>new/, derived from this)
 #
 # Create a dedicated FTP account in cPanel scoped to the directory it deploys
 # into. Do not use the main cPanel login — these credentials live in GitHub, and
@@ -86,17 +88,32 @@ jobs:
         continue-on-error: true
         run: npm run check:content
 
+      # FTP_SERVER_DIR is the production web root, e.g. /public_html/. Staging is
+      # that plus new/, derived rather than hard-coded so this still works on a
+      # host whose web root is not /public_html/.
+      - name: Resolve the target directory
+        id: target
+        run: |
+          ROOT="${{ secrets.FTP_SERVER_DIR }}"
+          if [ -z "$ROOT" ]; then
+            echo "::error::FTP_SERVER_DIR is not set. Add it as a repository secret (e.g. /public_html/)."
+            exit 1
+          fi
+          case "$ROOT" in */) ;; *) ROOT="$ROOT/" ;; esac
+          if [ "${{ github.event.inputs.target }}" = "production" ]; then
+            echo "dir=$ROOT" >> "$GITHUB_OUTPUT"
+          else
+            echo "dir=${ROOT}new/" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Upload to cPanel
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: ${{ secrets.CPANEL_FTP_SERVER }}
-          username: ${{ secrets.CPANEL_FTP_USERNAME }}
-          password: ${{ secrets.CPANEL_FTP_PASSWORD }}
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./dist/
-          server-dir: >-
-            ${{ github.event.inputs.target == 'production'
-                && '/public_html/'
-                || '/public_html/new/' }}
+          server-dir: ${{ steps.target.outputs.dir }}
           # Only changed files are transferred, so a routine content edit uploads
           # a handful of files rather than the whole site.
           dangerous-clean-slate: false
