@@ -34,6 +34,12 @@ Word can't inject markup. Every image field requires alt text. URL slugs are
 pattern-checked. Accreditations, statistics and testimonials stay switched off
 behind a "not verified yet" toggle until they're real.
 
+### No setup at all
+
+The editor is a convenience, not a requirement. Anyone who can sign in to GitHub
+can change any wording on the site straight from a browser — no token, nothing
+installed. See `docs/EDITING.md` for a link per file.
+
 ### Signing in
 
 The editor commits to GitHub, so it needs a GitHub identity. There are two ways
