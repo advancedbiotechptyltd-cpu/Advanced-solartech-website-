@@ -1,0 +1,6 @@
+{
+  "_note": "Where each photo came from. Every file in src/images/ that fills a page slot needs an entry here. `own` means a photograph of this business's own work, taken by or for the business. Anything else is stock and must record its licence and source URL — some licences require attribution, and in a year nobody will remember which ones did.",
+  "_ownFlag": "business.photos.own can only be set true when EVERY slot below is `own`. check:content enforces that. This is the guard that stops a set of stock photos being captioned as our installs, which is a misleading representation under the Australian Consumer Law.",
+  "_howToAdd": "Add one entry per file, keyed by filename without the extension. For stock: {\"source\": \"stock\", \"licence\": \"Unsplash\", \"url\": \"https://unsplash.com/photos/...\", \"credit\": \"Photographer Name\"}. For ours: {\"source\": \"own\"}.",
+  "images": {}
+}

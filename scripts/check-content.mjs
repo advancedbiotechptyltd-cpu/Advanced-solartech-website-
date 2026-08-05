@@ -110,6 +110,44 @@ const photoSlots = [
 const uniqueSlots = [...new Set(photoSlots)];
 const missingPhotos = uniqueSlots.filter((name) => !imageStems.has(name));
 
+/*
+ * Provenance, not just presence.
+ *
+ * Checking only that eleven files exist would let a full set of stock photos
+ * satisfy the "all slots filled" test and unlock the ownership wording — which
+ * is the exact claim the flag exists to prevent. So every slot must be recorded
+ * as `own` in src/images/credits.json before photos.own can be true.
+ */
+const credits = JSON.parse(await readFile(resolve(here, "..", "src/images/credits.json"), "utf8"))
+  .images ?? {};
+
+const present = uniqueSlots.filter((n) => imageStems.has(n));
+const uncredited = present.filter((n) => !credits[n]);
+const notOwn = present.filter((n) => credits[n] && credits[n].source !== "own");
+const stockMissingLicence = present.filter(
+  (n) => credits[n]?.source === "stock" && !credits[n].licence
+);
+
+if (uncredited.length) {
+  warnings.push(
+    `${uncredited.length} photo(s) have no entry in src/images/credits.json (${uncredited.join(", ")}). ` +
+      `Record where each came from — a stock licence you cannot evidence in a year is a licence you do not have.`
+  );
+}
+if (stockMissingLicence.length) {
+  warnings.push(
+    `Stock photo(s) with no licence recorded: ${stockMissingLicence.join(", ")}. Add the licence and source URL.`
+  );
+}
+
+if (ownPhotos && (notOwn.length || uncredited.length)) {
+  errors.push(
+    `business.photos.own is true, but ${notOwn.length + uncredited.length} photo(s) are not recorded as ours ` +
+      `in src/images/credits.json (${[...notOwn, ...uncredited].join(", ")}). With the flag on, captions and ` +
+      `alt text say this business installed what is shown — it cannot say that over a stock photo.`
+  );
+}
+
 if (ownPhotos && missingPhotos.length) {
   errors.push(
     `business.photos.own is true, but ${missingPhotos.length} photo slot(s) are still empty ` +
@@ -118,14 +156,13 @@ if (ownPhotos && missingPhotos.length) {
       `photos.own back to false.`
   );
 } else if (!ownPhotos) {
-  const filled = uniqueSlots.length - missingPhotos.length;
+  const ownCount = present.filter((n) => credits[n]?.source === "own").length;
   warnings.push(
     `business.photos.own is false — every caption and alt text stays neutral, so stock and the interim ` +
-      `illustrations are safe to use. ${filled}/${uniqueSlots.length} slots hold a real photograph` +
-      (missingPhotos.length
-        ? `; the rest fall back to illustrations (${missingPhotos.join(", ")})`
-        : "") +
-      `. Once all of them are this business's own work, set it to true.`
+      `illustrations are safe to use. ${present.length}/${uniqueSlots.length} slots hold a photograph, ` +
+      `${ownCount} of them ours` +
+      (missingPhotos.length ? `; the rest fall back to illustrations (${missingPhotos.join(", ")})` : "") +
+      `. The flag can only go true once all ${uniqueSlots.length} are recorded as ours in credits.json.`
   );
 }
 

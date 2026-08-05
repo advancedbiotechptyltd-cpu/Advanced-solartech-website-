@@ -79,6 +79,13 @@ standard of work notice.
 attribution required. Read the licence for the specific photo — a few carry
 restrictions — and download the full-size original rather than a preview.
 
+**Record every one in `credits.json`**, in this folder. Stock entries need the
+licence and the source URL; ours just need `{"source": "own"}`. Two reasons: a
+licence you cannot evidence in a year is a licence you do not have, and the
+`photos.own` flag will not go true unless every slot is recorded as ours. That
+second one matters — without it, eleven stock photos would satisfy an
+"all slots filled" check and unlock captions claiming they are our installs.
+
 **Alt text is required** and it is not decoration — it is what a blind visitor
 hears and what Google reads. Describe what is in the frame:
 
