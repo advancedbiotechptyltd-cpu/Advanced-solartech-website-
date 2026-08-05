@@ -1,0 +1,23 @@
+# Cloudflare Worker config for the content editor's GitHub sign-in.
+#
+# Deploy:  npx wrangler deploy      (from this folder)
+# Secrets: npx wrangler secret put GITHUB_CLIENT_ID
+#          npx wrangler secret put GITHUB_CLIENT_SECRET
+#
+# See README.md — there are only four steps.
+
+name = "ast-cms-auth"
+main = "worker.js"
+compatibility_date = "2026-01-01"
+
+[vars]
+# Which sites may receive a token. Comma-separated, no trailing slashes.
+#
+# This is the security boundary: without it, anyone could point their own copy
+# of the editor at this Worker and be handed write access to the repository.
+# Add the production origin here as well before launch — origins only, no paths.
+ALLOWED_ORIGINS = "https://advancedsolartec.com.au"
+
+# GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET are NOT set here on purpose.
+# Anything in this file is committed to a public repository. They go in as
+# encrypted secrets with `wrangler secret put`, which keeps them on Cloudflare.

@@ -80,6 +80,22 @@
         var KEY = 'ast-signin-hint-dismissed'
         try { if (localStorage.getItem(KEY)) return } catch (e) {}
 
+        /*
+         * Only warn while there is something to warn about. Once base_url is
+         * set in config.yml the OAuth proxy exists and the GitHub button works,
+         * at which point this notice would be actively misleading — so read the
+         * same config the editor reads rather than trusting a hard-coded
+         * assumption to be updated by whoever deploys the Worker.
+         */
+        fetch('./config.yml')
+          .then(function (r) { return r.ok ? r.text() : '' })
+          .then(function (yaml) {
+            if (/^\s*base_url:\s*\S/m.test(yaml)) return
+            showHint()
+          })
+          .catch(showHint)
+
+        function showHint() {
         var bar = document.createElement('div')
         bar.id = 'signin-hint'
         bar.innerHTML =
@@ -101,6 +117,7 @@
         setInterval(function () {
           if (document.querySelector('[data-collection], .sui-app, nav[aria-label]')) bar.remove()
         }, 2000)
+        }
       })()
     </script>
   </body>

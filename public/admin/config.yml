@@ -18,17 +18,21 @@ backend:
   name: github
   repo: advancedbiotechptyltd-cpu/Advanced-solartech-website-
   branch: claude/advanced-solartech-488d5g
-  # No `base_url` on purpose.
+  # ── One-click "Sign In with GitHub" ────────────────────────────────────────
   #
-  # "Sign In with GitHub" needs an OAuth proxy to exchange the code for a token,
-  # and static cPanel hosting cannot run one. Rather than stand up a Cloudflare
-  # Worker for a handful of staff, sign in with "Sign In Using Access Token" —
-  # a fine-grained GitHub token scoped to this one repository, with Contents:
-  # read and write, and Metadata: read. Setup is in README.md.
+  # Uncomment the two lines below and put your Worker's address in, and the
+  # GitHub button works — no tokens for anyone, ever. The Worker is in
+  # oauth-worker/ with a four-step setup guide; it exists because GitHub's login
+  # returns a code that has to be exchanged using a client secret, and a secret
+  # cannot live in a page or on static hosting.
   #
-  # If you later want one-click GitHub login, deploy an OAuth proxy and set:
-  #   base_url: https://your-worker.workers.dev
-  #   auth_endpoint: auth
+  # base_url: https://ast-cms-auth.your-name.workers.dev
+  # auth_endpoint: auth
+  #
+  # Until then, "Sign In with GitHub" dead-ends at Netlify's auth service (the
+  # editor's default) and staff must use "Sign In Using Access Token" with a
+  # fine-grained token scoped to this repository — Contents: read and write.
+  # Both routes are documented in README.md.
 
 # Simple mode: Save commits straight to the branch, and the deploy Action puts
 # the result on the /new staging site within a couple of minutes.

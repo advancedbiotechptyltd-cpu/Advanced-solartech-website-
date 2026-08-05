@@ -36,8 +36,18 @@ behind a "not verified yet" toggle until they're real.
 
 ### Signing in
 
-The editor commits to GitHub, so it needs a GitHub identity. On static hosting
-there's no server to run an OAuth handshake, so use a token:
+The editor commits to GitHub, so it needs a GitHub identity. There are two ways
+to give it one.
+
+**One-click (recommended once set up).** Deploy the Cloudflare Worker in
+`oauth-worker/` — free, about ten minutes, once — and set `base_url` in
+`public/admin/config.yml`. After that **Sign In with GitHub** just works, for
+everyone, forever. New staff need nothing but repository access. Full guide in
+`oauth-worker/README.md`.
+
+**Access token (works today, no setup).** Until the Worker is deployed, the
+GitHub button dead-ends at Netlify's auth service — the editor's default when no
+proxy is configured — so use a token instead:
 
 1. GitHub → Settings → Developer settings → **Fine-grained personal access tokens**
    → **Generate new token**
