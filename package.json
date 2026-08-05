@@ -12,7 +12,8 @@
     "preview": "astro preview",
     "check:content": "node scripts/check-content.mjs",
     "check:html": "node scripts/check-html.mjs",
-    "verify": "npm run build && npm run check:html && npm run check:content"
+    "verify": "npm run build && npm run check:html && npm run check:content",
+    "reviews": "node scripts/fetch-google-reviews.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.6.0",

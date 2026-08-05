@@ -30,6 +30,12 @@
   "social": [
     "https://www.facebook.com/Advanced.solartech"
   ],
+  "googleProfile": {
+    "_note": "The Google Business Profile reviews are fetched from. There is a similarly-named company in Perth (Advanced Solar Technology Since 2009, Balcatta WA, place ID ChIJy-1TeKWvMioRzBb9g5KsPpg) — pointing at it would publish another business's reviews as ours, so the fetch re-verifies the address on every run and refuses to write if it does not match.",
+    "placeId": "ChIJnztesYM51moRtCUs43kWhxU",
+    "expectAddressContains": "Templestowe VIC",
+    "profileUrl": "https://share.google/ArMy0rQPqSfrvBMew"
+  },
   "photos": {
     "_note": "Whether the photographs on this site are this business's own work. While false, no alt text or caption says the business installed what is shown, so licensed stock can fill the slots safely. Set to true only once every photo in src/images/ is genuinely this business's — alt text carries the claim as much as visible copy does, and describing a stock photo as 'an Advanced Solar Tech installer' is a misleading representation under the Australian Consumer Law.",
     "own": false
@@ -81,12 +87,5 @@
         "label": "kW of solar delivered"
       }
     ]
-  },
-  "reviews": {
-    "placeholder": true,
-    "_note": "AggregateRating JSON-LD is emitted ONLY when placeholder is false and count/rating are real, verifiable numbers from a review platform. Fabricated ratings are a manual-action risk with Google and a misrepresentation under the ACL.",
-    "ratingValue": null,
-    "reviewCount": null,
-    "source": null
   }
 }

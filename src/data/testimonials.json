@@ -1,27 +1,55 @@
 {
-  "placeholder": true,
-  "_note": "STRUCTURE ONLY — these are not real customer reviews. Replace every entry with verbatim text from a verified source (Google Business Profile, Product Review) and set placeholder to false. `npm run check:content` fails while this stays true, and AggregateRating JSON-LD is suppressed until business.json reviews.placeholder is false. Publishing invented testimonials is a misrepresentation under the Australian Consumer Law.",
+  "_generated": "GENERATED FILE — do not edit by hand. Written by scripts/fetch-google-reviews.mjs from the business's Google Business Profile. Hand edits are overwritten on the next refresh, and editing a customer's words would misrepresent them in any case.",
+  "placeholder": false,
+  "source": "Google Business Profile",
+  "placeId": "ChIJnztesYM51moRtCUs43kWhxU",
+  "businessName": "Advanced Solartech",
+  "businessAddress": "14 Flowerdrum Cl, Templestowe VIC 3106, Australia",
+  "profileUrl": "https://www.google.com/maps/place/?q=place_id:ChIJnztesYM51moRtCUs43kWhxU",
+  "reviewsUrl": "https://search.google.com/local/reviews?placeid=ChIJnztesYM51moRtCUs43kWhxU",
+  "rating": 4.9,
+  "reviewCount": 51,
+  "fetchedAt": "2026-08-05",
   "items": [
     {
-      "quote": "SAMPLE CONTENT — replace with a verified customer review before launch.",
-      "author": "Customer name",
-      "location": "Suburb, VIC",
-      "service": "Solar Panels",
-      "source": "Google Business Profile"
+      "quote": "If you care about nature, go green. If you want to manage your electricity and gas costs, go solar. And if you value a reliable and professional company, I strongly recommend Advanced Solartech.\n\nI am extremely happy with my experience with Advanced Solartech. From the initial consultation to the final installation of the solar panels and battery system, everything was handled professionally and efficiently.\n\nThe team was knowledgeable, honest, and took the time to explain the system clearly, helping me choose the best solution for my home. The installation was smooth, well organised, and completed to a very high standard.\n\nSince installing the solar panels and batteries, I’ve already seen the benefits in energy efficiency and peace of mind. I truly appreciate the quality of their work and their excellent customer service.\n\nI highly recommend Advanced Solartech to anyone considering solar and battery solutions—they are reliable, professional, and a pleasure to deal with.",
+      "author": "Ali Ghasem-Zadeh",
+      "rating": 5,
+      "date": "2025-12-16",
+      "relative": "7 months ago",
+      "source": "Google"
     },
     {
-      "quote": "SAMPLE CONTENT — replace with a verified customer review before launch.",
-      "author": "Customer name",
-      "location": "Suburb, VIC",
-      "service": "Battery Storage",
-      "source": "Google Business Profile"
+      "quote": "Advanced solar tech (Ali) did a great job in setting up an ESY HM6 30kW battery system including additional PV panels last week for us. He also recommended to add more panels as our old PV system was small in capacity. System is working great. Ali was very helpful in the sorting delivery, installation, and necessary configuration with energy provider. Highly recommend.\n\nThanks Advanced solar tech.",
+      "author": "Marie Reginald",
+      "rating": 5,
+      "date": "2025-09-29",
+      "relative": "10 months ago",
+      "source": "Google"
     },
     {
-      "quote": "SAMPLE CONTENT — replace with a verified customer review before launch.",
-      "author": "Customer name",
-      "location": "Suburb, VIC",
-      "service": "EV Chargers",
-      "source": "Google Business Profile"
+      "quote": "Highly recommend this solar company. Competitively priced, great product and professionally installed. Very responsive communication from Ali each step. Very happy with my solar panels and inverter so far.",
+      "author": "George Li",
+      "rating": 5,
+      "date": "2026-02-11",
+      "relative": "5 months ago",
+      "source": "Google"
+    },
+    {
+      "quote": "We recently had solar panels and a battery system installed by Advanced Solartech and couldn't be happier with the experience. Ali and the team offered very competitive pricing, communicated clearly throughout the entire process, and delivered exactly what they promised.\nThe guys arrived on time and the whole process was smooth and professional from start to finish. We would happily recommend them to anyone considering solar and battery installation.",
+      "author": "K B",
+      "rating": 5,
+      "date": "2026-05-31",
+      "relative": "2 months ago",
+      "source": "Google"
+    },
+    {
+      "quote": "The experience with Advanced Solartech was absolutely amazing. From quotation to contract to installation and commissioning. Everything went super smooth and with lots of support and professional advise. Ali was great in providing a good deal and guiding us through documentation. Farid and his team were amazing throughout installation and system run. I would highly recommend Advanced Solartech to everyone for their solar system projects.",
+      "author": "Four Corners Co",
+      "rating": 5,
+      "date": "2026-04-20",
+      "relative": "3 months ago",
+      "source": "Google"
     }
   ]
 }

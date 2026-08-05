@@ -7,7 +7,7 @@ Mirrors the owner's master prompt. Update the status here when a section moves.
 | 0 | Project isolation & deploy | **Done** — this repo, Action builds → FTP to cPanel, Apache redirects |
 | 1 | Core site + content decisions | **Done** |
 | 2 | Content editor (CMS) | **Built** — needs the owner's GitHub token + 4 FTP secrets |
-| 3 | Real Google reviews | **Blocked** — needs the Maps API key. Last gate before go-live |
+| 3 | Real Google reviews | **Done** — fetched at build time, weekly refresh. Content gate passes |
 | 4 | Page per product | **Blocked** — needs §8 |
 | 5 | Third-party product reviews | **Parked** — no licensed feed |
 | 6 | CEC approved-product check | **Blocked** — needs the CEC data file |
@@ -58,10 +58,37 @@ the states actually flagged direct.
 
 | Needed | For | Notes |
 |---|---|---|
-| Google Maps API key | §3 | Server-side only. Clears the last go-live gate |
+| ~~Google Maps API key~~ | §3 | Supplied. Add as the `GOOGLE_MAPS_API_KEY` repository secret |
 | GitHub token + `FTP_SERVER`, `FTP_USERNAME`, `FTP_PASSWORD`, `FTP_SERVER_DIR` | §2 | Fine-grained token, this repo, contents read/write |
 | Accreditation logos ×4 | §1 | Each program's own partner portal |
 | Real photos + logo | §1 | Drop into `src/images/` by filename; illustrations step aside automatically |
 | CEC approved-product CSV/PDF | §6 | Ingested as a dated snapshot |
 | Native-speaker review per language | §7 | Especially rebate and safety wording |
 | Catalogue seed + pricing spreadsheet | §8, §9 | Private repo only — never here |
+
+## §3 as built
+
+Reviews come from Place ID `ChIJnztesYM51moRtCUs43kWhxU` — **Advanced Solartech,
+14 Flowerdrum Cl, Templestowe VIC 3106**, 4.9★ from 51 ratings.
+
+`scripts/fetch-google-reviews.mjs` runs before every deploy and weekly on its
+own schedule, writing `src/data/testimonials.json`. The result is committed so a
+build never depends on the API being up.
+
+The script re-verifies the listing's address on every run and refuses to write
+if it does not contain "Templestowe VIC". That guard exists because of
+**Advanced Solar Technology Since 2009**, 26 Mumford Pl, Balcatta WA — a
+different company with a confusingly similar name, whose reviews would
+otherwise be publishable here by a single wrong character. Verified: pointing
+the config at that Place ID makes the fetch refuse and leave the file untouched.
+
+The key is used at build time only, from the repository secret. It is never in
+committed data and never in shipped JavaScript — `.env.example` documents why it
+must not carry Astro's `PUBLIC_` prefix.
+
+AggregateRating in the LocalBusiness schema is derived from the fetched figures
+rather than a hand-typed copy, so the structured data cannot drift from what the
+page shows.
+
+`check:content` fails if the snapshot passes 30 days, which is Google Maps
+Platform's caching limit.

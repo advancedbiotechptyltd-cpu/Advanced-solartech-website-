@@ -96,6 +96,18 @@ export function getTestimonials() {
   return testimonials.placeholder ? [] : testimonials.items;
 }
 
+/**
+ * The Google profile the reviews came from — rating, count and links.
+ * Returns null while testimonials are placeholders, so nothing claims a rating
+ * the business has not actually got.
+ */
+export function getReviewProfile() {
+  if (testimonials.placeholder) return null;
+  const { rating, reviewCount, profileUrl, reviewsUrl, source, fetchedAt } = testimonials;
+  if (!rating || !reviewCount) return null;
+  return { rating, reviewCount, profileUrl, reviewsUrl, source, fetchedAt };
+}
+
 export function testimonialsArePlaceholder() {
   return Boolean(testimonials.placeholder);
 }
@@ -143,6 +155,15 @@ export function getStats() {
 
 /** Only real, sourced ratings become AggregateRating markup. */
 export function getAggregateRating() {
+  /*
+   * Sourced from the fetched Google data, not from a number typed into
+   * business.json. A hand-maintained copy drifts from the profile it claims to
+   * quote, and a rating in structured data that disagrees with the visible page
+   * is exactly what earns a manual action.
+   */
+  const p = getReviewProfile();
+  if (p) return { ratingValue: p.rating, reviewCount: p.reviewCount };
+
   const r = business.reviews;
   if (!r || r.placeholder || !r.ratingValue || !r.reviewCount) return null;
   return { ratingValue: r.ratingValue, reviewCount: r.reviewCount };

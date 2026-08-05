@@ -59,10 +59,7 @@ const [business, testimonials, locations, cities, services, brands, articles, re
   ]);
 
 // ── 1. Placeholders ──────────────────────────────────────────────────────────
-if (testimonials.placeholder)
-  errors.push(
-    "testimonials.json is still placeholder. Replace every quote with a verified review and set placeholder:false. Until then TestimonialGrid renders nothing."
-  );
+
 
 if (business.accreditations?.placeholder)
   warnings.push(
@@ -143,10 +140,33 @@ if (business.stats?.placeholder)
     "business.stats is off, so the numbers band does not render. That is a deliberate choice — add figures only if they can be evidenced from job records."
   );
 
-if (business.reviews?.placeholder)
-  warnings.push(
-    "business.reviews is placeholder — AggregateRating JSON-LD is suppressed. Add a real rating and count from a review platform, or leave it."
+/*
+ * Reviews are fetched, not typed. What can go wrong is the snapshot going
+ * stale: Google Maps Platform terms allow caching this content for 30 days,
+ * and a build older than that is both out of date and out of terms.
+ */
+if (testimonials.placeholder) {
+  errors.push(
+    "testimonials.json is marked placeholder — no reviews will render. Run `npm run reviews` with GOOGLE_MAPS_API_KEY set."
   );
+} else {
+  const fetched = testimonials.fetchedAt ? new Date(testimonials.fetchedAt) : null;
+  const days = fetched ? Math.floor((Date.now() - fetched.getTime()) / 86_400_000) : null;
+  if (days === null) {
+    warnings.push("testimonials.json has no fetchedAt date, so its age cannot be checked.");
+  } else if (days > 30) {
+    errors.push(
+      `The Google reviews snapshot is ${days} days old. Google Maps Platform terms allow caching this ` +
+        `content for 30 days — refresh it (Actions → Refresh Google reviews) before deploying.`
+    );
+  } else if (days > 14) {
+    warnings.push(`The Google reviews snapshot is ${days} days old. The weekly refresh may not be running.`);
+  }
+  notes.push(
+    `Reviews: ${testimonials.items.length} shown, ${testimonials.rating}★ from ${testimonials.reviewCount}, ` +
+      `for "${testimonials.businessName}" (${testimonials.businessAddress}), fetched ${testimonials.fetchedAt}.`
+  );
+}
 
 // ── 2. Location uniqueness ───────────────────────────────────────────────────
 const required = ["intro", "localNotes", "metaTitle", "metaDescription", "heroHeading"];

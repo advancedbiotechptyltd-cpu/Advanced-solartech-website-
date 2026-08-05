@@ -7,6 +7,7 @@
 #
 # ── Setup (once) ──────────────────────────────────────────────────────────────
 # Add these repository secrets (Settings → Secrets and variables → Actions):
+#   GOOGLE_MAPS_API_KEY  Places API key, used only here — never in the site
 #   FTP_SERVER      ftp.advancedsolartec.com.au
 #   FTP_USERNAME    the cPanel FTP user
 #   FTP_PASSWORD    that user's password
@@ -60,6 +61,15 @@ jobs:
 
       - name: Install
         run: npm ci
+
+      # Refresh the reviews from the live profile before building, so a deploy
+      # always ships the current rating. If the API is unreachable or the key is
+      # missing, the script keeps the committed snapshot and the build carries
+      # on — a deploy should not fail because Google had a bad minute.
+      - name: Refresh Google reviews
+        env:
+          GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
+        run: npm run reviews
 
       - name: Build
         run: |
