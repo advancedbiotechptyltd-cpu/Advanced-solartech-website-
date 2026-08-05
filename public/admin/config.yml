@@ -29,10 +29,22 @@ backend:
   # base_url: https://ast-cms-auth.your-name.workers.dev
   # auth_endpoint: auth
   #
+  # ...and add `oauth` to auth_methods below, so the button reappears.
+  #
   # Until then, "Sign In with GitHub" dead-ends at Netlify's auth service (the
   # editor's default) and staff must use "Sign In Using Access Token" with a
   # fine-grained token scoped to this repository — Contents: read and write.
   # Both routes are documented in README.md.
+
+  # Only offer the sign-in method that actually works here.
+  #
+  # Without this, the editor shows "Sign In with GitHub" above the token
+  # button — and with no OAuth proxy configured it falls back to Netlify's auth
+  # service, which answers "Not Found". It is the obvious-looking button and it
+  # is the wrong one, which is a trap rather than a choice.
+  #
+  # Add `oauth` back once oauth-worker/ is deployed and base_url is set above.
+  auth_methods: [token]
 
 # Simple mode: Save commits straight to the branch, and the deploy Action puts
 # the result on the /new staging site within a couple of minutes.
