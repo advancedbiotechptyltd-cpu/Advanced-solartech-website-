@@ -1,12 +1,18 @@
 ---
-/** One page per entry in brands.json. Consolidates the old -2/-3 duplicates. */
+/**
+ * One page per brand.
+ *
+ * Data-driven from the distinct brands in catalogue.json, plus any brand that
+ * only exists in brands.json — dropping those would 404 URLs the redirect map
+ * already points at.
+ */
 import BrandTemplate from "../../templates/BrandTemplate.astro";
-import { brands } from "../../lib/site.js";
+import { allBrandSlugs, getBrand } from "../../lib/catalogue.js";
 
 export function getStaticPaths() {
-  return brands.map((brand) => ({
-    params: { brand: brand.slug },
-    props: { brand },
+  return allBrandSlugs.map((slug) => ({
+    params: { brand: slug },
+    props: { brand: getBrand(slug) },
   }));
 }
 

@@ -8,9 +8,9 @@ Mirrors the owner's master prompt. Update the status here when a section moves.
 | 1 | Core site + content decisions | **Done** |
 | 2 | Content editor (CMS) | **Built** — needs the owner's GitHub token + 4 FTP secrets |
 | 3 | Real Google reviews | **Done** — fetched at build time, weekly refresh. Content gate passes |
-| 4 | Page per product | **Blocked** — needs §8 |
+| 4 | Page per product | **Done** — 245 products, 51 brands, all from catalogue.json |
 | 5 | Third-party product reviews | **Parked** — no licensed feed |
-| 6 | CEC approved-product check | **Blocked** — needs the CEC data file |
+| 6 | CEC approved-product check | **Blocked** — needs the CEC data file. Slot reserved on the product page |
 | 7 | Multi-language | **Not started** |
 | 8 | Catalogue manager | **Later** — own private repo + Railway |
 | 9 | Roof-quote calculator | **Later** — Railway |
@@ -92,3 +92,47 @@ page shows.
 
 `check:content` fails if the snapshot passes 30 days, which is Google Maps
 Platform's caching limit.
+
+## §4 as built
+
+`src/data/catalogue.json` is the PUBLIC catalogue: 245 products, 51 brands,
+four categories. Brand, model, specification and manufacturer document links —
+no supplier codes, no prices. The gate fails the build if a field matching
+`price|cost|nett|supplier|margin|trade` ever appears, because this repository is
+public and that would be a commercial disclosure rather than a formatting slip.
+
+Everything under `/products` and `/brands` is generated from it. Adding a row
+creates a product page and a card on its brand page; there are no hand-written
+product pages.
+
+- `/products` opens with a strip of all 51 brands, each linking to its page.
+- `/products/{category}/` lists that category's brands and first twelve models.
+- `/brands/{slug}/` lists that brand's full range.
+- `/products/{category}/{slug}/` is the product page.
+
+**Logos.** Drop `src/images/brands/{brand_slug}.svg` in and it appears. Until
+then a monochrome wordmark fills the same box — with 51 brands the fallback is
+the normal state, not an error state, and a broken-image icon in a row of
+manufacturer logos reads as a dead site.
+
+**Documents.** A button renders only when the catalogue holds that URL. Empty
+means "not supplied yet" and is shown as "available on request". Nothing here
+can produce a dead link. 28 of 245 currently have at least one document.
+
+**Availability.** Every product is `unavailable` today, which shows a badge and
+softens the call to action to "Enquire about this product". The page still
+renders in full — specifications and documents stay visible, because someone
+researching a product still needs them.
+
+**Brand copy.** Six brands have hand-written strengths and trade-offs in
+`brands.json`; that section is omitted for the other 45 rather than filled in
+with something plausible. Writing a considered view on a brand nobody here has
+one about is exactly the invention the content gate exists to stop.
+
+**Reserved.** The product page leaves a slot for the CEC approved-product check
+(§6) and third-party reviews (§5), empty rather than filled with a "coming
+soon" panel repeated across 245 pages.
+
+**Editing.** The CMS has a Products collection over `catalogue.json`, filtered
+by availability, with a per-row summary — the owner will mostly toggle
+availability and paste document links.

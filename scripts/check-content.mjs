@@ -45,7 +45,7 @@ const warnings = [];
 // "fixes" it by inventing a number.
 const notes = [];
 
-const [business, testimonials, locations, cities, services, brands, articles, redirects, home] =
+const [business, testimonials, locations, cities, services, brands, articles, redirects, home, catalogueFile] =
   await Promise.all([
     read("business.json"),
     read("testimonials.json"),
@@ -56,6 +56,7 @@ const [business, testimonials, locations, cities, services, brands, articles, re
     read("articles.json"),
     read("redirects.json"),
     read("home.json"),
+    read("catalogue.json"),
   ]);
 
 // ── 1. Placeholders ──────────────────────────────────────────────────────────
@@ -96,6 +97,77 @@ if (directAbbrs !== flaggedDirect) {
       `[${flaggedDirect}]. The copy and the state pages would contradict each other.`
   );
 }
+
+/*
+ * Catalogue integrity.
+ *
+ * 245 rows generate 245 pages, so a bad row is a bad page nobody will notice.
+ * These are the failures that would ship silently: a duplicate route, a slug
+ * that cannot be a URL, a document link that is not a link, and a price or
+ * supplier code finding its way into a public file.
+ */
+const catalogue = catalogueFile.products ?? [];
+const CATEGORIES = ["Panel", "Inverter", "Battery", "EV charger"];
+const URL_FIELDS = ["image_url", "datasheet_url", "manual_url", "warranty_url"];
+
+const routeKeys = new Map();
+for (const p of catalogue) {
+  const label = `catalogue/${p.slug ?? "(no slug)"}`;
+
+  for (const f of ["slug", "brand", "brand_slug", "category", "model"]) {
+    if (!p[f]) errors.push(`${label}: missing ${f}.`);
+  }
+  for (const f of ["slug", "brand_slug"]) {
+    if (p[f] && !/^[a-z0-9-]+$/.test(p[f]))
+      errors.push(`${label}: ${f} "${p[f]}" is not usable in a URL — lowercase, numbers and hyphens only.`);
+  }
+  if (p.category && !CATEGORIES.includes(p.category))
+    errors.push(`${label}: category "${p.category}" is not one of ${CATEGORIES.join(", ")}.`);
+  if (p.availability && !["available", "unavailable"].includes(p.availability))
+    errors.push(`${label}: availability must be "available" or "unavailable", not "${p.availability}".`);
+
+  const key = `${p.category}/${p.slug}`;
+  if (routeKeys.has(key)) errors.push(`${label}: duplicate — two products share the route ${key}.`);
+  routeKeys.set(key, true);
+
+  for (const f of URL_FIELDS) {
+    const v = p[f];
+    if (v && !/^https?:\/\//i.test(v))
+      errors.push(`${label}: ${f} is not a URL ("${String(v).slice(0, 40)}"). Blank is fine; broken is not.`);
+  }
+}
+
+/*
+ * This repository is public. A price or supplier code in the catalogue is a
+ * commercial disclosure, not a formatting problem, so it fails the build.
+ */
+const leakedFields = [...new Set(catalogue.flatMap((p) => Object.keys(p)))].filter((k) =>
+  /price|cost|nett|supplier|margin|trade/i.test(k)
+);
+if (leakedFields.length)
+  errors.push(
+    `catalogue.json contains commercially sensitive field(s): ${leakedFields.join(", ")}. ` +
+      `This repository is public — prices and supplier codes belong in the private catalogue.`
+  );
+
+const brandNames = new Map();
+for (const p of catalogue) {
+  if (!p.brand_slug) continue;
+  const seen = brandNames.get(p.brand_slug);
+  if (seen && seen !== p.brand)
+    warnings.push(
+      `catalogue: brand_slug "${p.brand_slug}" is used for both "${seen}" and "${p.brand}" — ` +
+        `they will share one brand page under whichever name comes first.`
+    );
+  brandNames.set(p.brand_slug, seen ?? p.brand);
+}
+
+const withDocs = catalogue.filter((p) => p.datasheet_url || p.manual_url || p.warranty_url).length;
+const available = catalogue.filter((p) => p.availability === "available").length;
+notes.push(
+  `Catalogue: ${catalogue.length} products across ${brandNames.size} brands. ` +
+    `${available} marked available, ${withDocs} with at least one document.`
+);
 
 const ownPhotos = business.photos?.own === true;
 const photoSlots = [

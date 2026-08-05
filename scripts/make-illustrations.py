@@ -290,3 +290,20 @@ write("work-4", (hills() + sun(88, 66, 22) + shadow(320, 132+62*2+70+16, 304, 17
   + "".join(plane_rect(Lo,Lu,Lv, .07+i*.13, .28, .09, .32, op=.7) for i in range(5))
   + plane_rect(Lo,Lu,Lv, .74, .20, .20, .70, fill=WALL_D, stroke=NAVY, sw=2)))
 print("all illustrations written")
+
+# ── category-inverters: a wall-mounted string inverter ───────────────────────
+write("category-inverters", (wall_scene() + shadow(320, 330, 190, 12)
+  + unit(196, 78, 248, 238, rx=20)
+  + f'<rect x="224" y="106" width="192" height="104" rx="10" fill="{NAVY_2}"/>'
+  # a generation curve on the display
+  + f'<path d="M240 186 q34 -6 52 -34 q22 -30 44 -30 q26 0 36 34 q8 26 20 30" '
+    f'stroke="{GOLD}" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>'
+  + f'<line x1="240" y1="196" x2="396" y2="196" stroke="{SKY_1}" stroke-width="2" opacity=".45"/>'
+  + "".join(f'<rect x="{228+i*46}" y="228" width="34" height="8" rx="4" fill="{GREY}"/>' for i in range(4))
+  + led(300, 268) + led(348, 268, GOLD)
+  # DC in from the roof, AC out to the board
+  + f'<path d="M240 78 v-30 M290 78 v-46" stroke="{NAVY_2}" stroke-width="7" stroke-linecap="round"/>'
+  + f'<path d="M444 200 h48 q14 0 14 14 v72" stroke="{GOLD}" stroke-width="4" fill="none" '
+    f'stroke-linecap="round" stroke-dasharray="8 9"/>'
+  + sun(566, 62, 22)))
+print("category-inverters written")

@@ -5,7 +5,9 @@ import InnerHero from "../../components/InnerHero.astro";
 import SectionHeader from "../../components/SectionHeader.astro";
 import FeatureCardGrid from "../../components/FeatureCardGrid.astro";
 import LeadForm from "../../components/LeadForm.astro";
-import { PRODUCT_CATEGORIES, getBrandsByCategory, business, services } from "../../lib/site.js";
+import BrandLogo from "../../components/BrandLogo.astro";
+import { PRODUCT_CATEGORIES, business, services, href } from "../../lib/site.js";
+import { brandsForCategory, getProductsByCategory, productPath } from "../../lib/catalogue.js";
 import { breadcrumbSchema } from "../../lib/schema.js";
 
 export function getStaticPaths() {
@@ -17,7 +19,8 @@ export function getStaticPaths() {
 
 const { category } = Astro.props;
 
-const categoryBrands = getBrandsByCategory(category.slug);
+const categoryBrands = brandsForCategory(category.slug);
+const categoryProducts = getProductsByCategory(category.slug);
 const relatedService = services.find((s) => s.relatedBrandCategory === category.slug);
 
 const crumbs = [
@@ -46,16 +49,40 @@ const crumbs = [
     categoryBrands.length > 0 ? (
       <section class="section">
         <div class="container">
-          <SectionHeader heading={`${category.title} brands we install`} level={2} />
+          <SectionHeader
+            heading={`${category.title} brands we install`}
+            body={`${categoryProducts.length} models from ${categoryBrands.length} manufacturers. Each brand page lists its full range with specifications and documents.`}
+            level={2}
+          />
+          <ul class="brandStrip" role="list">
+            {categoryBrands.map((b, i) => (
+              <li>
+                <a class="brandStrip__link" href={href(`/brands/${b.slug}/`)}>
+                  <BrandLogo brand={b} priority={i < 8} decorative />
+                  <span class="visually-hidden">
+                    {b.name} — {b.productCount}{" "}
+                    {b.productCount === 1 ? "product" : "products"}
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
           <FeatureCardGrid
-            items={categoryBrands.map((b) => ({
-              title: b.name,
-              summary: b.summary,
-              href: `/brands/${b.slug}/`,
+            items={categoryProducts.slice(0, 12).map((p) => ({
+              title: `${p.brand} ${p.model}`,
+              summary: [p.power_or_capacity, p.specs].filter(Boolean).join(" · "),
+              meta: p.available ? undefined : "Temporarily unavailable",
+              href: productPath(p),
             }))}
             columns={3}
             level={3}
           />
+          {categoryProducts.length > 12 && (
+            <p class="moreNote">
+              Showing 12 of {categoryProducts.length}. The rest are listed on each brand's page
+              above.
+            </p>
+          )}
         </div>
       </section>
     ) : (
@@ -104,3 +131,37 @@ const crumbs = [
     </div>
   </section>
 </BaseLayout>
+
+<style>
+  .brandStrip {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: var(--s-3);
+    list-style: none;
+    margin: var(--s-6) 0 var(--s-8);
+    padding: 0;
+  }
+
+  .brandStrip__link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 76px;
+    padding: var(--s-3);
+    border: 1px solid var(--c-line);
+    border-radius: var(--r-md);
+    background: var(--c-surface);
+    text-decoration: none;
+  }
+
+  .brandStrip__link:hover,
+  .brandStrip__link:focus-visible {
+    border-color: var(--c-navy);
+  }
+
+  .moreNote {
+    margin: var(--s-6) 0 0;
+    font-size: var(--fs-sm);
+    color: var(--c-muted);
+  }
+</style>

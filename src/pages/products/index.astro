@@ -3,18 +3,25 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import InnerHero from "../../components/InnerHero.astro";
 import SectionHeader from "../../components/SectionHeader.astro";
 import FeatureCardGrid from "../../components/FeatureCardGrid.astro";
-import LogoStrip from "../../components/LogoStrip.astro";
-import { PRODUCT_CATEGORIES, brands, business, getBrandsByCategory } from "../../lib/site.js";
+import BrandLogo from "../../components/BrandLogo.astro";
+import { PRODUCT_CATEGORIES, business, href } from "../../lib/site.js";
+import {
+  catalogueBrands,
+  brandsForCategory,
+  getProductsByCategory,
+  products,
+} from "../../lib/catalogue.js";
 import { breadcrumbSchema } from "../../lib/schema.js";
 
 const crumbs = [{ label: "Products", href: "/products/" }];
 
 const cards = PRODUCT_CATEGORIES.map((c) => {
-  const count = getBrandsByCategory(c.slug).length;
+  const count = getProductsByCategory(c.slug).length;
+  const brandCount = brandsForCategory(c.slug).length;
   return {
     title: c.title,
     summary: c.summary,
-    meta: count ? `${count} brand${count === 1 ? "" : "s"}` : "Enquire for options",
+    meta: count ? `${count} models · ${brandCount} brands` : "Enquire for options",
     href: `/products/${c.slug}/`,
   };
 });
@@ -35,6 +42,37 @@ const cards = PRODUCT_CATEGORIES.map((c) => {
     ctaHref="/quote/"
   />
 
+  <section class="section section--tight">
+    <div class="container">
+      <SectionHeader
+        kicker="Brands"
+        heading={`${catalogueBrands.length} brands we supply and install`}
+        body={`${products.length} models across panels, inverters, batteries and EV charging. Every one has its own page with the manufacturer's specification and documents.`}
+        level={2}
+      />
+      <!--
+        One cell per brand, alphabetical. Logos are lazy except the first row —
+        fifty-one eager images at the top of a page is a Largest Contentful
+        Paint problem, and the strip is the first thing on it.
+      -->
+      <ul class="brandStrip" role="list">
+        {
+          catalogueBrands.map((brand, i) => (
+            <li>
+              <a class="brandStrip__link" href={href(`/brands/${brand.slug}/`)}>
+                <BrandLogo brand={brand} priority={i < 8} decorative />
+                <span class="visually-hidden">
+                  {brand.name} — {brand.productCount}{" "}
+                  {brand.productCount === 1 ? "product" : "products"}
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
   <section class="section">
     <div class="container">
       <SectionHeader heading="Product categories" level={2} />
@@ -46,22 +84,52 @@ const cards = PRODUCT_CATEGORIES.map((c) => {
     <div class="container">
       <SectionHeader
         kicker="Brands"
-        heading="Every brand we install has a page"
-        body="Each one covers where that product is the right choice and where it is not. Product selection should follow the site assessment, not lead it."
+        heading="The brands we know best"
+        body="These are the ones we have a considered view on — where each is the right choice and where it is not. The rest are listed above with their full catalogue."
         level={2}
       />
       <FeatureCardGrid
-        items={brands.map((b) => ({
-          title: b.name,
-          summary: b.summary,
-          meta: b.category,
-          href: `/brands/${b.slug}/`,
-        }))}
+        items={catalogueBrands
+          .filter((b) => b.marketing)
+          .map((b) => ({
+            title: b.name,
+            summary: b.marketing.summary,
+            meta: `${b.productCount} models`,
+            href: `/brands/${b.slug}/`,
+          }))}
         columns={3}
         level={3}
       />
     </div>
   </section>
 
-  <LogoStrip heading="Quick links" />
+  <!-- The brand strip above replaces the old six-logo LogoStrip. -->
 </BaseLayout>
+
+<style>
+  .brandStrip {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: var(--s-3);
+    list-style: none;
+    margin: var(--s-7) 0 0;
+    padding: 0;
+  }
+
+  .brandStrip__link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 76px;
+    padding: var(--s-3);
+    border: 1px solid var(--c-line);
+    border-radius: var(--r-md);
+    background: var(--c-surface);
+    text-decoration: none;
+  }
+
+  .brandStrip__link:hover,
+  .brandStrip__link:focus-visible {
+    border-color: var(--c-navy);
+  }
+</style>

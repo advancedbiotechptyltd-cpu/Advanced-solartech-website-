@@ -1,0 +1,342 @@
+---
+/**
+ * ProductPage — one layout for all 245 products, and for any row added to
+ * catalogue.json later. Nothing here is product-specific.
+ *
+ * Two rules shape it:
+ *
+ *   Never render a dead link. A document button appears only when the
+ *   catalogue holds a URL for it. Empty means "not supplied yet", and is shown
+ *   as such rather than as a button that 404s.
+ *
+ *   Never invent a specification. Everything on the page comes from the
+ *   catalogue row. A product with thin data gets a thin page, which is honest
+ *   and fixable; a padded one is neither.
+ */
+import BaseLayout from "../layouts/BaseLayout.astro";
+import InnerHero from "../components/InnerHero.astro";
+import SectionHeader from "../components/SectionHeader.astro";
+import KeyFacts from "../components/KeyFacts.astro";
+import FeatureCardGrid from "../components/FeatureCardGrid.astro";
+import Figure from "../components/Figure.astro";
+import BrandLogo from "../components/BrandLogo.astro";
+import LeadForm from "../components/LeadForm.astro";
+import Icon from "../components/Icon.astro";
+import { href, business } from "../lib/site.js";
+import {
+  categoryTitle,
+  categoryNoun,
+  categoryNounPlural,
+  categoryIllustration,
+  getProductsByBrand,
+  productPath,
+  getBrand,
+} from "../lib/catalogue.js";
+import { breadcrumbSchema, catalogueProductSchema } from "../lib/schema.js";
+
+const { product } = Astro.props;
+
+const brand = getBrand(product.brand_slug);
+const category = categoryTitle(product.categorySlug);
+
+const siblings = getProductsByBrand(product.brand_slug)
+  .filter((p) => p.slug !== product.slug && p.categorySlug === product.categorySlug)
+  .slice(0, 3)
+  .map((p) => ({
+    title: p.model,
+    summary: p.specs || p.power_or_capacity,
+    meta: p.available ? undefined : "Temporarily unavailable",
+    href: productPath(p),
+  }));
+
+const keyFacts = [
+  { label: "Brand", value: product.brand },
+  { label: "Category", value: category },
+  product.power_or_capacity && { label: "Rating", value: product.power_or_capacity },
+  {
+    label: "Availability",
+    value: product.available ? "Available to order" : "Temporarily unavailable",
+  },
+].filter(Boolean);
+
+const crumbs = [
+  { label: "Products", href: "/products/" },
+  { label: category, href: `/products/${product.categorySlug}/` },
+  { label: product.model, href: productPath(product) },
+];
+
+/*
+ * Length matters here more than anywhere: 245 pages generated from one
+ * template will trip the duplicate-description check unless each one is
+ * genuinely distinct, and the gate wants 70–165 characters.
+ */
+/* Trim against the escaped length, since that is what lands in the attribute:
+   one "&" in a model name costs five characters, not one. */
+const escapedLength = (t) => t.replace(/&/g, "&amp;").replace(/"/g, "&quot;").length;
+
+function fitDescription(parts, limit = 160) {
+  const tail = `${categoryNounPlural(product.categorySlug)} supplied and installed by ${business.name} across Victoria and NSW.`;
+  let head = parts.filter(Boolean).join(" ");
+  while (head && escapedLength(`${head} — ${tail}`) > limit) {
+    head = head.slice(0, head.lastIndexOf(" ") > 0 ? head.lastIndexOf(" ") : 0).replace(/[\s,·—-]+$/, "");
+  }
+  return head ? `${head} — ${tail}` : tail;
+}
+
+const description = fitDescription([
+  `${product.brand} ${product.model}`,
+  product.power_or_capacity,
+  product.specs,
+]);
+
+/* Same for the title: long model names push past the 65 the gate allows, and a
+   truncated brand in a search result is worse than a missing suffix. */
+const fullTitle = `${product.brand} ${product.model} | ${business.name}`;
+const title =
+  escapedLength(fullTitle) <= 65 ? fullTitle : `${product.brand} ${product.model}`.slice(0, 65);
+
+const missingDocs = ["Datasheet", "Installation manual", "Warranty document"].filter(
+  (label) => !product.documents.some((d) => d.label === label)
+);
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  path={productPath(product)}
+  schemas={[catalogueProductSchema(product), breadcrumbSchema(crumbs)]}
+>
+  <InnerHero
+    kicker={`${category} · ${product.brand}`}
+    heading={product.model}
+    body={product.specs || `${product.brand} ${product.model}, supplied and installed.`}
+    crumbs={crumbs}
+    variant="compact"
+    ctaLabel={product.available ? "Get a Quote" : "Enquire"}
+    ctaHref="/quote/"
+  />
+
+  <section class="section">
+    <div class="container product">
+      <div class="product__media">
+        <!--
+          A locally-hosted product photo wins; otherwise the category
+          illustration stands in. image_url records where the manufacturer's
+          official image lives — it is not rendered from there, because
+          hotlinking someone else's server is fragile and not ours to do.
+        -->
+        <Figure
+          name={`product-${product.slug}`}
+          fallbackName={categoryIllustration(product.categorySlug)}
+          alt={`${product.brand} ${product.model}`}
+          ratio="4 / 3"
+        />
+        <a class="product__brandLink" href={href(`/brands/${product.brand_slug}/`)}>
+          <BrandLogo brand={{ slug: product.brand_slug, name: product.brand }} decorative />
+          <span>All {product.brand} products</span>
+        </a>
+      </div>
+
+      <div class="product__detail">
+        {
+          !product.available && (
+            <p class="product__badge">
+              <Icon name="clock" size={18} />
+              <span>
+                <strong>Temporarily unavailable.</strong> We are not taking orders for this
+                model right now. Enquire and we will tell you when it returns, or suggest an
+                equivalent.
+              </span>
+            </p>
+          )
+        }
+
+        <KeyFacts facts={keyFacts} heading="At a glance" level={2} />
+
+        {
+          product.specs && (
+            <div class="product__specs">
+              <h2 class="product__h2">Specification</h2>
+              <p>{product.specs}</p>
+              <p class="product__source">
+                Specifications as published by {product.brand}. Confirm against the datasheet
+                for your installation.
+              </p>
+            </div>
+          )
+        }
+
+        <div class="product__docs">
+          <h2 class="product__h2">Documents</h2>
+          {
+            product.documents.length > 0 ? (
+              <ul class="docs" role="list">
+                {product.documents.map((d) => (
+                  <li>
+                    <a class="btn btn--ghost docs__btn" href={d.url} target="_blank" rel="noopener noreferrer">
+                      <Icon name="doc" size={18} />
+                      <span>
+                        {d.label}
+                        <small>PDF · opens in a new tab</small>
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p class="product__source">
+                We have not published documents for this model yet.
+              </p>
+            )
+          }
+          {
+            missingDocs.length > 0 && product.documents.length > 0 && (
+              <p class="product__source">
+                {missingDocs.join(", ")} available on request.
+              </p>
+            )
+          }
+        </div>
+
+        <!--
+          Reserved for the CEC approved-product check and third-party reviews.
+          Left empty rather than filled with a promise: an empty section is
+          honest, and a "coming soon" panel on 245 pages is noise.
+        -->
+
+        <p class="product__cta">
+          <a class="btn btn--primary btn--lg" href={href(`/quote/?product=${product.slug}`)}>
+            {product.available ? "Get a quote for this product" : "Enquire about this product"}
+          </a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  {
+    siblings.length > 0 && (
+      <section class="section section--surface">
+        <div class="container">
+          <SectionHeader heading={`Other ${product.brand} ${categoryNounPlural(product.categorySlug)}`} level={2} />
+          <FeatureCardGrid items={siblings} columns={3} level={3} />
+        </div>
+      </section>
+    )
+  }
+
+  <section class="section">
+    <div class="container container--narrow">
+      <LeadForm
+        id={`lead-${product.slug}`}
+        heading={product.available ? `Quote me on the ${product.model}` : `Ask about the ${product.model}`}
+        body="Tell us about your property and we will come back with a system around this product, priced after rebates."
+        source={`product:${product.categorySlug}/${product.slug}`}
+      />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .product {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: clamp(var(--s-6), 5vw, var(--s-9));
+    align-items: start;
+  }
+
+  .product__media {
+    position: sticky;
+    top: calc(var(--header-h) + var(--s-6));
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-5);
+  }
+
+  .product__brandLink {
+    display: flex;
+    align-items: center;
+    gap: var(--s-4);
+    padding: var(--s-4);
+    border: 1px solid var(--c-line);
+    border-radius: var(--r-md);
+    text-decoration: none;
+    color: var(--c-muted);
+    font-size: var(--fs-sm);
+  }
+
+  .product__brandLink:hover {
+    border-color: var(--c-navy);
+    color: var(--c-navy);
+  }
+
+  .product__detail {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-7);
+  }
+
+  .product__badge {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--s-3);
+    margin: 0;
+    padding: var(--s-5);
+    border-radius: var(--r-md);
+    background: var(--c-surface-alt);
+    border-left: 3px solid var(--c-gold-600);
+    color: var(--c-navy);
+    font-size: var(--fs-sm);
+  }
+
+  .product__h2 {
+    font-size: var(--fs-lg);
+    color: var(--c-navy);
+    margin: 0 0 var(--s-3);
+  }
+
+  .product__specs p {
+    margin: 0 0 var(--s-2);
+  }
+
+  .product__source {
+    margin: 0;
+    font-size: var(--fs-xs);
+    color: var(--c-muted);
+  }
+
+  .docs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-3);
+    list-style: none;
+    margin: 0 0 var(--s-3);
+    padding: 0;
+  }
+
+  .docs__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-3);
+    text-align: left;
+  }
+
+  .docs__btn small {
+    display: block;
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-regular);
+    color: var(--c-muted);
+  }
+
+  .product__cta {
+    margin: 0;
+  }
+
+  @media (max-width: 900px) {
+    .product {
+      grid-template-columns: 1fr;
+    }
+    .product__media {
+      position: static;
+    }
+  }
+</style>

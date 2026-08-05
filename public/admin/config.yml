@@ -228,6 +228,51 @@ collections:
                   - { name: label, label: Label, widget: string }
                   - { name: value, label: Value, widget: string }
 
+  # ── Products ────────────────────────────────────────────────────────────────
+  - name: products
+    label: Products
+    files:
+      - name: catalogue
+        label: Product catalogue
+        file: src/data/catalogue.json
+        description: >
+          Every product on the site. Adding a row creates its page automatically.
+          In day-to-day use you will mostly toggle Availability and paste
+          document links — brand, model and specs come from the manufacturer and
+          should match their datasheet exactly.
+        fields:
+          - { name: _note, widget: hidden, required: false }
+          - name: products
+            label: Products
+            widget: list
+            # 245 rows: without a summary the list is unreadable, and without
+            # the filters below finding one product means scrolling all of them.
+            summary: "{{fields.brand}} {{fields.model}} — {{fields.availability}}"
+            filter:
+              field: availability
+              values: [available, unavailable]
+            fields:
+              - { name: slug, label: URL slug, widget: string, pattern: ['^[a-z0-9-]+$', 'Lowercase letters, numbers and hyphens only.'], hint: "Changing this changes the page address and breaks any existing link to it." }
+              - { name: brand, label: Brand, widget: string }
+              - { name: brand_slug, label: Brand slug, widget: string, pattern: ['^[a-z0-9-]+$', 'Lowercase letters, numbers and hyphens only.'], hint: "Groups products onto one brand page. Must match the other products of this brand exactly." }
+              - { name: category, label: Category, widget: select, options: [Panel, Inverter, Battery, EV charger] }
+              - { name: model, label: Model, widget: string }
+              - { name: power_or_capacity, label: Rating (e.g. 440W, 10 kWh), widget: string, required: false }
+              - { name: specs, label: Specification, widget: text, required: false, hint: "As published by the manufacturer. Do not paraphrase or improve it." }
+              - name: availability
+                label: Availability
+                widget: select
+                options: [available, unavailable]
+                default: unavailable
+                hint: >
+                  "unavailable" shows a Temporarily unavailable badge and softens
+                  the call to action. The page still works — specs and documents
+                  stay visible.
+              - { name: image_url, label: Product image URL, widget: string, required: false, hint: "Manufacturer's official image. Leave blank to show the category illustration." }
+              - { name: datasheet_url, label: Datasheet PDF, widget: string, required: false, hint: "Official manufacturer link. Blank hides the button — never leave a dead link." }
+              - { name: manual_url, label: Installation manual PDF, widget: string, required: false }
+              - { name: warranty_url, label: Warranty document PDF, widget: string, required: false }
+
   # ── Locations ───────────────────────────────────────────────────────────────
   - name: locations
     label: Service areas

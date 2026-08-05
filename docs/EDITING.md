@@ -19,6 +19,7 @@ reach customers by accident.
 | Brand pages | [brands.json](https://github.com/advancedbiotechptyltd-cpu/Advanced-solartech-website-/edit/claude/advanced-solartech-488d5g/src/data/brands.json) |
 | Questions & answers | [faqs.json](https://github.com/advancedbiotechptyltd-cpu/Advanced-solartech-website-/edit/claude/advanced-solartech-488d5g/src/data/faqs.json) |
 | Blog / guides | [articles.json](https://github.com/advancedbiotechptyltd-cpu/Advanced-solartech-website-/edit/claude/advanced-solartech-488d5g/src/data/articles.json) |
+| Products, availability, document links | [catalogue.json](https://github.com/advancedbiotechptyltd-cpu/Advanced-solartech-website-/edit/claude/advanced-solartech-488d5g/src/data/catalogue.json) |
 | Menus (top and footer) | [nav.json](https://github.com/advancedbiotechptyltd-cpu/Advanced-solartech-website-/edit/claude/advanced-solartech-488d5g/src/data/nav.json) |
 
 Each link opens that file in GitHub's editor. Change the text between the

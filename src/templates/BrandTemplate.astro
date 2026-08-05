@@ -1,11 +1,16 @@
 ---
 /**
- * BrandTemplate — one page per brand, generated from brands.json.
+ * BrandTemplate — one page per brand.
  *
- * Every brand page carries a `considerations` section as well as `strengths`.
- * A page that only lists strengths reads as marketing copy to a person and as
- * thin promotional content to a crawler; the trade-offs are what make it a
- * page worth ranking.
+ * Two kinds of brand share this layout. A handful have hand-written marketing
+ * copy in brands.json, including the `considerations` section that keeps a
+ * brand page from reading as pure promotion. The other forty-odd come from the
+ * catalogue alone, and get a plain heading plus their product list.
+ *
+ * The marketing sections are conditional rather than filled in with something
+ * plausible: writing strengths and trade-offs for a brand nobody here has a
+ * view on would be inventing content, which is the one thing the content gate
+ * exists to stop. A short honest page is fixable; a padded one is not.
  */
 import BaseLayout from "../layouts/BaseLayout.astro";
 import InnerHero from "../components/InnerHero.astro";
@@ -14,17 +19,39 @@ import SectionHeader from "../components/SectionHeader.astro";
 import KeyFacts from "../components/KeyFacts.astro";
 import FeatureCardGrid from "../components/FeatureCardGrid.astro";
 import LeadForm from "../components/LeadForm.astro";
-import { getBrandsByCategory, PRODUCT_CATEGORIES } from "../lib/site.js";
+import BrandLogo from "../components/BrandLogo.astro";
+import { PRODUCT_CATEGORIES, business } from "../lib/site.js";
+import {
+  getProductsByBrand,
+  productPath,
+  categoryTitle,
+  brandsForCategory,
+} from "../lib/catalogue.js";
 import { productSchema, breadcrumbSchema } from "../lib/schema.js";
 
 const { brand } = Astro.props;
 
+/** Hand-written copy, where it exists. Everything below degrades without it. */
+const m = brand.marketing;
+
 const category = PRODUCT_CATEGORIES.find((c) => c.slug === brand.category);
-const siblings = getBrandsByCategory(brand.category)
+
+const items = getProductsByBrand(brand.slug);
+const productCards = items.map((p) => ({
+  title: p.model,
+  summary: [p.power_or_capacity, p.specs].filter(Boolean).join(" · "),
+  meta: p.available ? categoryTitle(p.categorySlug) : "Temporarily unavailable",
+  href: productPath(p),
+}));
+
+const siblings = brandsForCategory(brand.category)
   .filter((b) => b.slug !== brand.slug)
+  .slice(0, 6)
   .map((b) => ({
     title: b.name,
-    summary: b.summary,
+    summary:
+      b.marketing?.summary ??
+      `${b.productCount} ${b.productCount === 1 ? "product" : "products"} we supply and install.`,
     href: `/brands/${b.slug}/`,
   }));
 
@@ -34,24 +61,46 @@ const crumbs = [
   { label: brand.name, href: `/brands/${brand.slug}/` },
 ];
 
+const categoriesLabel = brand.categorySlugs.map(categoryTitle).join(", ");
+
 const keyFacts = [
-  { label: "Category", value: category?.title ?? brand.category },
-  { label: "Product types", value: brand.productTypes.join(", ") },
+  { label: "Category", value: categoriesLabel || category?.title || brand.category },
+  m?.productTypes && { label: "Product types", value: m.productTypes.join(", ") },
+  items.length > 0 && {
+    label: "In our catalogue",
+    value: `${items.length} ${items.length === 1 ? "model" : "models"}`,
+  },
   { label: "Supplied and installed", value: "Yes" },
   { label: "Warranty", value: "Manufacturer terms — stated on your quote" },
-];
+].filter(Boolean);
+
+/*
+ * Forty-five brands sharing one template will collide on the duplicate title
+ * and description checks unless each is genuinely distinct, so both fall back
+ * to something built from that brand's own catalogue.
+ */
+const metaTitle = m?.metaTitle ?? `${brand.name} — Supplied & Installed | ${business.name}`;
+const metaDescription =
+  m?.metaDescription ??
+  `${brand.name} ${categoriesLabel.toLowerCase()} supplied and installed by ${business.name}. ` +
+    `${items.length} ${items.length === 1 ? "model" : "models"} in our catalogue, with datasheets and warranty documents.`;
+const intro =
+  m?.intro ??
+  `We supply and install ${brand.name} ${categoriesLabel.toLowerCase()}. Every model we carry is listed below with its specification and, where the manufacturer publishes them, its datasheet, installation manual and warranty document.`;
+const summary =
+  m?.summary ?? `${brand.name} ${categoriesLabel.toLowerCase()}, supplied and installed across Victoria and New South Wales.`;
 ---
 
 <BaseLayout
-  title={brand.metaTitle}
-  description={brand.metaDescription}
+  title={metaTitle}
+  description={metaDescription}
   path={`/brands/${brand.slug}/`}
-  schemas={[productSchema(brand), breadcrumbSchema(crumbs)]}
+  schemas={[productSchema({ ...brand, summary, productTypes: m?.productTypes }), breadcrumbSchema(crumbs)]}
 >
   <InnerHero
-    kicker={category?.title}
+    kicker={categoriesLabel}
     heading={`${brand.name} — supplied and installed`}
-    body={brand.summary}
+    body={summary}
     crumbs={crumbs}
     variant="compact"
     ctaLabel="Get a Quote"
@@ -60,28 +109,49 @@ const keyFacts = [
 
   <section class="section">
     <div class="container">
-      <SplitFeature heading={`About ${brand.name}`} body={brand.intro} level={2}>
-        <KeyFacts slot="media" facts={keyFacts} level={2} />
+      <SplitFeature heading={`About ${brand.name}`} body={intro} level={2}>
+        <div slot="media" class="brandMedia">
+          <BrandLogo brand={brand} priority class="brandMedia__logo" />
+          <KeyFacts facts={keyFacts} level={2} />
+        </div>
       </SplitFeature>
     </div>
   </section>
 
-  <section class="section section--surface">
+  {
+    productCards.length > 0 && (
+      <section class="section section--surface">
+        <div class="container">
+          <SectionHeader
+            kicker="Catalogue"
+            heading={`${brand.name} models we supply`}
+            body="Specifications and documents come from the manufacturer. Anything marked temporarily unavailable is not being ordered right now — ask and we will suggest an equivalent."
+            level={2}
+          />
+          <FeatureCardGrid items={productCards} columns={3} level={3} />
+        </div>
+      </section>
+    )
+  }
+
+  {m?.strengths?.length > 0 && (
+  <section class="section">
     <div class="container">
       <div class="balance">
         <div class="balance__col">
           <SectionHeader heading={`Where ${brand.name} is the right choice`} level={2} />
           <ul class="balance__list" role="list">
-            {brand.strengths.map((s) => <li>{s}</li>)}
+            {m.strengths.map((s) => <li>{s}</li>)}
           </ul>
         </div>
         <div class="balance__col balance__col--caution">
           <SectionHeader heading="What to weigh up" level={2} />
-          <p class="balance__body">{brand.considerations}</p>
+          <p class="balance__body">{m.considerations}</p>
         </div>
       </div>
     </div>
   </section>
+  )}
 
   <section class="section section--alt">
     <div class="container quoteRow">
@@ -105,7 +175,7 @@ const keyFacts = [
     siblings.length > 0 && (
       <section class="section">
         <div class="container">
-          <SectionHeader heading={`Other ${category?.title.toLowerCase() ?? "products"} we install`} level={2} />
+          <SectionHeader heading={`Other ${(category?.title ?? "product").toLowerCase()} brands we install`} level={2} />
           <FeatureCardGrid items={siblings} columns={3} level={3} />
         </div>
       </section>
@@ -114,6 +184,20 @@ const keyFacts = [
 </BaseLayout>
 
 <style>
+  .brandMedia {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-5);
+  }
+
+  .brandMedia__logo {
+    height: 60px;
+    padding: var(--s-5);
+    border: 1px solid var(--c-line);
+    border-radius: var(--r-md);
+    background: var(--c-surface);
+  }
+
   .balance {
     display: grid;
     grid-template-columns: 1fr 1fr;

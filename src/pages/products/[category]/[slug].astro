@@ -1,0 +1,22 @@
+---
+/**
+ * One page per row in catalogue.json. No hand-written product pages.
+ *
+ * Sits alongside products/[category].astro, which renders the category
+ * listings — Astro resolves /products/panels/ to that and
+ * /products/panels/jinko-… to this.
+ */
+import ProductPage from "../../../templates/ProductPage.astro";
+import { products } from "../../../lib/catalogue.js";
+
+export function getStaticPaths() {
+  return products.map((product) => ({
+    params: { category: product.categorySlug, slug: product.slug },
+    props: { product },
+  }));
+}
+
+const { product } = Astro.props;
+---
+
+<ProductPage product={product} />

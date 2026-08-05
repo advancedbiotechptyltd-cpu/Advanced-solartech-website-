@@ -97,6 +97,34 @@ export function serviceSchema(service, areaServed = business.areaServed) {
   };
 }
 
+/**
+ * A specific catalogue product.
+ *
+ * No `offers` block: we publish no price, and inventing one to win a rich
+ * result is a misrepresentation. Availability is what a buyer actually needs
+ * and the part we do know.
+ */
+export function catalogueProductSchema(product) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: `${product.brand} ${product.model}`,
+    sku: product.slug,
+    brand: { "@type": "Brand", name: product.brand },
+    category: product.category,
+    url: absoluteUrl(`/products/${product.categorySlug}/${product.slug}/`),
+  };
+  if (product.specs) schema.description = product.specs;
+  if (product.power_or_capacity) {
+    schema.additionalProperty = {
+      "@type": "PropertyValue",
+      name: product.category === "Battery" ? "Usable capacity" : "Rated output",
+      value: product.power_or_capacity,
+    };
+  }
+  return schema;
+}
+
 /** Brand pages describe a product line, not a specific SKU with a price. */
 export function productSchema(brand) {
   return {

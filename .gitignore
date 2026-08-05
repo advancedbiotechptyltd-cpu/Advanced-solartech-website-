@@ -14,11 +14,19 @@ dist/
 # noticing.
 redirects-for-*.conf
 
-# Supplier catalogue data — see docs/README.md.
-# 247 product-supplier lines with a price column: the commercial core of the
-# business, in a repository that belongs to a different company. It needs its
-# own repo and a backend that can authenticate staff, not a static site folder.
+# The PRIVATE supplier catalogue — see docs/README.md.
+#
+# Supplier lines with a price column: the commercial core of the business, and
+# this repository is public. It needs its own private repo and a backend that
+# can authenticate staff.
+#
+# Not to be confused with src/data/catalogue.json, which is the PUBLIC product
+# catalogue — brand, model, specs and manufacturer document links, no supplier
+# codes and no prices. That one is the source of the /products pages and is
+# committed on purpose, so it is un-ignored below.
 catalogue*.json
 catalogue*.csv
 catalogue*.xlsx
+catalogue-seed.*
 products-by-supplier.*
+!src/data/catalogue.json

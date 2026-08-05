@@ -65,6 +65,13 @@ for (const [path, mod] of Object.entries(photos)) {
 
 const {
   name,
+  /*
+   * Tried when `name` resolves to nothing. Lets 245 product pages fall back to
+   * a category illustration instead of a "photo coming soon" panel — the
+   * generic placeholder is right for a slot awaiting a specific photo, wrong
+   * for one that has a perfectly good stand-in.
+   */
+  fallbackName,
   alt,
   ratio = "4 / 3",
   // Set on the one image above the fold. Everything else lazy-loads.
@@ -76,7 +83,7 @@ const {
   class: className = "",
 } = Astro.props;
 
-const asset = name ? byName[name] : null;
+const asset = (name ? byName[name] : null) ?? (fallbackName ? byName[fallbackName] : null);
 const image = asset?.kind === "photo" ? asset.src : null;
 const illustration = asset?.kind === "illustration" ? asset.src : null;
 

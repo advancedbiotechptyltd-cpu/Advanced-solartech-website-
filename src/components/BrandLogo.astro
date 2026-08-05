@@ -1,0 +1,122 @@
+---
+/**
+ * BrandLogo — a manufacturer's logo, or a clean text badge if we do not have it.
+ *
+ * Drop `src/images/brands/{brand_slug}.svg` (or .png/.webp) in and it appears.
+ * With 51 brands most files will be missing for a long time, so the fallback is
+ * the normal state rather than an error state: a monochrome wordmark that sits
+ * in the same box at the same size, so a strip of 51 looks deliberate whether
+ * two logos are present or all of them.
+ *
+ * A broken-image icon in a row of manufacturer logos reads as a dead site, which
+ * is why nothing here ever renders an <img> for a file that is not there.
+ *
+ * SVG is served as-is rather than through astro:assets — the image pipeline
+ * exists to resize and re-encode photographs, and a vector logo needs neither.
+ */
+import { Image } from "astro:assets";
+
+const raster = import.meta.glob("../images/brands/*.{png,jpg,jpeg,webp,avif}", { eager: true });
+const vector = import.meta.glob("../images/brands/*.svg", {
+  eager: true,
+  query: "?url",
+  import: "default",
+});
+
+const stem = (path) => path.split("/").pop().replace(/\.[^.]+$/, "");
+
+const logos = {};
+for (const [path, url] of Object.entries(vector)) logos[stem(path)] = { type: "svg", src: url };
+for (const [path, mod] of Object.entries(raster)) logos[stem(path)] = { type: "raster", src: mod.default };
+
+const {
+  brand,
+  /** Set on logos above the fold; everything else lazy-loads. */
+  priority = false,
+  /*
+   * When the surrounding link already names the brand, this must not name it
+   * again — a screen reader reading "AE Solar AE Solar, link" is the result of
+   * two well-meaning labels. Decorative mode silences the logo and leaves the
+   * naming to the caller.
+   */
+  decorative = false,
+  class: className = "",
+} = Astro.props;
+
+const logo = logos[brand.slug];
+const alt = decorative ? "" : `${brand.name} logo`;
+---
+
+<span class:list={["brandLogo", className]}>
+  {
+    logo?.type === "svg" ? (
+      <img src={logo.src} alt={alt} loading={priority ? "eager" : "lazy"} decoding="async" width="120" height="44" />
+    ) : logo?.type === "raster" ? (
+      <Image
+        src={logo.src}
+        alt={alt}
+        widths={[120, 240]}
+        sizes="120px"
+        loading={priority ? "eager" : "lazy"}
+        decoding="async"
+      />
+    ) : (
+      /*
+       * Not an image, so it needs no alt — the brand name is the content, and
+       * a screen reader should read it once rather than twice.
+       */
+      <span class="brandLogo__text" aria-hidden={decorative ? "true" : undefined}>{brand.name}</span>
+    )
+  }
+</span>
+
+<style>
+  /* Fixed box, contained fit: logos arrive at wildly different aspect ratios,
+     and a strip whose cells change height reads as broken. */
+  .brandLogo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 44px;
+    overflow: hidden;
+  }
+
+  .brandLogo :global(img) {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    /* Manufacturer logos come in every colour there is. Muting them keeps the
+       strip from turning into a rainbow, and full colour returns on hover. */
+    filter: grayscale(1);
+    opacity: 0.75;
+    transition: filter var(--t-fast, 150ms), opacity var(--t-fast, 150ms);
+  }
+
+  .brandLogo:hover :global(img),
+  a:hover .brandLogo :global(img),
+  a:focus-visible .brandLogo :global(img) {
+    filter: none;
+    opacity: 1;
+  }
+
+  .brandLogo__text {
+    font-family: var(--ff-display);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-bold);
+    letter-spacing: -0.01em;
+    color: var(--c-navy);
+    text-align: center;
+    line-height: 1.15;
+    /* Long names must not push the cell wider than its neighbours. */
+    overflow-wrap: anywhere;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .brandLogo :global(img) {
+      transition: none;
+    }
+  }
+</style>
