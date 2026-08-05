@@ -40,12 +40,26 @@ The editor commits to GitHub, so it needs a GitHub identity. On static hosting
 there's no server to run an OAuth handshake, so use a token:
 
 1. GitHub → Settings → Developer settings → **Fine-grained personal access tokens**
-2. Repository access: **only** `advancedbiotechptyltd-cpu/ab-product-framework`
-3. Permissions: **Contents → Read and write**. Nothing else.
-4. At `/admin/`, choose **Sign In Using Access Token** and paste it.
+   → **Generate new token**
+2. Repository access: **Only select repositories** →
+   `advancedbiotechptyltd-cpu/Advanced-solartech-website-`
+3. Permissions → Repository permissions:
+   - **Contents: Read and write** — this is the one that matters
+   - **Metadata: Read-only** — GitHub adds this automatically; leave it
+   - Nothing else
+4. Expiration: 90 days is a sensible default. A token that never expires is one
+   nobody ever gets around to revoking.
+5. Generate, and copy the token — GitHub shows it once.
+6. At `/admin/`, choose **Sign In Using Access Token** and paste it.
 
 One token per staff member, so access can be revoked individually. Scope it to
 the one repository — a broader token is a much bigger loss if it leaks.
+
+**The `/admin/` page itself is public**, because it is a static file on a static
+host. That is fine: it is an empty shell until someone supplies a token, and the
+token is the actual access control. Anyone without one sees a sign-in prompt and
+nothing else. If that still feels wrong, put an `.htaccess` password on the
+`/admin/` directory in cPanel — belt and braces, and it costs nothing.
 
 If you later want one-click "Sign in with GitHub", that needs an OAuth proxy
 (a small Cloudflare Worker). See the comment at the top of

@@ -24,14 +24,23 @@ backend:
   # and static cPanel hosting cannot run one. Rather than stand up a Cloudflare
   # Worker for a handful of staff, sign in with "Sign In Using Access Token" —
   # a fine-grained GitHub token scoped to this one repository, with Contents:
-  # read and write. Setup is in README.md.
+  # read and write, and Metadata: read. Setup is in README.md.
   #
   # If you later want one-click GitHub login, deploy an OAuth proxy and set:
   #   base_url: https://your-worker.workers.dev
   #   auth_endpoint: auth
 
-# Staff can preview a draft before publishing.
-publish_mode: editorial_workflow
+# Simple mode: Save commits straight to the branch, and the deploy Action puts
+# the result on the /new staging site within a couple of minutes.
+#
+# Not editorial_workflow, which routes every edit through a pull request. That
+# would need Pull requests: read and write on the token as well, and it puts a
+# review queue in front of people whose review environment is already the
+# staging site — production is a separate manual dispatch either way, so nothing
+# reaches the public site by saving here.
+#
+# If a formal approval step is ever wanted, set publish_mode: editorial_workflow
+# and widen the token to include Pull requests: read and write.
 
 # Drag-and-drop uploads land where the build already looks for photos, so a
 # picture added here is resized, converted to WebP and given a srcset
@@ -39,8 +48,10 @@ publish_mode: editorial_workflow
 media_folder: src/images
 public_folder: /
 
-site_url: https://advancedsolartec.com.au
-display_url: https://advancedsolartec.com.au
+# Where the "View site" link goes. Point these at /new while the site is still
+# in preview, or the link lands on the old WordPress site.
+site_url: https://advancedsolartec.com.au/new/
+display_url: https://advancedsolartec.com.au/new/
 logo_url: https://advancedsolartec.com.au/favicon.svg
 
 collections:

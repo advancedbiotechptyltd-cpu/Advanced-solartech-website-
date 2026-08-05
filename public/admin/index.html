@@ -34,8 +34,13 @@
       Self-hosted rather than loaded from a CDN. A CDN script would be a
       third-party dependency sitting in front of the tool that edits the whole
       site, and it would break the moment that CDN has a bad day.
+
+      Relative, not "/admin/sveltia-cms.js". This file is copied verbatim from
+      public/, so Astro never rewrites its paths for the base — an absolute path
+      resolves to the domain root and 404s on the /new staging deploy, which is
+      the only place anyone is editing before launch. Relative works at both.
     -->
-    <script src="/admin/sveltia-cms.js"></script>
+    <script src="./sveltia-cms.js"></script>
     <script>
       // The CMS replaces the whole body when it boots. If it does, the fallback
       // goes with it; if it doesn't, the message above stays visible.
