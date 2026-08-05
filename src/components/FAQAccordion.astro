@@ -1,0 +1,150 @@
+---
+/**
+ * FAQAccordion — the AIO workhorse.
+ *
+ * Answers live in the HTML at build time, not behind JS, so a crawler that does
+ * not execute scripts still reads every answer. The panels start visible and
+ * are collapsed by the global script on load, which means a no-JS visitor sees
+ * the full Q&A rather than a list of unopenable headings.
+ *
+ * The matching FAQPage JSON-LD is emitted by the template from the same array —
+ * Google requires the marked-up Q&A to be visible on the page, and building
+ * both from one source is how that stays true.
+ */
+const { faqs = [], heading = "Common questions", level = 2, id = "faqs" } = Astro.props;
+const Heading = `h${level}`;
+---
+
+{
+  faqs.length > 0 && (
+    <div class="faq" id={id} data-reveal>
+      <Heading class="faq__heading">{heading}</Heading>
+
+      <div class="faq__list">
+        {faqs.map((f, i) => (
+          <div class="faq__item">
+            <h3 class="faq__q">
+              <button
+                type="button"
+                class="faq__trigger"
+                data-accordion-trigger
+                aria-expanded="true"
+                aria-controls={`${id}-panel-${i}`}
+                id={`${id}-trigger-${i}`}
+              >
+                <span>{f.question}</span>
+                <span class="faq__chev" aria-hidden="true" />
+              </button>
+            </h3>
+            <div
+              class="faq__a"
+              id={`${id}-panel-${i}`}
+              role="region"
+              aria-labelledby={`${id}-trigger-${i}`}
+            >
+              <p>{f.answer}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+<script>
+  // Collapse on load. Runs inline so the closed state is applied before paint,
+  // avoiding a flash of every panel open — but if JS never runs, the answers
+  // simply stay visible, which is the safe failure mode.
+  document.querySelectorAll("[data-accordion-trigger]").forEach((btn, i) => {
+    const panel = document.getElementById(btn.getAttribute("aria-controls"));
+    if (panel && i !== 0) {
+      panel.hidden = true;
+      btn.setAttribute("aria-expanded", "false");
+    }
+  });
+</script>
+
+<style>
+  .faq__heading {
+    margin-bottom: var(--s-6);
+  }
+
+  .faq__list {
+    border-top: 1px solid var(--c-line);
+  }
+
+  .faq__item {
+    border-bottom: 1px solid var(--c-line);
+  }
+
+  .faq__q {
+    margin: 0;
+    font-size: inherit;
+  }
+
+  .faq__trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-4);
+    width: 100%;
+    padding: var(--s-5) 0;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    text-align: left;
+    font-family: var(--font-heading);
+    font-size: var(--fs-h4);
+    font-weight: var(--fw-bold);
+    color: var(--c-navy);
+  }
+
+  .faq__trigger:hover {
+    color: var(--c-gold-text);
+  }
+
+  .faq__chev {
+    position: relative;
+    flex-shrink: 0;
+    width: 14px;
+    height: 14px;
+  }
+
+  .faq__chev::before,
+  .faq__chev::after {
+    content: "";
+    position: absolute;
+    background: currentColor;
+    border-radius: var(--r-pill);
+    transition: transform var(--t-base), opacity var(--t-base);
+  }
+
+  .faq__chev::before {
+    top: 6px;
+    left: 0;
+    width: 14px;
+    height: 2px;
+  }
+
+  .faq__chev::after {
+    top: 0;
+    left: 6px;
+    width: 2px;
+    height: 14px;
+  }
+
+  .faq__trigger[aria-expanded="true"] .faq__chev::after {
+    transform: scaleY(0);
+    opacity: 0;
+  }
+
+  .faq__a {
+    padding-bottom: var(--s-5);
+    max-width: 76ch;
+  }
+
+  .faq__a p {
+    font-size: var(--fs-base);
+    color: var(--c-muted);
+  }
+</style>

@@ -1,0 +1,16 @@
+---
+/** One page per state/territory in locations.json. */
+import LocationTemplate from "../../../templates/LocationTemplate.astro";
+import { locations } from "../../../lib/site.js";
+
+export function getStaticPaths() {
+  return locations.map((location) => ({
+    params: { state: location.slug },
+    props: { location },
+  }));
+}
+
+const { location } = Astro.props;
+---
+
+<LocationTemplate location={location} />

@@ -1,0 +1,238 @@
+---
+/**
+ * ServiceTemplate — one layout for all four services, and for any service
+ * added to services.json later. Nothing here is service-specific.
+ */
+import BaseLayout from "../layouts/BaseLayout.astro";
+import InnerHero from "../components/InnerHero.astro";
+import SplitFeature from "../components/SplitFeature.astro";
+import SectionHeader from "../components/SectionHeader.astro";
+import FeatureCardGrid from "../components/FeatureCardGrid.astro";
+import StepsProcess from "../components/StepsProcess.astro";
+import FAQAccordion from "../components/FAQAccordion.astro";
+import KeyFacts from "../components/KeyFacts.astro";
+import Figure from "../components/Figure.astro";
+import LeadForm from "../components/LeadForm.astro";
+import LogoStrip from "../components/LogoStrip.astro";
+import TestimonialGrid from "../components/TestimonialGrid.astro";
+import TrustBar from "../components/TrustBar.astro";
+import {
+  getFaqs,
+  getProcess,
+  getBrandsByCategory,
+  getService,
+  photoAlt,
+  business,
+} from "../lib/site.js";
+import { serviceSchema, faqSchema, breadcrumbSchema } from "../lib/schema.js";
+
+const { service } = Astro.props;
+
+const faqs = getFaqs(service.faqs);
+const process = getProcess(service.process);
+const relatedBrands = getBrandsByCategory(service.relatedBrandCategory);
+
+/*
+ * Headings like "Get a … quote" read wrong when the title is a plural noun
+ * phrase ("Get a hot water heat pumps quote"). quoteNoun is the singular form
+ * to use in running prose; services without one keep the old behaviour.
+ */
+const noun = service.quoteNoun ?? service.title.toLowerCase();
+
+/*
+ * Brands the business installs but does not have a full brand page for. A
+ * brand page needs real product and performance detail; a name list is the
+ * honest version when that detail isn't on hand.
+ */
+const brandsInstalled = service.brandsInstalled;
+const relatedServices = (service.relatedServices ?? [])
+  .map(getService)
+  .filter(Boolean)
+  .map((s) => ({
+    title: s.title,
+    summary: s.summary,
+    icon: s.icon,
+    href: `/services/${s.slug}/`,
+  }));
+
+const crumbs = [
+  { label: "Services", href: "/services/" },
+  { label: service.title, href: `/services/${service.slug}/` },
+];
+---
+
+<BaseLayout
+  title={service.metaTitle}
+  description={service.metaDescription}
+  path={`/services/${service.slug}/`}
+  schemas={[serviceSchema(service), faqSchema(faqs), breadcrumbSchema(crumbs)]}
+>
+  <InnerHero
+    kicker={service.heroKicker}
+    heading={service.heroHeading}
+    body={service.heroBody}
+    crumbs={crumbs}
+    ctaLabel="Get a Quote"
+    ctaHref="/quote/"
+  />
+
+  <section class="section">
+    <div class="container">
+      <SplitFeature heading={`About our ${service.title.toLowerCase()}`} body={service.intro} level={2}>
+        <div slot="media" class="serviceMedia">
+          <Figure
+            name={`service-${service.slug}`}
+            alt={photoAlt(
+              `${service.title} installation`,
+              `${service.title} installed by ${business.name}`
+            )}
+            ratio="4 / 3"
+          />
+          <KeyFacts facts={service.keyFacts} level={2} />
+        </div>
+      </SplitFeature>
+    </div>
+  </section>
+
+  <section class="section section--surface">
+    <div class="container">
+      <SectionHeader
+        kicker="What you get"
+        heading={`Why our ${noun} quotes look different`}
+      />
+      <FeatureCardGrid items={service.benefits} columns={2} level={3} />
+    </div>
+  </section>
+
+  {
+    process && (
+      <section class="section">
+        <div class="container">
+          <StepsProcess heading={process.heading} steps={process.steps} level={2} />
+        </div>
+      </section>
+    )
+  }
+
+  {
+    relatedBrands.length > 0 && (
+      <LogoStrip
+        items={relatedBrands}
+        heading={`${service.title} brands we supply`}
+        level={2}
+      />
+    )
+  }
+
+  {
+    brandsInstalled?.names?.length > 0 && (
+      <section class="section">
+        <div class="container">
+          <SectionHeader
+            kicker="Brands"
+            heading={brandsInstalled.heading}
+            body={brandsInstalled.body}
+            level={2}
+          />
+          <ul class="brandNames" role="list">
+            {brandsInstalled.names.map((name) => (
+              <li class="brandNames__item">{name}</li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+
+  <TrustBar />
+
+  <TestimonialGrid heading={`${service.title} customers`} />
+
+  <section class="section section--alt">
+    <div class="container quoteRow">
+      <div class="quoteRow__text">
+        <SectionHeader
+          kicker="Next step"
+          heading={`Get a ${noun} quote`}
+          body="Send us your details and a recent bill. We'll come back with a system size, a price after rebates, and the assumptions behind both."
+        />
+      </div>
+      <LeadForm
+        id={`lead-${service.slug}`}
+        heading="Request your quote"
+        body="Two quick steps. We'll be in touch shortly."
+        source={`service:${service.slug}`}
+        compact
+      />
+    </div>
+  </section>
+
+  {
+    faqs.length > 0 && (
+      <section class="section section--surface">
+        <div class="container container--narrow">
+          <FAQAccordion faqs={faqs} heading={`${service.title} questions`} id={`faq-${service.slug}`} />
+        </div>
+      </section>
+    )
+  }
+
+  {
+    relatedServices.length > 0 && (
+      <section class="section">
+        <div class="container">
+          <SectionHeader heading="Related services" level={2} />
+          <FeatureCardGrid items={relatedServices} columns={2} level={3} />
+        </div>
+      </section>
+    )
+  }
+</BaseLayout>
+
+<style>
+  .serviceMedia {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-5);
+  }
+
+  .brandNames {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-3);
+    list-style: none;
+    margin: var(--s-6) 0 0;
+    padding: 0;
+  }
+
+  .brandNames__item {
+    padding: var(--s-2) var(--s-4);
+    border: 1px solid var(--c-line);
+    border-radius: var(--r-pill);
+    background: var(--c-surface);
+    color: var(--c-navy);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-semibold);
+  }
+
+  .quoteRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(var(--s-6), 5vw, var(--s-9));
+    align-items: start;
+  }
+
+  .quoteRow__text {
+    position: sticky;
+    top: calc(var(--header-h) + var(--s-6));
+  }
+
+  @media (max-width: 960px) {
+    .quoteRow {
+      grid-template-columns: 1fr;
+    }
+    .quoteRow__text {
+      position: static;
+    }
+  }
+</style>

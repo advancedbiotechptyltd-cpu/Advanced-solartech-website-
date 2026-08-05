@@ -1,0 +1,78 @@
+---
+/**
+ * Breadcrumbs — visible trail. The matching BreadcrumbList JSON-LD is emitted
+ * by the template from the same `crumbs` array, so the two can never disagree.
+ */
+import { href } from "../lib/site.js";
+
+const { crumbs = [] } = Astro.props;
+const trail = [{ label: "Home", href: "/" }, ...crumbs];
+---
+
+{
+  trail.length > 1 && (
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <ol>
+        {trail.map((c, i) => {
+          const isLast = i === trail.length - 1;
+          return (
+            <li>
+              {isLast ? (
+                <span aria-current="page">{c.label}</span>
+              ) : (
+                <>
+                  <a href={href(c.href)}>{c.label}</a>
+                  <span class="crumbs__sep" aria-hidden="true">
+                    /
+                  </span>
+                </>
+              )}
+            </li>
+          );
+        })}
+      </ol>
+    </nav>
+  )
+}
+
+<style>
+  .crumbs {
+    margin-bottom: var(--s-5);
+  }
+
+  .crumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-2);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: var(--fs-xs);
+  }
+
+  .crumbs li {
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+  }
+
+  .crumbs a {
+    color: var(--c-muted);
+    text-decoration: none;
+  }
+
+  .crumbs a:hover {
+    color: var(--c-navy);
+    text-decoration: underline;
+  }
+
+  .crumbs [aria-current="page"] {
+    color: var(--c-navy);
+    font-weight: var(--fw-medium);
+  }
+
+  .crumbs__sep {
+    color: var(--c-line);
+  }
+</style>

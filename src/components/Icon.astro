@@ -1,0 +1,48 @@
+---
+/**
+ * Icon — inline SVG sprite.
+ *
+ * Inline rather than an icon font or external file: no extra request, no FOIT,
+ * and `currentColor` means icons inherit whatever the surrounding text does.
+ */
+const { name, size = 24 } = Astro.props;
+
+const paths = {
+  sun: "M12 17a5 5 0 100-10 5 5 0 000 10zm0-13.5V1m0 22v-2.5M4.2 4.2L2.4 2.4m19.2 19.2l-1.8-1.8M3.5 12H1m22 0h-2.5M4.2 19.8l-1.8 1.8M21.6 2.4l-1.8 1.8",
+  battery: "M4 8h13a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4a2 2 0 012-2zm18 2.5v3M6 10.5v3m3.5-3v3",
+  ev: "M5 4h9a2 2 0 012 2v13H3V6a2 2 0 012-2zm2 5h5m-5 4h5m5-5l2.2 2.2a2 2 0 01.6 1.4V16a1.6 1.6 0 11-3.2 0",
+  building: "M3 21h18M5 21V4a1 1 0 011-1h7a1 1 0 011 1v17M14 9h4a1 1 0 011 1v11M8 7h3M8 11h3M8 15h3",
+  check: "M20 6L9 17l-5-5",
+  shield: "M12 2l8 4v6c0 5-3.4 8.8-8 10-4.6-1.2-8-5-8-10V6l8-4z",
+  bolt: "M13 2L4 14h7l-1 8 9-12h-7l1-8z",
+  chart: "M3 3v18h18M7 15l4-5 3 3 5-7",
+  clock: "M12 22a10 10 0 100-20 10 10 0 000 20zm0-15v5l3.5 2",
+  home: "M3 10.5L12 3l9 7.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1v-9.5z",
+  pin: "M12 21s7-6.2 7-11a7 7 0 10-14 0c0 4.8 7 11 7 11zm0-8.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z",
+  doc: "M14 2H6a1 1 0 00-1 1v18a1 1 0 001 1h12a1 1 0 001-1V7l-5-5zm0 0v5h5M9 13h6M9 17h6",
+};
+
+const d = paths[name] ?? paths.check;
+---
+
+<svg
+  class="icon"
+  width={size}
+  height={size}
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.7"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+  focusable="false"
+>
+  <path d={d}></path>
+</svg>
+
+<style>
+  .icon {
+    flex-shrink: 0;
+  }
+</style>

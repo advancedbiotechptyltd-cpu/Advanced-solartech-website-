@@ -1,0 +1,124 @@
+---
+/**
+ * AccreditationLogo — one accreditation badge.
+ *
+ * Drop the official logo into `src/images/accreditations/` as `<name>.png`
+ * (or .svg/.jpg/.webp) and it appears. Until then the badge renders as an icon
+ * and the accreditation's name, which is a correct and complete trust signal on
+ * its own — the logo is the decoration, not the claim.
+ *
+ * That fallback is the point. Every one of these marks belongs to somebody
+ * else, and each program has its own rules about size, clear space and who may
+ * display it. A missing file must therefore degrade to text, never to a broken
+ * image or an invented graphic.
+ *
+ * SVG is handled separately from raster: astro:assets does not process SVG
+ * imports the way it does photographs, so those come through `?url` as a plain
+ * <img src>.
+ */
+import { Image } from "astro:assets";
+import Icon from "./Icon.astro";
+
+const raster = import.meta.glob("../images/accreditations/*.{png,jpg,jpeg,webp,avif}", {
+  eager: true,
+});
+const vector = import.meta.glob("../images/accreditations/*.svg", {
+  eager: true,
+  query: "?url",
+  import: "default",
+});
+
+const byName = {};
+for (const [path, mod] of Object.entries(raster)) {
+  byName[path.split("/").pop().replace(/\.[^.]+$/, "")] = { type: "raster", src: mod.default };
+}
+for (const [path, url] of Object.entries(vector)) {
+  byName[path.split("/").pop().replace(/\.[^.]+$/, "")] = { type: "vector", src: url };
+}
+
+const { item } = Astro.props;
+const logo = item.logo ? byName[item.logo] : null;
+
+// The logo already carries the accreditation's name, so repeating it in alt
+// text would make a screen reader say it twice.
+const alt = `${item.title} logo`;
+---
+
+<li class="accred">
+  {
+    logo ? (
+      <span class="accred__logo">
+        {logo.type === "vector" ? (
+          <img src={logo.src} alt={alt} loading="lazy" decoding="async" height="52" />
+        ) : (
+          <Image src={logo.src} alt={alt} widths={[160, 320]} sizes="160px" loading="lazy" decoding="async" />
+        )}
+      </span>
+    ) : (
+      <span class="accred__icon" aria-hidden="true">
+        <Icon name={item.icon ?? "shield"} size={20} />
+      </span>
+    )
+  }
+
+  <span class="accred__text">
+    <strong>{item.title}</strong>
+    {item.detail && <span>{item.detail}</span>}
+  </span>
+</li>
+
+<style>
+  .accred {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--s-3);
+  }
+
+  .accred__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--r-md);
+    background: var(--c-green-100);
+    color: var(--c-green);
+  }
+
+  /* Fixed box, contained fit: logos arrive at wildly different aspect ratios,
+     and a row of badges that jump in height reads as broken. */
+  .accred__logo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 84px;
+    height: 52px;
+  }
+
+  .accred__logo :global(img) {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .accred__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-1);
+    font-size: var(--fs-sm);
+  }
+
+  .accred__text strong {
+    color: var(--c-navy);
+    font-weight: var(--fw-semibold);
+  }
+
+  .accred__text span {
+    color: var(--c-muted);
+    font-size: var(--fs-xs);
+  }
+</style>

@@ -1,0 +1,76 @@
+---
+/**
+ * TrustBar — accreditations and guarantees.
+ *
+ * Renders nothing while business.json marks accreditations as placeholder.
+ * Accreditation claims (Clean Energy Council approved retailer, accredited
+ * installer, and similar) are regulated representations — publishing one that
+ * cannot be evidenced is a false trade claim, so the empty state is the
+ * correct default rather than a gap to fill with something plausible.
+ */
+import { getAccreditations, getInstallerStatement } from "../lib/site.js";
+import AccreditationLogo from "./AccreditationLogo.astro";
+
+const {
+  items = getAccreditations(),
+  /*
+   * Six unlabelled badges read as decoration. A heading says what they are —
+   * and gives the section a landmark name, so it is reachable rather than an
+   * anonymous list of images.
+   */
+  heading = "Accredited and approved",
+  /*
+   * Who actually does the work, stated in one line. It sits with the badges
+   * because that is the question the badges raise — an approved retailer is not
+   * necessarily the party on the roof.
+   */
+  statement = getInstallerStatement(),
+} = Astro.props;
+---
+
+{
+  items.length > 0 && (
+    <section class="trust section--tight" data-reveal aria-labelledby="trust-heading">
+      <div class="container">
+        <h2 class="trust__heading" id="trust-heading">
+          {heading}
+        </h2>
+        <ul class="trust__list" role="list">
+          {items.map((item) => (
+            <AccreditationLogo item={item} />
+          ))}
+        </ul>
+        {statement && <p class="trust__statement">{statement}</p>}
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .trust__heading {
+    margin: 0 0 var(--s-6);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-semibold);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--c-muted);
+  }
+
+  .trust__statement {
+    margin: var(--s-6) 0 0;
+    padding-top: var(--s-5);
+    border-top: 1px solid var(--c-line);
+    font-size: var(--fs-sm);
+    color: var(--c-navy);
+  }
+
+  .trust__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--s-5);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+</style>

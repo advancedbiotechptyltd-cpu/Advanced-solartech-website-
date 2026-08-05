@@ -1,0 +1,160 @@
+---
+/**
+ * BrandTemplate — one page per brand, generated from brands.json.
+ *
+ * Every brand page carries a `considerations` section as well as `strengths`.
+ * A page that only lists strengths reads as marketing copy to a person and as
+ * thin promotional content to a crawler; the trade-offs are what make it a
+ * page worth ranking.
+ */
+import BaseLayout from "../layouts/BaseLayout.astro";
+import InnerHero from "../components/InnerHero.astro";
+import SplitFeature from "../components/SplitFeature.astro";
+import SectionHeader from "../components/SectionHeader.astro";
+import KeyFacts from "../components/KeyFacts.astro";
+import FeatureCardGrid from "../components/FeatureCardGrid.astro";
+import LeadForm from "../components/LeadForm.astro";
+import { getBrandsByCategory, PRODUCT_CATEGORIES } from "../lib/site.js";
+import { productSchema, breadcrumbSchema } from "../lib/schema.js";
+
+const { brand } = Astro.props;
+
+const category = PRODUCT_CATEGORIES.find((c) => c.slug === brand.category);
+const siblings = getBrandsByCategory(brand.category)
+  .filter((b) => b.slug !== brand.slug)
+  .map((b) => ({
+    title: b.name,
+    summary: b.summary,
+    href: `/brands/${b.slug}/`,
+  }));
+
+const crumbs = [
+  { label: "Products", href: "/products/" },
+  { label: category?.title ?? "Products", href: `/products/${brand.category}/` },
+  { label: brand.name, href: `/brands/${brand.slug}/` },
+];
+
+const keyFacts = [
+  { label: "Category", value: category?.title ?? brand.category },
+  { label: "Product types", value: brand.productTypes.join(", ") },
+  { label: "Supplied and installed", value: "Yes" },
+  { label: "Warranty", value: "Manufacturer terms — stated on your quote" },
+];
+---
+
+<BaseLayout
+  title={brand.metaTitle}
+  description={brand.metaDescription}
+  path={`/brands/${brand.slug}/`}
+  schemas={[productSchema(brand), breadcrumbSchema(crumbs)]}
+>
+  <InnerHero
+    kicker={category?.title}
+    heading={`${brand.name} — supplied and installed`}
+    body={brand.summary}
+    crumbs={crumbs}
+    variant="compact"
+    ctaLabel="Get a Quote"
+    ctaHref="/quote/"
+  />
+
+  <section class="section">
+    <div class="container">
+      <SplitFeature heading={`About ${brand.name}`} body={brand.intro} level={2}>
+        <KeyFacts slot="media" facts={keyFacts} level={2} />
+      </SplitFeature>
+    </div>
+  </section>
+
+  <section class="section section--surface">
+    <div class="container">
+      <div class="balance">
+        <div class="balance__col">
+          <SectionHeader heading={`Where ${brand.name} is the right choice`} level={2} />
+          <ul class="balance__list" role="list">
+            {brand.strengths.map((s) => <li>{s}</li>)}
+          </ul>
+        </div>
+        <div class="balance__col balance__col--caution">
+          <SectionHeader heading="What to weigh up" level={2} />
+          <p class="balance__body">{brand.considerations}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="container quoteRow">
+      <SectionHeader
+        kicker="Next step"
+        heading={`Ask us whether ${brand.name} suits your roof`}
+        body="Product choice should follow the site assessment, not lead it. Send us your details and we'll tell you what actually fits."
+        level={2}
+      />
+      <LeadForm
+        id={`lead-${brand.slug}`}
+        heading="Request a quote"
+        body="Two quick steps. We'll be in touch shortly."
+        source={`brand:${brand.slug}`}
+        compact
+      />
+    </div>
+  </section>
+
+  {
+    siblings.length > 0 && (
+      <section class="section">
+        <div class="container">
+          <SectionHeader heading={`Other ${category?.title.toLowerCase() ?? "products"} we install`} level={2} />
+          <FeatureCardGrid items={siblings} columns={3} level={3} />
+        </div>
+      </section>
+    )
+  }
+</BaseLayout>
+
+<style>
+  .balance {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(var(--s-6), 5vw, var(--s-9));
+  }
+
+  .balance__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+    margin: 0;
+    padding-left: var(--s-5);
+  }
+
+  .balance__list li {
+    font-size: var(--fs-lg);
+  }
+
+  .balance__col--caution {
+    padding: var(--s-6);
+    background: var(--c-bg);
+    border-radius: var(--r-lg);
+    border-left: 3px solid var(--c-gold);
+  }
+
+  .balance__body {
+    font-size: var(--fs-lg);
+    color: var(--c-muted);
+  }
+
+  .quoteRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(var(--s-6), 5vw, var(--s-9));
+    align-items: start;
+  }
+
+  @media (max-width: 960px) {
+    .balance,
+    .quoteRow {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

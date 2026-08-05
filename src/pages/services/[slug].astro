@@ -1,0 +1,16 @@
+---
+/** One page per entry in services.json. Adding a service is a data change. */
+import ServiceTemplate from "../../templates/ServiceTemplate.astro";
+import { services } from "../../lib/site.js";
+
+export function getStaticPaths() {
+  return services.map((service) => ({
+    params: { slug: service.slug },
+    props: { service },
+  }));
+}
+
+const { service } = Astro.props;
+---
+
+<ServiceTemplate service={service} />

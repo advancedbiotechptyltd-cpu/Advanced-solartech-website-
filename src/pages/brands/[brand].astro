@@ -1,0 +1,16 @@
+---
+/** One page per entry in brands.json. Consolidates the old -2/-3 duplicates. */
+import BrandTemplate from "../../templates/BrandTemplate.astro";
+import { brands } from "../../lib/site.js";
+
+export function getStaticPaths() {
+  return brands.map((brand) => ({
+    params: { brand: brand.slug },
+    props: { brand },
+  }));
+}
+
+const { brand } = Astro.props;
+---
+
+<BrandTemplate brand={brand} />

@@ -1,0 +1,233 @@
+---
+/**
+ * HomeTemplate — deliberately short.
+ *
+ * Hero → services → three-point why-us → proof → CTA. A home page's job is to
+ * route people to the page that answers their actual question, not to answer
+ * every question itself.
+ *
+ * Photos do the persuading here. Every image slot renders a styled placeholder
+ * at the correct aspect ratio until the real photo is dropped into
+ * `src/images/`, so the layout is final now and adding photos shifts nothing.
+ */
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SectionHeader from "../components/SectionHeader.astro";
+import FeatureCardGrid from "../components/FeatureCardGrid.astro";
+import SplitFeature from "../components/SplitFeature.astro";
+import StatsBand from "../components/StatsBand.astro";
+import TestimonialGrid from "../components/TestimonialGrid.astro";
+import LogoStrip from "../components/LogoStrip.astro";
+import TrustBar from "../components/TrustBar.astro";
+import FAQAccordion from "../components/FAQAccordion.astro";
+import Figure from "../components/Figure.astro";
+import Gallery from "../components/Gallery.astro";
+import { business, services, telHref, getFaqs, href, usingOwnPhotos, photoAlt } from "../lib/site.js";
+import home from "../data/home.json";
+import { faqSchema } from "../lib/schema.js";
+
+const homeFaqs = getFaqs(home.faqSection.faqIds);
+
+const serviceCards = services.map((s) => ({
+  title: s.title,
+  summary: s.summary,
+  icon: s.icon,
+  image: `service-${s.slug}`,
+  imageAlt: photoAlt(`${s.title} installation`, `${s.title} installation by ${business.name}`),
+  href: `/services/${s.slug}/`,
+}));
+
+const whyUs = home.whyUsSection.items;
+
+/*
+ * Two sets of copy for the same four pictures. Until `ownPhotos` is switched on
+ * in home.json, nothing here — heading, caption or alt text — says the business
+ * did the work shown, because the photos may still be stock. Claiming otherwise
+ * would be a misleading representation, and alt text carries the claim just as
+ * much as the visible heading does.
+ */
+const ownPhotos = usingOwnPhotos();
+const workCopy = ownPhotos ? home.workSection.own : home.workSection.generic;
+const recentWork = home.workSection.items.map((item) => ({
+  ...item,
+  alt: ownPhotos ? (item.ownAlt ?? item.alt) : item.alt,
+}));
+---
+
+<BaseLayout
+  title={home.seo.title}
+  description={home.seo.description}
+  path="/"
+  schemas={[faqSchema(homeFaqs)]}
+>
+  <!-- Hero. Not wrapped in [data-reveal] — it holds the LCP element. -->
+  <section class="hero">
+    <div class="container hero__grid">
+      <div class="hero__text">
+        <p class="hero__kicker">{home.hero.kicker}</p>
+        <h1 class="hero__heading">{home.hero.heading}</h1>
+        <p class="hero__body">{home.hero.body}</p>
+        <div class="hero__actions">
+          <a class="btn btn--primary btn--lg" href={href("/quote/")}>{home.hero.primaryLabel}</a>
+          <a class="btn btn--ghost btn--lg" href={telHref()}>
+            Call {business.phoneDisplay}
+          </a>
+        </div>
+        <p class="hero__reassure">{home.hero.reassurance}</p>
+      </div>
+
+      <div class="hero__media">
+        <Figure
+          name={home.hero.image}
+          alt={photoAlt(home.hero.imageAlt, home.hero.imageAltOwn)}
+          ratio="5 / 4"
+          priority
+          sizes="(max-width: 960px) 100vw, 560px"
+          widths={[640, 900, 1200]}
+        />
+      </div>
+    </div>
+  </section>
+
+  <TrustBar />
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader
+        kicker={home.servicesSection.kicker}
+        heading={home.servicesSection.heading}
+        body={home.servicesSection.body}
+      />
+      <FeatureCardGrid items={serviceCards} columns="auto" level={3} />
+    </div>
+  </section>
+
+  <section class="section section--surface">
+    <div class="container">
+      <SectionHeader
+        kicker={workCopy.kicker}
+        heading={workCopy.heading}
+        body={workCopy.body}
+        align="center"
+        level={2}
+      />
+      <Gallery items={recentWork} columns={4} />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader
+        kicker={home.whyUsSection.kicker}
+        heading={home.whyUsSection.heading}
+        align="center"
+      />
+      <FeatureCardGrid items={whyUs} columns={3} level={3} variant="plain" />
+    </div>
+  </section>
+
+  <StatsBand heading="Advanced Solar Tech in numbers" />
+
+  <section class="section section--surface">
+    <div class="container">
+      <SplitFeature
+        kicker={home.processSection.kicker}
+        heading={home.processSection.heading}
+        body={home.processSection.body}
+        bullets={home.processSection.bullets}
+        ctaLabel={home.processSection.ctaLabel}
+        ctaHref="/quote/"
+        reverse
+      >
+        <Figure
+          slot="media"
+          name={home.processSection.image}
+          alt={photoAlt(home.processSection.imageAlt, home.processSection.imageAltOwn)}
+          ratio="4 / 3"
+        />
+      </SplitFeature>
+    </div>
+  </section>
+
+  <LogoStrip />
+
+  <TestimonialGrid />
+
+  <section class="section section--surface">
+    <div class="container container--narrow">
+      <FAQAccordion faqs={homeFaqs} heading={home.faqSection.heading} />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    background: linear-gradient(165deg, var(--c-surface-alt) 0%, var(--c-bg) 60%);
+    border-bottom: 1px solid var(--c-line);
+    padding-block: clamp(var(--s-7), 5vw, var(--s-10));
+  }
+
+  .hero__grid {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: clamp(var(--s-6), 5vw, var(--s-9));
+    align-items: center;
+  }
+
+  .hero__kicker {
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-bold);
+    text-transform: uppercase;
+    letter-spacing: var(--ls-wide);
+    color: var(--c-gold-text);
+    margin-bottom: var(--s-4);
+  }
+
+  .hero__heading {
+    font-size: var(--fs-display);
+    max-width: 16ch;
+  }
+
+  .hero__body {
+    margin-top: var(--s-5);
+    max-width: 52ch;
+    font-size: var(--fs-xl);
+    color: var(--c-muted);
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-3);
+    margin-top: var(--s-7);
+  }
+
+  .hero__reassure {
+    margin-top: var(--s-4);
+    font-size: var(--fs-xs);
+    color: var(--c-muted);
+  }
+
+  .hero__media :global(.fig__img),
+  .hero__media :global(.fig__placeholder) {
+    border-radius: var(--r-xl);
+    box-shadow: var(--sh-lg);
+  }
+
+  @media (max-width: 960px) {
+    .hero__grid {
+      grid-template-columns: 1fr;
+    }
+    /* Text first on mobile — the headline should be the first thing read,
+       not a photo pushing it below the fold. */
+    .hero__media {
+      order: 2;
+      max-width: 560px;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .hero__actions .btn {
+      flex: 1 1 100%;
+    }
+  }
+</style>

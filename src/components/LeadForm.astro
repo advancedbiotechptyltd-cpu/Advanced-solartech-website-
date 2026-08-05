@@ -1,0 +1,534 @@
+---
+/**
+ * LeadForm — two-step progressive lead capture.
+ *
+ * Step 1 asks the six fields needed to call someone back. Step 2 asks the
+ * qualifying questions, and only appears once step 1 validates — asking eleven
+ * questions up front is the most reliable way to halve a form's completion rate.
+ *
+ * The endpoint is configurable and intentionally unset by default: the form
+ * posts wherever PUBLIC_LEAD_ENDPOINT points. With no endpoint configured it
+ * refuses to submit rather than silently dropping a real enquiry.
+ */
+import { href, business, telHref, locations, getCoverage } from "../lib/site.js";
+
+const {
+  id = "lead-form",
+  heading = "Get your quote",
+  body = "Tell us where you are and how to reach you. We'll come back with a system size and a price after rebates.",
+  compact = false,
+  source = "website",
+} = Astro.props;
+
+// Configured at build time. Point it at a CRM webhook, a form service, or the
+// /f/{key} endpoint of a lead-capture backend.
+const endpoint = import.meta.env.PUBLIC_LEAD_ENDPOINT ?? "";
+
+/*
+ * State is asked in step 1, not step 2. We accept leads from anywhere, but who
+ * carries out the installation depends on the state — and someone is entitled
+ * to know that before they hand over their phone number, not after.
+ */
+const coverage = getCoverage();
+const states = locations.map((l) => ({
+  abbr: l.abbr,
+  name: l.state,
+  direct: l.serviced === true,
+}));
+---
+
+<div class:list={["leadForm", compact && "leadForm--compact"]} id={id}>
+  <div class="leadForm__head">
+    <h2 class="leadForm__heading">{heading}</h2>
+    <p class="leadForm__body">{body}</p>
+  </div>
+
+  <form
+    class="leadForm__form"
+    data-lead-form
+    data-endpoint={endpoint}
+    method="post"
+    action={endpoint || undefined}
+    novalidate
+  >
+    <input type="hidden" name="source" value={source} />
+    <!-- Spam trap. Hidden from people, filled by bots. Do not remove. -->
+    <div class="leadForm__trap" aria-hidden="true">
+      <label for={`${id}-website`}>Leave this field empty</label>
+      <input id={`${id}-website`} name="website_url" type="text" tabindex="-1" autocomplete="off" />
+    </div>
+    <!-- Render timestamp: a submission faster than a human can type is rejected. -->
+    <input type="hidden" name="_rendered" data-rendered value="" />
+
+    <!-- ── Step 1 ─────────────────────────────────────────────────────── -->
+    <fieldset class="leadForm__step" data-step="1">
+      <legend class="visually-hidden">Your contact details</legend>
+
+      <div class="leadForm__row">
+        <div class="field">
+          <label for={`${id}-first`}>First name <span aria-hidden="true">*</span></label>
+          <input id={`${id}-first`} name="first_name" type="text" autocomplete="given-name" required maxlength="80" />
+          <p class="field__error" data-error-for="first_name" hidden></p>
+        </div>
+
+        <div class="field">
+          <label for={`${id}-last`}>Last name <span aria-hidden="true">*</span></label>
+          <input id={`${id}-last`} name="last_name" type="text" autocomplete="family-name" required maxlength="80" />
+          <p class="field__error" data-error-for="last_name" hidden></p>
+        </div>
+      </div>
+
+      <div class="leadForm__row">
+        <div class="field">
+          <label for={`${id}-phone`}>Phone <span aria-hidden="true">*</span></label>
+          <input id={`${id}-phone`} name="phone" type="tel" autocomplete="tel" inputmode="tel" required maxlength="30" />
+          <p class="field__error" data-error-for="phone" hidden></p>
+        </div>
+
+        <div class="field">
+          <label for={`${id}-email`}>Email <span aria-hidden="true">*</span></label>
+          <input id={`${id}-email`} name="email" type="email" autocomplete="email" required maxlength="254" />
+          <p class="field__error" data-error-for="email" hidden></p>
+        </div>
+      </div>
+
+      <div class="leadForm__row">
+        <div class="field">
+          <label for={`${id}-postcode`}>Suburb or postcode <span aria-hidden="true">*</span></label>
+          <input id={`${id}-postcode`} name="suburb_postcode" type="text" autocomplete="postal-code" required maxlength="90" />
+          <p class="field__error" data-error-for="suburb_postcode" hidden></p>
+        </div>
+
+        <div class="field">
+          <label for={`${id}-state`}>State <span aria-hidden="true">*</span></label>
+          <select id={`${id}-state`} name="state" required data-state-select>
+            <option value="">Please choose…</option>
+            {states.map((st) => (
+              <option value={st.abbr} data-direct={st.direct ? "true" : "false"}>
+                {st.name}
+              </option>
+            ))}
+          </select>
+          <p class="field__error" data-error-for="state" hidden></p>
+        </div>
+      </div>
+
+      <p class="leadForm__coverage" data-coverage hidden>{coverage.partnerMessage}</p>
+
+      <div class="leadForm__row">
+        <div class="field">
+          <label for={`${id}-property`}>Property type <span aria-hidden="true">*</span></label>
+          <select id={`${id}-property`} name="property_type" required>
+            <option value="">Please choose…</option>
+            <option value="residential">Residential</option>
+            <option value="commercial">Commercial</option>
+          </select>
+          <p class="field__error" data-error-for="property_type" hidden></p>
+        </div>
+      </div>
+
+      <button type="button" class="btn btn--primary btn--lg btn--block" data-next>
+        Continue
+      </button>
+      <p class="leadForm__note">Takes about 30 seconds. No obligation.</p>
+    </fieldset>
+
+    <!-- ── Step 2 (revealed after step 1 validates) ───────────────────── -->
+    <fieldset class="leadForm__step" data-step="2" hidden>
+      <legend class="visually-hidden">About your property</legend>
+
+      <div class="field">
+        <label for={`${id}-interest`}>What are you interested in?</label>
+        <select id={`${id}-interest`} name="interest">
+          <option value="">Not sure yet</option>
+          <option value="solar">Solar panels</option>
+          <option value="solar-battery">Solar and battery</option>
+          <option value="battery">Battery only</option>
+          <option value="heat-pump">Hot water heat pump</option>
+          <option value="ev">EV charger</option>
+          <option value="commercial">Commercial solar</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for={`${id}-bill`}>Roughly what is your quarterly electricity bill?</label>
+        <select id={`${id}-bill`} name="bill_range">
+          <option value="">Prefer not to say</option>
+          <option value="under-400">Under $400</option>
+          <option value="400-700">$400 – $700</option>
+          <option value="700-1000">$700 – $1,000</option>
+          <option value="1000-2000">$1,000 – $2,000</option>
+          <option value="over-2000">Over $2,000</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for={`${id}-notes`}>Anything else we should know?</label>
+        <textarea id={`${id}-notes`} name="notes" rows="4" maxlength="1500"></textarea>
+      </div>
+
+      <div class="leadForm__actions">
+        <button type="button" class="btn btn--ghost" data-back>Back</button>
+        <button type="submit" class="btn btn--primary btn--lg" data-submit>Send my details</button>
+      </div>
+      <p class="leadForm__note">
+        We use your details only to respond to this enquiry. See our
+        <a href={href("/privacy/")}>privacy policy</a>.
+      </p>
+    </fieldset>
+
+    <!-- ── States ──────────────────────────────────────────────────────── -->
+    <div class="leadForm__success" data-success hidden role="status">
+      <h3>Thanks — we've got it.</h3>
+      <p>We'll be in touch shortly. If it's urgent, call us and we'll pick up.</p>
+    </div>
+
+    <!--
+      Shown when no endpoint is configured. Styled as a neutral notice, not an
+      error: nothing has gone wrong from the visitor's side, and a red failure
+      box on a working form reads as a broken site. It gives them the phone
+      number instead, so the enquiry still has somewhere to go.
+    -->
+    <div class="leadForm__callUs" data-call-us hidden role="status">
+      <h3>Give us a call instead</h3>
+      <p>
+        Online enquiries aren't switched on for this preview yet — but we'd
+        still like to hear from you.
+      </p>
+      <a class="btn btn--primary btn--lg leadForm__callBtn" href={telHref()}>
+        Call {business.phoneDisplay}
+      </a>
+      <p class="leadForm__callNote">
+        Or email <a href={`mailto:${business.email}`}>{business.email}</a>
+      </p>
+    </div>
+
+    <p class="leadForm__formError" data-form-error hidden role="alert"></p>
+  </form>
+</div>
+
+<script>
+  document.querySelectorAll("[data-lead-form]").forEach((form) => {
+    const step1 = form.querySelector('[data-step="1"]');
+    const step2 = form.querySelector('[data-step="2"]');
+    const success = form.querySelector("[data-success]");
+    const callUs = form.querySelector("[data-call-us]");
+    const formError = form.querySelector("[data-form-error]");
+    const endpoint = form.dataset.endpoint;
+
+    // Timestamp the render so the receiving end can reject instant submissions.
+    const rendered = form.querySelector("[data-rendered]");
+    if (rendered) rendered.value = String(Date.now());
+
+    const showError = (field, message) => {
+      const el = form.querySelector(`[data-error-for="${field.name}"]`);
+      field.setAttribute("aria-invalid", "true");
+      if (el) {
+        el.textContent = message;
+        el.hidden = false;
+        field.setAttribute("aria-describedby", el.id || (el.id = `${field.name}-error`));
+      }
+    };
+
+    const clearError = (field) => {
+      const el = form.querySelector(`[data-error-for="${field.name}"]`);
+      field.removeAttribute("aria-invalid");
+      if (el) {
+        el.hidden = true;
+        el.textContent = "";
+      }
+    };
+
+    const validate = (field) => {
+      const value = field.value.trim();
+      if (field.required && !value) {
+        showError(field, "This field is required.");
+        return false;
+      }
+      if (field.type === "email" && value && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value)) {
+        showError(field, "Enter a valid email address.");
+        return false;
+      }
+      if (field.type === "tel" && value && value.replace(/\D/g, "").length < 8) {
+        showError(field, "Enter a valid phone number.");
+        return false;
+      }
+      clearError(field);
+      return true;
+    };
+
+    // Validate on blur once touched, so errors appear as the user leaves a
+    // field rather than all at once at the end.
+    form.querySelectorAll("input, select, textarea").forEach((field) => {
+      field.addEventListener("blur", () => {
+        if (field.dataset.touched) validate(field);
+      });
+      field.addEventListener("input", () => {
+        field.dataset.touched = "1";
+        if (field.getAttribute("aria-invalid")) validate(field);
+      });
+    });
+
+    /*
+     * Set the expectation before the enquiry is sent, not in the reply. The
+     * message is rendered server-side and only revealed, so it is in the page
+     * for anyone with JS off too — they just see it from the start.
+     */
+    const stateSelect = form.querySelector("[data-state-select]");
+    const coverageNote = form.querySelector("[data-coverage]");
+    if (stateSelect && coverageNote) {
+      const syncCoverage = () => {
+        const opt = stateSelect.selectedOptions[0];
+        const chosen = stateSelect.value !== "";
+        coverageNote.hidden = !chosen || opt?.dataset.direct === "true";
+      };
+      stateSelect.addEventListener("change", syncCoverage);
+      syncCoverage();
+    }
+
+    const validateStep = (step) => {
+      const fields = [...step.querySelectorAll("input[required], select[required]")];
+      const results = fields.map(validate);
+      const firstBad = fields.find((f, i) => !results[i]);
+      if (firstBad) firstBad.focus();
+      return results.every(Boolean);
+    };
+
+    form.querySelector("[data-next]")?.addEventListener("click", () => {
+      if (!validateStep(step1)) return;
+      step1.hidden = true;
+      step2.hidden = false;
+      step2.querySelector("select, input, textarea")?.focus();
+    });
+
+    form.querySelector("[data-back]")?.addEventListener("click", () => {
+      step2.hidden = true;
+      step1.hidden = false;
+    });
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (!validateStep(step1)) {
+        step2.hidden = true;
+        step1.hidden = false;
+        return;
+      }
+
+      const submitBtn = form.querySelector("[data-submit]");
+      formError.hidden = true;
+
+      // No endpoint configured (staging, or before the CRM is wired up).
+      // Hand the visitor the phone number rather than pretending the
+      // submission went somewhere — but present it as a next step, not a fault.
+      if (!endpoint) {
+        step1.hidden = true;
+        step2.hidden = true;
+        callUs.hidden = false;
+        callUs.scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Sending…";
+
+      try {
+        const res = await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(Object.fromEntries(new FormData(form))),
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+        step1.hidden = true;
+        step2.hidden = true;
+        success.hidden = false;
+        success.scrollIntoView({ behavior: "smooth", block: "center" });
+      } catch {
+        formError.textContent =
+          "Something went wrong sending your details. Please try again, or call us directly.";
+        formError.hidden = false;
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Send my details";
+      }
+    });
+  });
+</script>
+
+<style>
+  /* Neutral, not a warning: a partner install is a normal outcome, not a problem. */
+  .leadForm__coverage {
+    margin: 0 0 var(--s-5);
+    padding: var(--s-4);
+    border-radius: var(--r-md);
+    background: var(--c-surface-alt);
+    border-left: 3px solid var(--c-gold-600);
+    font-size: var(--fs-sm);
+    color: var(--c-navy);
+  }
+
+  .leadForm {
+    padding: var(--s-7);
+    background: var(--c-surface);
+    border: 1px solid var(--c-line);
+    border-radius: var(--r-xl);
+    box-shadow: var(--sh-lg);
+  }
+
+  .leadForm--compact {
+    padding: var(--s-6);
+    box-shadow: var(--sh-md);
+  }
+
+  .leadForm__head {
+    margin-bottom: var(--s-6);
+  }
+
+  .leadForm__heading {
+    font-size: var(--fs-h3);
+  }
+
+  .leadForm__body {
+    margin-top: var(--s-3);
+    font-size: var(--fs-sm);
+    color: var(--c-muted);
+  }
+
+  .leadForm__step {
+    border: 0;
+    margin: 0;
+    padding: 0;
+  }
+
+  .leadForm__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--s-4);
+  }
+
+  .field {
+    margin-bottom: var(--s-4);
+  }
+
+  .field label {
+    display: block;
+    margin-bottom: var(--s-2);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-semibold);
+    color: var(--c-navy);
+  }
+
+  .field input,
+  .field select,
+  .field textarea {
+    width: 100%;
+    padding: var(--s-3) var(--s-4);
+    background: var(--c-surface);
+    border: 1px solid var(--c-line);
+    border-radius: var(--r-md);
+    font-size: var(--fs-base);
+    transition: border-color var(--t-fast), box-shadow var(--t-fast);
+  }
+
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    outline: none;
+    border-color: var(--c-gold);
+    box-shadow: var(--sh-focus);
+  }
+
+  .field [aria-invalid="true"] {
+    border-color: var(--c-danger);
+  }
+
+  .field textarea {
+    resize: vertical;
+  }
+
+  .field__error {
+    margin-top: var(--s-2);
+    font-size: var(--fs-xs);
+    color: var(--c-danger);
+  }
+
+  .leadForm__trap {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .leadForm__actions {
+    display: flex;
+    gap: var(--s-3);
+    margin-top: var(--s-2);
+  }
+
+  .leadForm__actions .btn--primary {
+    flex: 1;
+  }
+
+  .leadForm__note {
+    margin-top: var(--s-4);
+    font-size: var(--fs-xs);
+    color: var(--c-muted);
+    text-align: center;
+  }
+
+  .leadForm__success {
+    padding: var(--s-6);
+    background: var(--c-green-100);
+    border-radius: var(--r-lg);
+    text-align: center;
+  }
+
+  .leadForm__success p {
+    margin-top: var(--s-2);
+    font-size: var(--fs-sm);
+    color: var(--c-muted);
+  }
+
+  /* Neutral, not red — this is a next step, not a failure. */
+  .leadForm__callUs {
+    padding: var(--s-6);
+    background: var(--c-surface-alt);
+    border: 1px solid var(--c-line);
+    border-radius: var(--r-lg);
+    text-align: center;
+  }
+
+  .leadForm__callUs p {
+    margin-top: var(--s-2);
+    font-size: var(--fs-sm);
+    color: var(--c-muted);
+  }
+
+  .leadForm__callBtn {
+    margin-top: var(--s-5);
+  }
+
+  .leadForm__callNote {
+    margin-top: var(--s-4);
+    font-size: var(--fs-xs);
+  }
+
+  .leadForm__formError {
+    margin-top: var(--s-4);
+    padding: var(--s-3) var(--s-4);
+    background: var(--c-danger-bg);
+    border-radius: var(--r-md);
+    font-size: var(--fs-sm);
+    color: var(--c-danger);
+  }
+
+  @media (max-width: 600px) {
+    .leadForm {
+      padding: var(--s-5);
+    }
+    .leadForm__row {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+  }
+</style>

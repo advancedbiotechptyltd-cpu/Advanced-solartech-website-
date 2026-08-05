@@ -1,0 +1,154 @@
+---
+/**
+ * ContactTemplate — contact details alongside the lead form.
+ *
+ * `showCtaBand` is off: this page already is the call to action, and a second
+ * one below the form would just push the form up the page for no reason.
+ */
+import BaseLayout from "../layouts/BaseLayout.astro";
+import InnerHero from "../components/InnerHero.astro";
+import LeadForm from "../components/LeadForm.astro";
+import KeyFacts from "../components/KeyFacts.astro";
+import FAQAccordion from "../components/FAQAccordion.astro";
+import { business, telHref, getFaqs, locations, href, getCoverage } from "../lib/site.js";
+import { breadcrumbSchema, faqSchema } from "../lib/schema.js";
+
+const crumbs = [{ label: "Contact", href: "/contact/" }];
+const faqs = getFaqs(["solar-install-time", "rebate-eligibility"]);
+const servicedStates = locations.filter((l) => l.serviced);
+const coverage = getCoverage();
+
+const contactFacts = [
+  { label: "Phone", value: business.phoneDisplay },
+  { label: "Email", value: business.email },
+  { label: "Service area", value: business.areaServed },
+  { label: "Quotes", value: "Free, no obligation" },
+];
+---
+
+<BaseLayout
+  title={`Contact ${business.name} | Solar, Battery & EV Charging`}
+  description={`Contact Advanced Solar Tech for solar, battery storage and EV charger installation across Victoria. Call ${business.phoneDisplay} or request a quote online.`}
+  path="/contact/"
+  schemas={[breadcrumbSchema(crumbs), faqSchema(faqs)]}
+  showCtaBand={false}
+>
+  <InnerHero
+    kicker="Contact"
+    heading="Talk to us about your property"
+    body="Send your details and a recent bill, or call and we'll talk it through."
+    crumbs={crumbs}
+    variant="compact"
+  />
+
+  <section class="section">
+    <div class="container contact">
+      <div class="contact__aside">
+        <div class="contact__block">
+          <h2 class="contact__heading">Call us</h2>
+          <a class="contact__phone" href={telHref()}>{business.phoneDisplay}</a>
+          <p class="contact__note">
+            If we're on a roof we'll miss it — leave a message and we'll call
+            back the same day.
+          </p>
+        </div>
+
+        <div class="contact__block">
+          <h2 class="contact__heading">Email</h2>
+          <a href={`mailto:${business.email}`}>{business.email}</a>
+        </div>
+
+        <div class="contact__block">
+          <h2 class="contact__heading">Where we install directly</h2>
+          <ul class="contact__areas">
+            {
+              servicedStates.map((l) => (
+                <li>
+                  <a href={href(`/locations/${l.slug}/`)}>{l.state}</a>
+                </li>
+              ))
+            }
+          </ul>
+          <p class="contact__note">{coverage.partnerSummary} Send your details the same way.</p>
+        </div>
+
+        <KeyFacts facts={contactFacts} heading="Details" level={2} />
+      </div>
+
+      <div class="contact__form">
+        <LeadForm
+          id="contact-form"
+          heading="Send us your details"
+          body="Two quick steps. We'll come back with a system size and a price after rebates."
+          source="contact-page"
+        />
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--surface">
+    <div class="container container--narrow">
+      <FAQAccordion faqs={faqs} heading="Before you get in touch" id="faq-contact" />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .contact {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: clamp(var(--s-6), 5vw, var(--s-9));
+    align-items: start;
+  }
+
+  .contact__block {
+    margin-bottom: var(--s-7);
+  }
+
+  .contact__heading {
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-bold);
+    text-transform: uppercase;
+    letter-spacing: var(--ls-wide);
+    color: var(--c-muted);
+    margin-bottom: var(--s-3);
+  }
+
+  .contact__phone {
+    display: inline-block;
+    font-family: var(--font-heading);
+    font-size: var(--fs-h2);
+    font-weight: var(--fw-heading);
+    color: var(--c-navy);
+    text-decoration: none;
+  }
+
+  .contact__phone:hover {
+    color: var(--c-gold-text);
+  }
+
+  .contact__note {
+    margin-top: var(--s-3);
+    font-size: var(--fs-sm);
+    color: var(--c-muted);
+    max-width: 40ch;
+  }
+
+  .contact__areas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-3);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  @media (max-width: 960px) {
+    .contact {
+      grid-template-columns: 1fr;
+    }
+    .contact__form {
+      order: -1;
+    }
+  }
+</style>

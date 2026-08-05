@@ -1,0 +1,78 @@
+---
+/**
+ * InnerHero — the top block on every page except the home page.
+ *
+ * Renders the page's single <h1>. Never wrapped in [data-reveal]: this is the
+ * LCP element on most pages, and hiding it to animate it in would delay LCP.
+ */
+import Breadcrumbs from "./Breadcrumbs.astro";
+import { href } from "../lib/site.js";
+
+const {
+  kicker,
+  heading,
+  body,
+  crumbs = [],
+  variant = "default", // default | compact | accent
+  ctaLabel,
+  ctaHref,
+} = Astro.props;
+---
+
+<section class:list={["hero", `hero--${variant}`]}>
+  <div class="container">
+    {crumbs.length > 0 && <Breadcrumbs crumbs={crumbs} />}
+
+    {kicker && <p class="hero__kicker">{kicker}</p>}
+    <h1 class="hero__heading">{heading}</h1>
+    {body && <p class="hero__body">{body}</p>}
+
+    {
+      ctaLabel && ctaHref && (
+        <a class="btn btn--primary btn--lg hero__cta" href={href(ctaHref)}>
+          {ctaLabel}
+        </a>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .hero {
+    background: linear-gradient(180deg, var(--c-surface-alt), var(--c-bg));
+    border-bottom: 1px solid var(--c-line);
+    padding-block: var(--s-7) var(--s-8);
+  }
+
+  .hero--compact {
+    padding-block: var(--s-6) var(--s-7);
+  }
+
+  .hero--accent {
+    background: linear-gradient(180deg, var(--c-gold-100), var(--c-bg));
+  }
+
+  .hero__kicker {
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-bold);
+    text-transform: uppercase;
+    letter-spacing: var(--ls-wide);
+    color: var(--c-gold-text);
+    margin-bottom: var(--s-3);
+  }
+
+  .hero__heading {
+    max-width: 22ch;
+  }
+
+  .hero__body {
+    margin-top: var(--s-4);
+    max-width: 60ch;
+    font-size: var(--fs-xl);
+    color: var(--c-muted);
+  }
+
+  .hero__cta {
+    margin-top: var(--s-6);
+  }
+</style>

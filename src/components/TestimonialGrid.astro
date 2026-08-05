@@ -1,0 +1,102 @@
+---
+/**
+ * TestimonialGrid — renders nothing while testimonials are placeholders.
+ *
+ * `getTestimonials()` returns an empty array until testimonials.json is marked
+ * non-placeholder, so sample quotes cannot be published by accident. Publishing
+ * invented reviews is a misrepresentation under the Australian Consumer Law,
+ * so this guard is deliberate rather than defensive.
+ */
+import { getTestimonials } from "../lib/site.js";
+import SectionHeader from "./SectionHeader.astro";
+
+const {
+  items = getTestimonials(),
+  heading = "What our customers say",
+  kicker = "Reviews",
+} = Astro.props;
+---
+
+{
+  items.length > 0 && (
+    <section class="section section--surface" data-reveal>
+      <div class="container">
+        <SectionHeader kicker={kicker} heading={heading} align="center" />
+        <ul class="quotes" role="list">
+          {items.map((t) => (
+            <li class="quotes__item">
+              <blockquote class="quotes__quote">
+                <p>{t.quote}</p>
+              </blockquote>
+              <figcaption class="quotes__meta">
+                <span class="quotes__author">{t.author}</span>
+                {t.location && <span class="quotes__location">{t.location}</span>}
+                {t.service && <span class="quotes__service">{t.service}</span>}
+                {t.source && <span class="quotes__source">via {t.source}</span>}
+              </figcaption>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .quotes {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--s-5);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .quotes__item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-5);
+    padding: var(--s-6);
+    background: var(--c-bg);
+    border: 1px solid var(--c-line);
+    border-radius: var(--r-lg);
+  }
+
+  .quotes__quote {
+    margin: 0;
+    flex: 1;
+  }
+
+  .quotes__quote p {
+    font-size: var(--fs-lg);
+    color: var(--c-text);
+  }
+
+  .quotes__quote p::before {
+    content: "\201C";
+  }
+
+  .quotes__quote p::after {
+    content: "\201D";
+  }
+
+  .quotes__meta {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-1);
+    font-size: var(--fs-xs);
+    color: var(--c-muted);
+  }
+
+  .quotes__author {
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-semibold);
+    color: var(--c-navy);
+  }
+
+  @media (max-width: 960px) {
+    .quotes {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

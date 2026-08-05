@@ -1,0 +1,361 @@
+/* Global styles — built entirely from tokens.css. No literal values below. */
+
+@import "../tokens/tokens.css";
+
+/*
+ * Fonts are NOT imported here. An @import inside a stylesheet serialises:
+ * the browser must download this file before it discovers the font request,
+ * which adds a full round trip to the critical path. The font stylesheet is
+ * loaded non-blocking from BaseLayout's <head> instead, and the stacks in
+ * tokens.css fall back to system fonts so text renders identically-positioned
+ * if it never arrives.
+ */
+
+/* ── Reset ─────────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--header-h) + var(--s-4));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--fs-base);
+  font-weight: var(--fw-body);
+  line-height: var(--lh-body);
+  color: var(--c-text);
+  background: var(--c-bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+img,
+picture,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+/* ── Typography ────────────────────────────────────────────────────────── */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  font-weight: var(--fw-heading);
+  line-height: var(--lh-heading);
+  letter-spacing: var(--ls-tight);
+  color: var(--c-heading);
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: var(--fs-h1);
+  line-height: var(--lh-tight);
+}
+h2 {
+  font-size: var(--fs-h2);
+}
+h3 {
+  font-size: var(--fs-h3);
+}
+h4 {
+  font-size: var(--fs-h4);
+  font-weight: var(--fw-bold);
+}
+
+p {
+  text-wrap: pretty;
+}
+
+a {
+  color: var(--c-link);
+  text-underline-offset: 0.18em;
+  text-decoration-thickness: 1px;
+  transition: color var(--t-fast);
+}
+
+a:hover {
+  color: var(--c-navy);
+}
+
+strong {
+  font-weight: var(--fw-semibold);
+}
+
+/* ── Focus: visible for keyboard users, never removed ──────────────────── */
+:focus-visible {
+  outline: 3px solid var(--c-accent);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
+}
+
+/* ── Layout primitives ─────────────────────────────────────────────────── */
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.container--narrow {
+  max-width: var(--container-narrow);
+}
+
+.section {
+  padding-block: var(--section-y);
+}
+
+.section--tight {
+  padding-block: var(--section-y-tight);
+}
+
+.section--surface {
+  background: var(--c-surface);
+}
+
+.section--alt {
+  background: var(--c-surface-alt);
+}
+
+.section--dark {
+  background: var(--c-navy);
+  color: var(--c-on-dark);
+}
+
+.section--dark h1,
+.section--dark h2,
+.section--dark h3,
+.section--dark h4 {
+  color: var(--c-on-dark);
+}
+
+.stack > * + * {
+  margin-top: var(--s-4);
+}
+
+.grid {
+  display: grid;
+  gap: var(--s-5);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── Skip link ─────────────────────────────────────────────────────────── */
+.skip-link {
+  position: absolute;
+  left: var(--s-4);
+  top: calc(var(--s-4) * -6);
+  z-index: var(--z-skip);
+  background: var(--c-navy);
+  color: var(--c-on-dark);
+  padding: var(--s-3) var(--s-5);
+  border-radius: var(--r-md);
+  font-weight: var(--fw-semibold);
+  text-decoration: none;
+  transition: top var(--t-base);
+}
+
+.skip-link:focus {
+  top: var(--s-4);
+  color: var(--c-on-dark);
+}
+
+/* ── Buttons ───────────────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  padding: var(--s-3) var(--s-5);
+  border: 1px solid transparent;
+  border-radius: var(--r-pill);
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background var(--t-fast), border-color var(--t-fast),
+    color var(--t-fast), transform var(--t-fast);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn--primary {
+  background: var(--c-accent);
+  color: var(--c-on-accent);
+}
+
+.btn--primary:hover {
+  background: var(--c-gold-600);
+  color: var(--c-on-accent);
+}
+
+.btn--secondary {
+  background: var(--c-navy);
+  color: var(--c-on-dark);
+}
+
+.btn--secondary:hover {
+  background: var(--c-navy-700);
+  color: var(--c-on-dark);
+}
+
+.btn--ghost {
+  background: transparent;
+  border-color: var(--c-line);
+  color: var(--c-navy);
+}
+
+.btn--ghost:hover {
+  border-color: var(--c-navy);
+  background: var(--c-surface);
+}
+
+.btn--on-dark {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.35);
+  color: var(--c-on-dark);
+}
+
+.btn--on-dark:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--c-on-dark);
+  color: var(--c-on-dark);
+}
+
+.btn--lg {
+  padding: var(--s-4) var(--s-6);
+  font-size: var(--fs-base);
+}
+
+.btn--block {
+  width: 100%;
+}
+
+/* ── Cards ─────────────────────────────────────────────────────────────── */
+.card {
+  background: var(--c-surface);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-lg);
+  padding: var(--s-5);
+  box-shadow: var(--sh-sm);
+}
+
+/* ── Prose (article body, legal pages) ─────────────────────────────────── */
+.prose > * + * {
+  margin-top: var(--s-4);
+}
+
+.prose h2 {
+  margin-top: var(--s-7);
+  font-size: var(--fs-h3);
+}
+
+.prose h3 {
+  margin-top: var(--s-6);
+  font-size: var(--fs-h4);
+}
+
+.prose p,
+.prose li {
+  font-size: var(--fs-lg);
+  color: var(--c-text);
+}
+
+.prose ul,
+.prose ol {
+  padding-left: var(--s-5);
+}
+
+.prose li + li {
+  margin-top: var(--s-2);
+}
+
+/* ── Scroll reveal ─────────────────────────────────────────────────────────
+ * CSS-only, via a scroll-driven view() timeline. No JavaScript is involved,
+ * which is the point: an earlier IntersectionObserver version set an
+ * `is-hidden` class up front and removed it on intersection, and any case
+ * where the observer did not fire — a stitched full-page capture, a restored
+ * scroll position, an early paint — left whole sections blank.
+ *
+ * An animation cannot do that. Where `animation-timeline: view()` is
+ * unsupported (Safari, Firefox today) the @supports block simply does not
+ * apply and content renders normally, so the failure mode is "no animation"
+ * rather than "no content".
+ *
+ * Never applied above the fold — animating the LCP element in delays LCP.
+ */
+@keyframes reveal-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    [data-reveal] {
+      animation: reveal-in linear both;
+      animation-timeline: view();
+      /* Completes early in the entry phase so content is fully opaque well
+         before it reaches the middle of the viewport. */
+      animation-range: entry 0% entry 45%;
+    }
+  }
+}

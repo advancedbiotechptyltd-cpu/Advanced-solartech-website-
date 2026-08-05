@@ -1,0 +1,86 @@
+{
+  "standard-install": {
+    "heading": "How an installation runs",
+    "steps": [
+      {
+        "title": "Quote and system design",
+        "body": "We review your bill, roof and usage pattern, then produce a design with the system size, layout and product list set out — plus what each rebate takes off the price."
+      },
+      {
+        "title": "Network approval",
+        "body": "Your distribution network approves the connection and confirms your export limit. This step sets the timeline more than anything else, and we tell you where it is up to."
+      },
+      {
+        "title": "Installation",
+        "body": "Most residential installs are completed in a day. Mounting, panels, inverter, switchboard work and isolation are all done on site by the installing team."
+      },
+      {
+        "title": "Commissioning and handover",
+        "body": "The system is tested, monitoring is configured on your phone, and we walk you through reading it — including what normal looks like, so you can tell when something is not."
+      }
+    ]
+  },
+  "ev-install": {
+    "heading": "How an EV charger installation runs",
+    "steps": [
+      {
+        "title": "Supply assessment",
+        "body": "We check switchboard capacity, mains size and existing load before quoting, so any upgrade is priced in rather than raised on the day."
+      },
+      {
+        "title": "Charger selection",
+        "body": "Single or three-phase, tethered or socketed, and whether it needs to follow your solar generation — chosen against your car and your usage."
+      },
+      {
+        "title": "Installation",
+        "body": "Mounting, cable run, circuit protection and any switchboard work, completed and tested to Australian Standards."
+      },
+      {
+        "title": "Configuration",
+        "body": "Solar-following behaviour, load limits and scheduling are set up with you, and we confirm the car actually charges as expected before leaving."
+      }
+    ]
+  },
+  "commercial-install": {
+    "heading": "How a commercial project runs",
+    "steps": [
+      {
+        "title": "Load and tariff analysis",
+        "body": "We model your consumption profile against your actual tariff, including demand charges, and confirm whether solar makes sense for your site before designing anything."
+      },
+      {
+        "title": "Structural and network assessment",
+        "body": "Roof structure, penetration method and access are assessed, and the network confirms your export limit — which frequently caps system size before roof area does."
+      },
+      {
+        "title": "Proposal and approval",
+        "body": "A proposal with system size, generation modelling, payback and every assumption it relies on, so it can be checked rather than taken on trust."
+      },
+      {
+        "title": "Installation and commissioning",
+        "body": "Staged to work around your operations, with the compliance documentation your insurer and network will ask for provided at handover."
+      }
+    ]
+  },
+  "heat-pump-install": {
+    "heading": "How a heat pump changeover runs",
+    "steps": [
+      {
+        "title": "Check the site",
+        "body": "Where the existing tank sits, whether there is airflow and drainage for the new unit, and how far it is from bedroom or neighbour windows. Placement decides both performance and noise complaints."
+      },
+      {
+        "title": "Confirm incentives",
+        "body": "Federal STCs and, for eligible Victorian households, a Victorian Energy Upgrades discount. Both are applied to the price rather than claimed back later."
+      },
+      {
+        "title": "Changeover",
+        "body": "Old system removed, new unit installed, plumbing and electrical connected and tested. Usually half a day, and you have hot water again the same afternoon."
+      },
+      {
+        "title": "Set the timer",
+        "body": "We set it to heat during your solar generation window, not overnight. This is the step that turns an efficient appliance into a cheap one, and it is the step most installers skip."
+      }
+    ]
+  }
+}

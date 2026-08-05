@@ -1,0 +1,70 @@
+---
+/**
+ * StatsBand — renders nothing when no verified stats exist.
+ *
+ * Stats are business claims. `getStats()` returns an empty array while
+ * business.json marks them placeholder, so an unverified figure cannot reach a
+ * built page even if a template asks for the band.
+ */
+import { getStats } from "../lib/site.js";
+
+const { items = getStats(), heading } = Astro.props;
+---
+
+{
+  items.length > 0 && (
+    <section class="stats section--dark" data-reveal>
+      <div class="container">
+        {heading && <h2 class="stats__heading">{heading}</h2>}
+        <dl class="stats__grid">
+          {items.map((s) => (
+            <div class="stats__item">
+              <dt class="stats__label">{s.label}</dt>
+              <dd class="stats__value">{s.value}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .stats {
+    padding-block: var(--section-y-tight);
+  }
+
+  .stats__heading {
+    text-align: center;
+    margin-bottom: var(--s-7);
+    font-size: var(--fs-h3);
+  }
+
+  .stats__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: var(--s-6);
+    margin: 0;
+    text-align: center;
+  }
+
+  .stats__item {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: var(--s-2);
+  }
+
+  .stats__value {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-size: var(--fs-display);
+    font-weight: var(--fw-heading);
+    line-height: 1;
+    color: var(--c-gold);
+  }
+
+  .stats__label {
+    font-size: var(--fs-sm);
+    color: var(--c-on-dark-muted);
+  }
+</style>

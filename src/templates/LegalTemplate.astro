@@ -1,0 +1,76 @@
+---
+/**
+ * LegalTemplate — privacy, terms and any future policy page.
+ *
+ * Content comes in as a block array so a policy is edited as data. `noindex`
+ * is off by default: policy pages are a trust signal and Google expects a real
+ * business to have them indexed.
+ */
+import BaseLayout from "../layouts/BaseLayout.astro";
+import InnerHero from "../components/InnerHero.astro";
+import { breadcrumbSchema } from "../lib/schema.js";
+
+const { title, description, path, heading, updated, blocks = [], noticeText } = Astro.props;
+
+const crumbs = [{ label: heading, href: path }];
+const updatedLabel = updated
+  ? new Date(updated).toLocaleDateString("en-AU", { day: "numeric", month: "long", year: "numeric" })
+  : null;
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  path={path}
+  schemas={[breadcrumbSchema(crumbs)]}
+>
+  <InnerHero heading={heading} crumbs={crumbs} variant="compact" />
+
+  <section class="section">
+    <div class="container container--narrow">
+      {updatedLabel && <p class="updated">Last updated: <time datetime={updated}>{updatedLabel}</time></p>}
+
+      {
+        noticeText && (
+          <aside class="legalNotice">
+            <strong>Template notice.</strong> {noticeText}
+          </aside>
+        )
+      }
+
+      <div class="prose">
+        {
+          blocks.map((block) => {
+            if (block.type === "h2") return <h2>{block.text}</h2>;
+            if (block.type === "ul")
+              return (
+                <ul>
+                  {block.items.map((i) => (
+                    <li>{i}</li>
+                  ))}
+                </ul>
+              );
+            return <p>{block.text}</p>;
+          })
+        }
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .updated {
+    margin-bottom: var(--s-6);
+    font-size: var(--fs-sm);
+    color: var(--c-muted);
+  }
+
+  .legalNotice {
+    margin-bottom: var(--s-6);
+    padding: var(--s-5);
+    background: var(--c-gold-100);
+    border-left: 3px solid var(--c-gold);
+    border-radius: var(--r-md);
+    font-size: var(--fs-sm);
+  }
+</style>

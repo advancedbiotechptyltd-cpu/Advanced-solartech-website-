@@ -1,0 +1,248 @@
+[
+  {
+    "slug": "victoria",
+    "state": "Victoria",
+    "abbr": "VIC",
+    "serviced": true,
+    "servicedByPartner": false,
+    "metaTitle": "Solar Panels & Batteries in Victoria | Advanced Solar Tech",
+    "metaDescription": "Solar, battery and EV charger installation across Victoria. Federal STCs and the federal battery rebate, plus Solar Victoria rebates on solar panels.",
+    "heroHeading": "Solar, batteries and EV charging across Victoria",
+    "intro": "Victoria is our home state and where our installation teams are based. It is also the state with the most layered incentives in the country, which means a Victorian quote should look different from an interstate one — and if it does not, something has been left on the table.",
+    "rebateSummary": "Federal STCs plus the federal battery rebate apply here as they do nationally. On top of that, Solar Victoria offers rebates and interest-free loans on solar panel systems. Note that these Victorian incentives cover panels, not batteries — Solar Victoria's battery offering has been discontinued, so a battery in Victoria is supported by the federal rebate alone.",
+    "rebates": [
+      {
+        "name": "Federal STCs (small-scale technology certificates)",
+        "scope": "National",
+        "detail": "Applied as an up-front discount on the system price. The value depends on system size, install location and the year of installation — the certificate count steps down annually."
+      },
+      {
+        "name": "Federal battery rebate",
+        "scope": "National",
+        "detail": "A discount of roughly 30% on installed battery cost under the Commonwealth's home battery program, applied through your installer at the point of sale. This is the only incentive currently available on a battery in Victoria."
+      },
+      {
+        "name": "Solar Victoria rebate — solar panels",
+        "scope": "Victoria only",
+        "detail": "A state rebate on solar panel systems for eligible owner-occupiers and rental providers, with eligibility set by property value, household income and whether a rebate has been claimed on the property before."
+      },
+      {
+        "name": "Solar Victoria interest-free loan — solar panels",
+        "scope": "Victoria only",
+        "detail": "An interest-free loan matching the panel rebate amount, repayable over a set term. It applies to the solar panel system only. There is no equivalent Victorian loan for batteries."
+      }
+    ],
+    "localNotes": "Victorian distribution networks — Citipower, Powercor, Jemena, United Energy and AusNet — each set their own export limits, and they are not the same. A system that can export 10kW in one network area may be capped at 5kW in another. We check your network before finalising system size, not after.",
+    "cities": [
+      "melbourne",
+      "geelong",
+      "ballarat",
+      "bendigo"
+    ],
+    "lastReviewed": "2026-08-05"
+  },
+  {
+    "slug": "new-south-wales",
+    "state": "New South Wales",
+    "abbr": "NSW",
+    "serviced": true,
+    "servicedByPartner": false,
+    "metaTitle": "Solar & Batteries in New South Wales | Advanced Solar Tech",
+    "metaDescription": "Solar and battery incentives available in NSW: federal STCs and the federal battery rebate. Enquire about installation availability in your area.",
+    "heroHeading": "Solar and battery incentives in New South Wales",
+    "intro": "New South Wales households rely mainly on the federal schemes rather than a state rebate on system price. That makes the sizing decision more important, because there is less subsidy absorbing an oversized system.",
+    "rebateSummary": "Federal STCs and the federal battery rebate apply. NSW does not run a broad state rebate on system price in the way Victoria does, so the federal schemes do most of the work.",
+    "rebates": [
+      {
+        "name": "Federal STCs",
+        "scope": "National",
+        "detail": "Applied as an up-front discount on the system price, scaled by system size and install year."
+      },
+      {
+        "name": "Federal battery rebate",
+        "scope": "National",
+        "detail": "Roughly 30% off installed battery cost under the Commonwealth home battery program."
+      }
+    ],
+    "localNotes": "Because NSW has no equivalent to the Solar Victoria rebate, the payback case rests on self-consumption. Systems sized to export-heavy generation take noticeably longer to pay back here than the same system in Victoria.",
+    "cities": [],
+    "lastReviewed": "2026-08-05"
+  },
+  {
+    "slug": "queensland",
+    "state": "Queensland",
+    "abbr": "QLD",
+    "serviced": false,
+    "servicedByPartner": true,
+    "metaTitle": "Solar & Batteries in Queensland | Advanced Solar Tech",
+    "metaDescription": "Solar and battery incentives available in Queensland: federal STCs and the federal battery rebate. Enquire about installation availability.",
+    "heroHeading": "Solar and battery incentives in Queensland",
+    "intro": "Queensland has the strongest solar resource of any mainland state, which changes the arithmetic. The same array generates materially more here than in Victoria, so systems reach payback faster even without a state rebate on system price.",
+    "rebateSummary": "Federal STCs and the federal battery rebate apply. Queensland's advantage is irradiance rather than an extra state subsidy — more generation per installed kilowatt.",
+    "rebates": [
+      {
+        "name": "Federal STCs",
+        "scope": "National",
+        "detail": "Queensland's higher solar zone rating means the same system size earns more certificates here than in Victoria."
+      },
+      {
+        "name": "Federal battery rebate",
+        "scope": "National",
+        "detail": "Roughly 30% off installed battery cost under the Commonwealth home battery program."
+      }
+    ],
+    "localNotes": "Air conditioning load in the Queensland summer peaks in the afternoon, overlapping well with solar generation. That overlap raises self-consumption and is one reason batteries are a less urgent purchase here than in southern states.",
+    "cities": [],
+    "lastReviewed": "2026-08-05"
+  },
+  {
+    "slug": "south-australia",
+    "state": "South Australia",
+    "abbr": "SA",
+    "serviced": false,
+    "servicedByPartner": true,
+    "metaTitle": "Solar & Batteries in South Australia | Advanced Solar Tech",
+    "metaDescription": "Solar and battery incentives in South Australia: federal STCs, the federal battery rebate and state-level storage support.",
+    "heroHeading": "Solar and battery incentives in South Australia",
+    "intro": "South Australia has the highest rooftop solar penetration in the country, and that changes what a good system looks like. Midday grid prices are frequently at or below zero, so exported solar earns very little and the value sits almost entirely in self-consumption and storage.",
+    "rebateSummary": "Federal STCs and the federal battery rebate apply, and South Australia has historically run state-level storage support alongside them.",
+    "rebates": [
+      {
+        "name": "Federal STCs",
+        "scope": "National",
+        "detail": "Applied as an up-front discount, scaled by system size and install year."
+      },
+      {
+        "name": "Federal battery rebate",
+        "scope": "National",
+        "detail": "Roughly 30% off installed battery cost under the Commonwealth home battery program."
+      },
+      {
+        "name": "State storage support",
+        "scope": "South Australia",
+        "detail": "SA has run its own storage incentives and virtual power plant programs. Current availability changes — confirm before relying on it."
+      }
+    ],
+    "localNotes": "SA networks apply dynamic export limits that can curtail a system to near zero export at times of high grid solar. Any payback model for an SA install that assumes uninterrupted export is overstating the return.",
+    "cities": [],
+    "lastReviewed": "2026-08-05"
+  },
+  {
+    "slug": "western-australia",
+    "state": "Western Australia",
+    "abbr": "WA",
+    "serviced": false,
+    "servicedByPartner": true,
+    "metaTitle": "Solar & Batteries in Western Australia | Advanced Solar Tech",
+    "metaDescription": "Solar and battery incentives in Western Australia: federal STCs, the federal battery rebate and state-level battery support.",
+    "heroHeading": "Solar and battery incentives in Western Australia",
+    "intro": "Western Australia sits outside the National Electricity Market, so its tariffs, feed-in arrangements and connection rules are set separately from the eastern states. Advice written for a Victorian customer frequently does not transfer.",
+    "rebateSummary": "Federal STCs and the federal battery rebate apply, and WA has run its own battery scheme in addition.",
+    "rebates": [
+      {
+        "name": "Federal STCs",
+        "scope": "National",
+        "detail": "Applied as an up-front discount, scaled by system size and install year."
+      },
+      {
+        "name": "Federal battery rebate",
+        "scope": "National",
+        "detail": "Roughly 30% off installed battery cost under the Commonwealth home battery program."
+      },
+      {
+        "name": "WA state battery scheme",
+        "scope": "Western Australia",
+        "detail": "WA has run a state battery rebate alongside the federal program, with its own eligibility rules. Confirm current status before relying on it."
+      }
+    ],
+    "localNotes": "WA's time-of-use feed-in rates pay more for late-afternoon export than midday export. That tilts system design toward west-facing panels more than it would anywhere on the east coast.",
+    "cities": [],
+    "lastReviewed": "2026-08-05"
+  },
+  {
+    "slug": "australian-capital-territory",
+    "state": "Australian Capital Territory",
+    "abbr": "ACT",
+    "serviced": false,
+    "servicedByPartner": true,
+    "metaTitle": "Solar & Batteries in the ACT | Advanced Solar Tech",
+    "metaDescription": "Solar and battery incentives in the ACT: federal STCs, the federal battery rebate and territory-level support.",
+    "heroHeading": "Solar and battery incentives in the ACT",
+    "intro": "The ACT runs its own energy support programs on top of the federal schemes, and has pursued household electrification more actively than most jurisdictions.",
+    "rebateSummary": "Federal STCs and the federal battery rebate apply, with ACT territory programs available in addition.",
+    "rebates": [
+      {
+        "name": "Federal STCs",
+        "scope": "National",
+        "detail": "Applied as an up-front discount, scaled by system size and install year."
+      },
+      {
+        "name": "Federal battery rebate",
+        "scope": "National",
+        "detail": "Roughly 30% off installed battery cost under the Commonwealth home battery program."
+      },
+      {
+        "name": "ACT energy support programs",
+        "scope": "ACT",
+        "detail": "The territory has run interest-free loans and targeted household electrification support. Check current program terms."
+      }
+    ],
+    "localNotes": "Canberra's winters are colder than most of the country and its summers hot, so heating and cooling dominate the load. Systems here are frequently sized around a heat pump or reverse-cycle load rather than a flat baseline.",
+    "cities": [],
+    "lastReviewed": "2026-08-05"
+  },
+  {
+    "slug": "tasmania",
+    "state": "Tasmania",
+    "abbr": "TAS",
+    "serviced": false,
+    "servicedByPartner": true,
+    "metaTitle": "Solar & Batteries in Tasmania | Advanced Solar Tech",
+    "metaDescription": "Solar and battery incentives in Tasmania: federal STCs and the federal battery rebate.",
+    "heroHeading": "Solar and battery incentives in Tasmania",
+    "intro": "Tasmania has the lowest solar irradiance in the country and a strongly seasonal generation curve — high summer output, low winter output. Systems are generally sized larger for the same annual yield than they would be on the mainland.",
+    "rebateSummary": "Federal STCs and the federal battery rebate apply. Tasmania does not run a broad state rebate on system price.",
+    "rebates": [
+      {
+        "name": "Federal STCs",
+        "scope": "National",
+        "detail": "Tasmania's solar zone rating is the lowest in the country, so the same system size earns fewer certificates than it would in Queensland."
+      },
+      {
+        "name": "Federal battery rebate",
+        "scope": "National",
+        "detail": "Roughly 30% off installed battery cost under the Commonwealth home battery program."
+      }
+    ],
+    "localNotes": "Winter output in Tasmania can be a small fraction of summer output. A battery sized on summer generation will sit largely unused for months, so storage decisions here need seasonal modelling rather than an annual average.",
+    "cities": [],
+    "lastReviewed": "2026-08-05"
+  },
+  {
+    "slug": "northern-territory",
+    "state": "Northern Territory",
+    "abbr": "NT",
+    "serviced": false,
+    "servicedByPartner": true,
+    "metaTitle": "Solar & Batteries in the NT | Advanced Solar Tech",
+    "metaDescription": "Solar and battery incentives in the Northern Territory: federal STCs and the federal battery rebate.",
+    "heroHeading": "Solar and battery incentives in the Northern Territory",
+    "intro": "The Northern Territory has excellent solar resource and a small, isolated grid. Both facts shape system design: generation is high, but network export limits are tighter than in the eastern states.",
+    "rebateSummary": "Federal STCs and the federal battery rebate apply. The NT has run its own household battery scheme at times, separate from the federal program.",
+    "rebates": [
+      {
+        "name": "Federal STCs",
+        "scope": "National",
+        "detail": "The NT's high solar zone rating means the same system size earns more certificates than in southern states."
+      },
+      {
+        "name": "Federal battery rebate",
+        "scope": "National",
+        "detail": "Roughly 30% off installed battery cost under the Commonwealth home battery program."
+      }
+    ],
+    "localNotes": "Wet season cloud cover cuts output for months at a time, and cyclone-region wind loading changes the mounting specification. NT installs need structural detail that a southern-state quote will not include.",
+    "cities": [],
+    "lastReviewed": "2026-08-05"
+  }
+]

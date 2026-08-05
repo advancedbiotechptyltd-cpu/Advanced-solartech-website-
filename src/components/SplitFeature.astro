@@ -1,0 +1,159 @@
+---
+/**
+ * SplitFeature — two-column text/media block. The media side takes a slot so
+ * an image, a stat panel or a key-facts list can occupy it without the
+ * component needing to know which.
+ */
+import Icon from "./Icon.astro";
+import { href } from "../lib/site.js";
+
+const {
+  kicker,
+  heading,
+  body,
+  bullets = [],
+  ctaLabel,
+  ctaHref,
+  reverse = false,
+  level = 2,
+} = Astro.props;
+
+const Heading = `h${level}`;
+const hasMedia = Astro.slots.has("media");
+---
+
+<div class:list={["split", reverse && "split--reverse", !hasMedia && "split--textOnly"]} data-reveal>
+  <div class="split__text">
+    {kicker && <p class="split__kicker">{kicker}</p>}
+    <Heading class="split__heading">{heading}</Heading>
+
+    {
+      body &&
+        body
+          .split("\n\n")
+          .map((para) => <p class="split__body">{para}</p>)
+    }
+
+    {
+      bullets.length > 0 && (
+        <ul class="split__list" role="list">
+          {bullets.map((b) => (
+            <li>
+              <span class="split__tick">
+                <Icon name="check" size={15} />
+              </span>
+              <span>
+                {typeof b === "string" ? (
+                  b
+                ) : (
+                  <>
+                    <strong>{b.title}</strong>
+                    {b.body && <span class="split__listBody">{b.body}</span>}
+                  </>
+                )}
+              </span>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+
+    {
+      ctaLabel && ctaHref && (
+        <a class="btn btn--secondary split__cta" href={href(ctaHref)}>
+          {ctaLabel}
+        </a>
+      )
+    }
+  </div>
+
+  {
+    hasMedia && (
+      <div class="split__media">
+        <slot name="media" />
+      </div>
+    )
+  }
+</div>
+
+<style>
+  .split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(var(--s-6), 5vw, var(--s-9));
+    align-items: center;
+  }
+
+  .split--textOnly {
+    grid-template-columns: 1fr;
+    max-width: var(--container-narrow);
+  }
+
+  .split--reverse .split__text {
+    order: 2;
+  }
+
+  .split__kicker {
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-bold);
+    text-transform: uppercase;
+    letter-spacing: var(--ls-wide);
+    color: var(--c-gold-text);
+    margin-bottom: var(--s-3);
+  }
+
+  .split__body {
+    margin-top: var(--s-4);
+    font-size: var(--fs-lg);
+    color: var(--c-muted);
+  }
+
+  .split__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-4);
+    margin-top: var(--s-6);
+    padding: 0;
+    list-style: none;
+  }
+
+  .split__list li {
+    display: flex;
+    gap: var(--s-3);
+    align-items: flex-start;
+    font-size: var(--fs-base);
+  }
+
+  .split__tick {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    margin-top: 2px;
+    border-radius: var(--r-pill);
+    background: var(--c-green-100);
+    color: var(--c-green);
+  }
+
+  .split__listBody {
+    display: block;
+    margin-top: var(--s-1);
+    font-size: var(--fs-sm);
+    color: var(--c-muted);
+  }
+
+  .split__cta {
+    margin-top: var(--s-6);
+  }
+
+  @media (max-width: 960px) {
+    .split {
+      grid-template-columns: 1fr;
+    }
+    .split--reverse .split__text {
+      order: 0;
+    }
+  }
+</style>

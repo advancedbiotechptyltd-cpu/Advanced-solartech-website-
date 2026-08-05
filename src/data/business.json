@@ -1,0 +1,92 @@
+{
+  "name": "Advanced Solar Tech",
+  "legalName": "Advanced Solar Tech",
+  "tagline": "Solar, battery storage and EV charging — designed, supplied and installed.",
+  "description": "Advanced Solar Tech designs, supplies and installs solar panel systems, battery storage, heat pump hot water and EV chargers. We install directly across Victoria and New South Wales, and through trusted accredited partners elsewhere in Australia.",
+  "url": "https://advancedsolartec.com.au",
+  "phone": "+61 403 657 585",
+  "phoneDisplay": "0403 657 585",
+  "email": "info@advancedsolartec.com.au",
+  "areaServed": "Victoria and New South Wales, Australia",
+  "coverage": {
+    "_note": "Single source for how coverage is described everywhere: service-area section, footer, location pages, contact, quote page and the quote form. Leads are accepted from every state — only the fulfilment message changes.",
+    "directStates": [
+      "VIC",
+      "NSW"
+    ],
+    "directLabel": "Installed by our own teams",
+    "partnerLabel": "Installed by a trusted accredited partner",
+    "directSummary": "We install directly across Victoria and New South Wales.",
+    "partnerSummary": "Everywhere else in Australia, your installation is completed by one of our trusted, accredited installer partners.",
+    "partnerMessage": "In your state, your installation is completed by one of our trusted, accredited installer partners — they'll contact you to arrange your quote and install."
+  },
+  "logo": {
+    "src": "https://advancedsolartec.com.au/wp-content/uploads/2022/11/Advanced-solar-Logo-01.png",
+    "width": 260,
+    "height": 60,
+    "alt": "Advanced Solar Tech",
+    "_note": "Self-host this file in /public/ and change src to a local path before launch — a third-party image request in the header costs an extra DNS + TLS round trip on first paint."
+  },
+  "social": [
+    "https://www.facebook.com/Advanced.solartech"
+  ],
+  "photos": {
+    "_note": "Whether the photographs on this site are this business's own work. While false, no alt text or caption says the business installed what is shown, so licensed stock can fill the slots safely. Set to true only once every photo in src/images/ is genuinely this business's — alt text carries the claim as much as visible copy does, and describing a stock photo as 'an Advanced Solar Tech installer' is a misleading representation under the Australian Consumer Law.",
+    "own": false
+  },
+  "_placeholderNote": "Fields below are structure-only. `npm run check:content` fails while any placeholder:true remains, so none of it can reach production by accident.",
+  "accreditations": {
+    "placeholder": false,
+    "_note": "Owner-confirmed. Exactly these four — do not add others without a certificate in hand. Accreditation claims are regulated representations: if one lapses, remove it the same day. Titles should match the certificate wording. Note the split: designer and installer accreditation is administered by Solar Accreditation Australia, retailer approval by the Clean Energy Council, so 'CEC Approved Designer' is worth checking against the actual certificate before launch.",
+    "_lastConfirmed": "2026-08-05",
+    "_logoNote": "`logo` names a file in src/images/accreditations/. Until that file exists the item renders as an icon plus its name, which is a complete claim on its own. Every one of these marks is someone else's trademark — download from that program's own partner portal, never a search result, and follow its brand guidelines.",
+    "items": [
+      {
+        "title": "CEC Approved Solar Retailer",
+        "detail": "Signatory to the Clean Energy Council's Solar Retailer Code of Conduct",
+        "icon": "shield",
+        "logo": "cec-approved-retailer"
+      },
+      {
+        "title": "CEC Approved Designer",
+        "detail": "System designs signed off by an accredited designer",
+        "icon": "doc",
+        "logo": "cec-approved-designer"
+      },
+      {
+        "title": "Tesla Certified Installer",
+        "detail": "Certified to supply and install Tesla Powerwall",
+        "icon": "battery",
+        "logo": "tesla"
+      },
+      {
+        "title": "SolarEdge Certified Installer",
+        "detail": "Certified to install SolarEdge inverters and optimisers",
+        "icon": "bolt",
+        "logo": "solaredge"
+      }
+    ],
+    "installerStatement": "All installations are carried out by a fully accredited CEC installer and a Grade A electrician."
+  },
+  "stats": {
+    "placeholder": true,
+    "_note": "Optional. An installations-completed figure was deliberately removed and should not be re-added. Anything here must be evidenced from job records. Absence never blocks a build — check:content reports it as information only.",
+    "items": [
+      {
+        "value": "—",
+        "label": "Years installing in Victoria"
+      },
+      {
+        "value": "—",
+        "label": "kW of solar delivered"
+      }
+    ]
+  },
+  "reviews": {
+    "placeholder": true,
+    "_note": "AggregateRating JSON-LD is emitted ONLY when placeholder is false and count/rating are real, verifiable numbers from a review platform. Fabricated ratings are a manual-action risk with Google and a misrepresentation under the ACL.",
+    "ratingValue": null,
+    "reviewCount": null,
+    "source": null
+  }
+}

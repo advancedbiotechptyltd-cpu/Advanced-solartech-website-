@@ -1,0 +1,180 @@
+---
+/**
+ * BaseLayout — wraps every page without exception.
+ *
+ * Order is fixed: head/SEO → skip link → header → main → CTA band → footer →
+ * global JS. Because no page renders a header or footer itself, editing one
+ * here changes every page, and no page can drift out of alignment.
+ */
+import "../styles/global.css";
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+import CtaBand from "../components/CtaBand.astro";
+import { business, absoluteUrl, href } from "../lib/site.js";
+import { localBusinessSchema, websiteSchema } from "../lib/schema.js";
+
+const {
+  title,
+  description,
+  path,
+  // Extra JSON-LD objects contributed by the page template.
+  schemas = [],
+  ogType = "website",
+  ogImage,
+  noindex = false,
+  // Pages that provide their own closing CTA (quote, contact) opt out.
+  showCtaBand = true,
+  ctaProps = {},
+  bodyClass = "",
+} = Astro.props;
+
+if (!title) throw new Error("BaseLayout: `title` is required — every page needs a unique <title>.");
+if (!description) throw new Error("BaseLayout: `description` is required — every page needs a unique meta description.");
+if (!path) throw new Error("BaseLayout: `path` is required to build the canonical URL.");
+
+const canonical = absoluteUrl(path);
+const socialImage = ogImage ? absoluteUrl(ogImage) : business.logo.src;
+
+/*
+ * Staging builds are noindex,nofollow site-wide — no page can opt out.
+ * A staging copy sitting in a public subfolder of a live domain WILL be found
+ * (internal links, referrer headers, someone pasting the URL), and a duplicate
+ * of the whole site competing with the real one is the worst possible outcome.
+ * `nofollow` as well as `noindex`, so crawlers do not walk the staging tree.
+ */
+const isStaging = import.meta.env.PUBLIC_STAGING === "true";
+const robotsContent = isStaging
+  ? "noindex, nofollow"
+  : noindex
+    ? "noindex, follow"
+    : null;
+
+// LocalBusiness + WebSite on every page; templates add Service, Product,
+// Article, FAQPage and BreadcrumbList on top.
+const allSchemas = [localBusinessSchema(), websiteSchema(), ...schemas.filter(Boolean)];
+---
+
+<!doctype html>
+<html lang="en-AU">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {robotsContent && <meta name="robots" content={robotsContent} />}
+    {robotsContent && <meta name="googlebot" content={robotsContent} />}
+
+    <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#0A2540" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content={business.name} />
+    <meta property="og:locale" content="en_AU" />
+    <meta property="og:image" content={socialImage} />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImage} />
+
+    <!-- Third-party origins used above the fold: resolve them early. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://advancedsolartec.com.au" />
+
+    <!--
+      Fonts load without blocking render: fetched as a print stylesheet, then
+      switched to `all` once downloaded. The <noscript> copy keeps them working
+      with JS disabled. Text stays visible throughout via display=swap and the
+      system-font fallbacks in tokens.css.
+    -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@700;800&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@700;800&display=swap"
+      />
+    </noscript>
+
+    <link rel="icon" href={href("/favicon.svg")} type="image/svg+xml" />
+    <link rel="sitemap" href={href("/sitemap-index.xml")} />
+
+    {
+      allSchemas.map((schema) => (
+        <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+      ))
+    }
+  </head>
+
+  <body class={bodyClass}>
+    <a class="skip-link" href="#main">Skip to main content</a>
+
+    <SiteHeader />
+
+    <main id="main">
+      <slot />
+      {showCtaBand && <CtaBand {...ctaProps} />}
+    </main>
+
+    <SiteFooter />
+
+    <script>
+      // Global behaviour: mobile menu and FAQ accordion only.
+      // Scroll reveal is CSS-only (see global.css) — no JS may ever be
+      // responsible for whether content is visible.
+      // Deliberately small, dependency-free and deferred by Astro's bundler.
+
+      // ── Mobile menu ──────────────────────────────────────────────────────
+      const toggle = document.querySelector("[data-menu-toggle]");
+      const menu = document.querySelector("[data-menu]");
+
+      if (toggle && menu) {
+        const setOpen = (open) => {
+          toggle.setAttribute("aria-expanded", String(open));
+          menu.toggleAttribute("data-open", open);
+          document.body.style.overflow = open ? "hidden" : "";
+        };
+
+        toggle.addEventListener("click", () => {
+          setOpen(toggle.getAttribute("aria-expanded") !== "true");
+        });
+
+        // Escape closes, and focus returns to the trigger so keyboard users
+        // are not dropped at the top of the document.
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape" && toggle.getAttribute("aria-expanded") === "true") {
+            setOpen(false);
+            toggle.focus();
+          }
+        });
+
+        menu.querySelectorAll("a").forEach((a) =>
+          a.addEventListener("click", () => setOpen(false))
+        );
+      }
+
+      // ── FAQ accordion ────────────────────────────────────────────────────
+      document.querySelectorAll("[data-accordion-trigger]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const expanded = btn.getAttribute("aria-expanded") === "true";
+          btn.setAttribute("aria-expanded", String(!expanded));
+          const panel = document.getElementById(btn.getAttribute("aria-controls"));
+          if (panel) panel.hidden = expanded;
+        });
+      });
+
+    </script>
+  </body>
+</html>

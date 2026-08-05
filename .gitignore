@@ -1,0 +1,24 @@
+node_modules
+dist/
+.astro/
+.env
+.env.production
+.DS_Store
+
+# Staging upload artifact — rebuilt by `npm run build:staging`.
+*.zip
+
+# Hand-off copies of build output, made when sending files to whoever does the
+# cPanel upload. Generated from src/data/redirects.json by the build — a copy
+# committed here would drift from that source and go stale without anyone
+# noticing.
+redirects-for-*.conf
+
+# Supplier catalogue data — see docs/README.md.
+# 247 product-supplier lines with a price column: the commercial core of the
+# business, in a repository that belongs to a different company. It needs its
+# own repo and a backend that can authenticate staff, not a static site folder.
+catalogue*.json
+catalogue*.csv
+catalogue*.xlsx
+products-by-supplier.*

@@ -1,0 +1,110 @@
+[
+  {
+    "slug": "solaredge",
+    "name": "SolarEdge",
+    "category": "inverters",
+    "summary": "DC-optimised inverter systems with per-panel monitoring — the usual answer for roofs with shading or multiple orientations.",
+    "metaTitle": "SolarEdge Inverters & Optimisers | Advanced Solar Tech",
+    "metaDescription": "SolarEdge inverter and power optimiser systems supplied and installed in Victoria. Per-panel monitoring and strong performance on shaded or complex roofs.",
+    "intro": "SolarEdge pairs a central inverter with a power optimiser on each panel. Because each panel is managed individually, one shaded module no longer drags down the whole string — which is why it is the common specification on roofs with a chimney, a neighbouring tree or several different orientations.",
+    "strengths": [
+      "Per-panel optimisation limits the impact of localised shading",
+      "Panel-level monitoring makes a single underperforming module easy to find",
+      "Suits complex roofs with multiple orientations and pitches",
+      "Module-level rapid shutdown for safety"
+    ],
+    "considerations": "There is more hardware on the roof than a string system — an optimiser per panel. On a genuinely unshaded, single-orientation roof, a straightforward string inverter often delivers the same yield for less. We specify SolarEdge where the roof justifies it.",
+    "productTypes": ["Inverters", "Power optimisers", "Monitoring"],
+    "consolidatedFrom": ["/solaredge/", "/solaredge-2/", "/solaredge-3/"]
+  },
+  {
+    "slug": "sungrow",
+    "name": "Sungrow",
+    "category": "inverters",
+    "summary": "High-volume inverter manufacturer with a broad residential, hybrid and commercial range.",
+    "metaTitle": "Sungrow Inverters & Hybrid Systems | Advanced Solar Tech",
+    "metaDescription": "Sungrow string and hybrid inverters supplied and installed in Victoria, including battery-ready hybrid models for later storage.",
+    "intro": "Sungrow is one of the largest inverter manufacturers globally, with a range spanning small residential string inverters through hybrid units to large commercial three-phase systems. The hybrid models are frequently specified where a battery is planned but not being bought yet.",
+    "strengths": [
+      "Wide range covering residential through to commercial scale",
+      "Hybrid models accept DC-coupled batteries without a second inverter",
+      "Established local support presence in Australia",
+      "Competitive pricing at volume"
+    ],
+    "considerations": "String inverters are more sensitive to shading than DC-optimised systems. On a roof with real shading, either add optimisers or plan the string layout carefully — the difference in annual yield is not marginal.",
+    "productTypes": ["String inverters", "Hybrid inverters", "Commercial inverters"],
+    "consolidatedFrom": ["/sungrow/", "/sungrow-2/"]
+  },
+  {
+    "slug": "goodwe",
+    "name": "GoodWe",
+    "category": "inverters",
+    "summary": "Hybrid and string inverters with a strong battery-ready range at accessible price points.",
+    "metaTitle": "GoodWe Inverters & Hybrid Systems | Advanced Solar Tech",
+    "metaDescription": "GoodWe string and hybrid inverters supplied and installed in Victoria, including battery-ready models with backup capability.",
+    "intro": "GoodWe's hybrid range is widely used where a household wants storage capability without paying for a premium-brand inverter. The ET-series hybrids support backup circuits, which matters where blackout resilience is part of the reason for buying.",
+    "strengths": [
+      "Strong hybrid range at accessible pricing",
+      "Backup circuit support on hybrid models",
+      "Compatible with a range of third-party batteries",
+      "Broad availability in the Australian market"
+    ],
+    "considerations": "Battery compatibility is model-specific — not every GoodWe inverter pairs with every battery. We confirm the exact pairing on your quote rather than leaving it to be discovered at commissioning.",
+    "productTypes": ["String inverters", "Hybrid inverters", "Backup systems"],
+    "consolidatedFrom": ["/goodwe/", "/goodwe-2/"]
+  },
+  {
+    "slug": "huawei",
+    "name": "Huawei",
+    "category": "inverters",
+    "summary": "Inverters with optional per-panel optimisers and integrated storage options.",
+    "metaTitle": "Huawei Solar Inverters & Optimisers | Advanced Solar Tech",
+    "metaDescription": "Huawei FusionSolar inverters and optimisers supplied and installed in Victoria, with optional per-panel optimisation and integrated battery options.",
+    "intro": "Huawei's FusionSolar range offers optimisers as an option rather than a requirement, so the same inverter can serve a simple roof without optimiser cost and a shaded roof with them. That flexibility is useful when a house has one problem section and an otherwise clear roof.",
+    "strengths": [
+      "Optimisers optional rather than mandatory — pay for them only where needed",
+      "Integrated storage options within the same product family",
+      "Detailed monitoring and diagnostics",
+      "Arc-fault detection on supported models"
+    ],
+    "considerations": "Some organisations and commercial tenders apply procurement restrictions to Huawei equipment. If that applies to your site or your insurer, tell us early and we will specify an alternative.",
+    "productTypes": ["String inverters", "Optimisers", "Storage"],
+    "consolidatedFrom": ["/huawei/", "/huawei-2/"]
+  },
+  {
+    "slug": "saj",
+    "name": "SAJ",
+    "category": "inverters",
+    "summary": "Budget-conscious string and hybrid inverters for straightforward roofs.",
+    "metaTitle": "SAJ Solar Inverters | Advanced Solar Tech",
+    "metaDescription": "SAJ string and hybrid inverters supplied and installed in Victoria. A value option for simple, unshaded roof layouts.",
+    "intro": "SAJ sits at the value end of the inverter market. On a simple, unshaded, single-orientation roof, a well-installed SAJ string inverter does the same job as a more expensive unit, and the saving can be redirected into more panels — which usually does more for the bill.",
+    "strengths": [
+      "Lower up-front cost than premium inverter brands",
+      "Hybrid models available for later battery addition",
+      "Straightforward installation and commissioning",
+      "Suits simple roof layouts well"
+    ],
+    "considerations": "Value-tier inverters typically carry shorter standard warranties and a thinner local support network than premium brands. Over a 20-year system life the inverter is the component most likely to need replacing — worth weighing against the up-front saving.",
+    "productTypes": ["String inverters", "Hybrid inverters"],
+    "consolidatedFrom": ["/saj/", "/saj-2/"]
+  },
+  {
+    "slug": "lg-energy-solution",
+    "name": "LG Energy Solution",
+    "category": "batteries",
+    "summary": "Lithium-ion home battery systems from an established global cell manufacturer.",
+    "metaTitle": "LG Energy Solution Home Batteries | Advanced Solar Tech",
+    "metaDescription": "LG Energy Solution home battery systems supplied and installed in Victoria, with compatibility confirmed against your inverter before quoting.",
+    "intro": "LG Energy Solution manufactures the cells as well as the battery system, which is not true of every brand in this market. For a product expected to cycle daily for a decade or more, cell provenance is a reasonable thing to care about.",
+    "strengths": [
+      "Cells manufactured in-house rather than sourced and packaged",
+      "Established global manufacturer with long production history",
+      "Compatible with a range of hybrid inverters",
+      "High round-trip efficiency"
+    ],
+    "considerations": "Battery and inverter compatibility is specific — check the pairing rather than assuming it. Product availability in the Australian market has shifted over time, so we confirm current supply before quoting.",
+    "productTypes": ["Home batteries", "Storage systems"],
+    "consolidatedFrom": ["/lg-energy-solution/", "/lg-energy-solution-2/"]
+  }
+]

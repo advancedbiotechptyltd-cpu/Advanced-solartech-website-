@@ -1,0 +1,77 @@
+---
+/**
+ * KeyFacts — a compact definition list of extractable facts.
+ *
+ * This is the AIO block. Answer engines lift short, unambiguous label/value
+ * pairs far more reliably than they lift the same information buried in prose,
+ * so every service, brand and location page carries one.
+ */
+const { facts = [], heading = "Key facts", level = 2 } = Astro.props;
+const Heading = `h${level}`;
+---
+
+{
+  facts.length > 0 && (
+    <div class="keyFacts">
+      <Heading class="keyFacts__heading">{heading}</Heading>
+      <dl class="keyFacts__list">
+        {facts.map((f) => (
+          <div class="keyFacts__row">
+            <dt>{f.label}</dt>
+            <dd>{f.value}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  )
+}
+
+<style>
+  .keyFacts {
+    padding: var(--s-6);
+    background: var(--c-surface);
+    border: 1px solid var(--c-line);
+    border-radius: var(--r-lg);
+    box-shadow: var(--sh-sm);
+  }
+
+  .keyFacts__heading {
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-bold);
+    text-transform: uppercase;
+    letter-spacing: var(--ls-wide);
+    color: var(--c-muted);
+    margin-bottom: var(--s-4);
+  }
+
+  .keyFacts__list {
+    margin: 0;
+  }
+
+  .keyFacts__row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--s-3);
+    padding-block: var(--s-3);
+    border-bottom: 1px solid var(--c-line);
+  }
+
+  .keyFacts__row:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .keyFacts__row dt {
+    font-size: var(--fs-sm);
+    color: var(--c-muted);
+  }
+
+  .keyFacts__row dd {
+    margin: 0;
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-semibold);
+    color: var(--c-navy);
+    text-align: right;
+  }
+</style>

@@ -1,0 +1,63 @@
+[
+  {
+    "slug": "melbourne",
+    "state": "victoria",
+    "name": "Melbourne",
+    "metaTitle": "Solar & Batteries in Melbourne | Advanced Solar Tech",
+    "metaDescription": "Solar, battery and EV charger installation across Melbourne. Network export limits, heritage overlays and terrace roof constraints handled up front.",
+    "heroHeading": "Solar and battery installation across Melbourne",
+    "intro": "Melbourne installs are shaped by three things that rarely come up elsewhere: five different distribution networks across the metro area with different export limits, heritage overlays in the inner suburbs that restrict street-facing panel placement, and a large stock of narrow terrace and townhouse roofs where usable area is the binding constraint rather than budget.",
+    "localNotes": "Inner-north and inner-east councils apply heritage overlays that can rule out street-facing arrays. We check the overlay before designing the layout, because finding out afterwards means redesigning around a smaller roof.\n\nMetro Melbourne is split between Citipower, Powercor, Jemena, United Energy and AusNet. Export limits differ between them, and the boundary can run down the middle of a suburb.",
+    "postcodeExamples": [
+      "3000",
+      "3121",
+      "3141",
+      "3182"
+    ]
+  },
+  {
+    "slug": "geelong",
+    "state": "victoria",
+    "name": "Geelong",
+    "metaTitle": "Solar & Batteries in Geelong | Advanced Solar Tech",
+    "metaDescription": "Solar, battery and EV charger installation across Geelong and the Bellarine. Coastal corrosion ratings and Powercor export limits accounted for.",
+    "heroHeading": "Solar and battery installation in Geelong and the Bellarine",
+    "intro": "Geelong and the Bellarine sit in Powercor's network, and much of the region is close enough to the coast that salt exposure matters. Mounting hardware and panel frames need the right corrosion rating, which is a specification decision rather than an upsell.",
+    "localNotes": "Properties within a few kilometres of the coast should be quoted with marine-grade or appropriately rated mounting hardware. Standard inland hardware corrodes faster in that environment, and the failure shows up years after the install when the warranty conversation is harder.\n\nGeelong's larger post-war housing stock generally has simple, well-oriented hip and gable roofs, which usually means more usable array area than an equivalent inner-Melbourne property.",
+    "postcodeExamples": [
+      "3220",
+      "3216",
+      "3228"
+    ]
+  },
+  {
+    "slug": "ballarat",
+    "state": "victoria",
+    "name": "Ballarat",
+    "metaTitle": "Solar & Batteries in Ballarat | Advanced Solar Tech",
+    "metaDescription": "Solar, battery and EV charger installation across Ballarat. Cold-climate heating loads and winter generation modelled properly.",
+    "heroHeading": "Solar and battery installation in Ballarat",
+    "intro": "Ballarat is meaningfully colder than Melbourne, and heating dominates the load for a large part of the year. That shifts the sizing question: the winter months where consumption is highest are also the months where generation is lowest.",
+    "localNotes": "Homes running reverse-cycle heating or a heat pump see their heaviest consumption in exactly the months solar produces least. Sizing on an annual average hides that mismatch — we model winter separately so the shortfall is visible before you buy.\n\nFrost and occasional snow load are real considerations for mounting specification in the higher parts of the region.",
+    "postcodeExamples": [
+      "3350",
+      "3355",
+      "3356"
+    ]
+  },
+  {
+    "slug": "bendigo",
+    "state": "victoria",
+    "name": "Bendigo",
+    "metaTitle": "Solar & Batteries in Bendigo | Advanced Solar Tech",
+    "metaDescription": "Solar, battery and EV charger installation across Bendigo. Strong summer generation, hot-climate cooling loads and rural supply considerations.",
+    "heroHeading": "Solar and battery installation in Bendigo",
+    "intro": "Bendigo gets hotter summers and more sunshine hours than Melbourne, so the same array generates more here. Summer cooling load also overlaps well with generation, which lifts self-consumption without needing storage to achieve it.",
+    "localNotes": "Extended runs of 40°C-plus days push inverters toward their thermal limits. Inverter placement matters — a west-facing wall in full afternoon sun will derate output on exactly the days you need it most.\n\nProperties on the rural fringe are more likely to be single-phase with long service runs, which can constrain both system size and EV charger capacity. We check supply before quoting rather than after.",
+    "postcodeExamples": [
+      "3550",
+      "3555",
+      "3556"
+    ]
+  }
+]

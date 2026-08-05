@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Website Audit — Advanced Solar Tech</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0A2540;--navy2:#0E3253;--gold:#FFB020;--green:#10B981;--green6:#059669;--red:#E4572E;--amber:#E5941A;--bg:#F5F8FC;--surf:#fff;--line:#E4EDF4;--text:#1E2A38;--muted:#5B6B7C}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Inter',system-ui,sans-serif;color:var(--text);background:var(--bg);line-height:1.65}
+h1,h2,h3,h4{font-family:'Plus Jakarta Sans',sans-serif;color:var(--navy);line-height:1.2;margin:0 0 .4em;letter-spacing:-.02em}
+.wrap{max-width:900px;margin:0 auto;padding:0 22px}
+.hero{background:radial-gradient(700px 340px at 85% -10%,rgba(56,189,248,.18),transparent 60%),linear-gradient(160deg,#071B31,#0E3253);color:#fff;padding:56px 0 46px}
+.hero h1{color:#fff;font-size:2.2rem}
+.hero p{color:#C7D6E5;margin:.3em 0 0;max-width:60ch}
+.hero .tag{display:inline-block;background:rgba(16,185,129,.16);color:#C7F5E4;font-family:'Plus Jakarta Sans';font-weight:700;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;padding:7px 14px;border-radius:999px;margin-bottom:16px}
+.section{padding:40px 0}
+.section h2{font-size:1.5rem;padding-bottom:12px;border-bottom:2px solid var(--line);margin-bottom:22px}
+.scorebar{display:flex;flex-wrap:wrap;gap:14px;margin-top:26px}
+.score{flex:1;min-width:150px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);border-radius:14px;padding:16px 18px}
+.score b{font-family:'Plus Jakarta Sans';font-size:1.7rem;color:#fff;display:block;line-height:1}
+.score span{color:#9FB4C7;font-size:.82rem}
+.issue{background:var(--surf);border:1px solid var(--line);border-left-width:5px;border-radius:12px;padding:18px 20px;margin-bottom:14px;box-shadow:0 2px 10px rgba(13,38,66,.05)}
+.issue.crit{border-left-color:var(--red)}
+.issue.high{border-left-color:var(--amber)}
+.issue.med{border-left-color:var(--gold)}
+.issue h3{font-size:1.08rem;margin-bottom:6px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.badge{font-family:'Plus Jakarta Sans';font-weight:700;font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;padding:4px 9px;border-radius:999px;color:#fff}
+.b-crit{background:var(--red)}.b-high{background:var(--amber)}.b-med{background:var(--gold);color:#3a2500}
+.issue p{margin:.35em 0 0;color:var(--muted);font-size:.96rem}
+.issue .fix{margin-top:8px;font-size:.94rem;color:var(--text)}
+.issue .fix b{color:var(--green6)}
+.plan{background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin-bottom:14px}
+.plan h3{font-size:1.05rem;margin-bottom:4px}
+.plan .when{font-family:'Plus Jakarta Sans';font-weight:700;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--green6)}
+.plan ul{margin:10px 0 0;padding-left:20px}
+.plan li{margin-bottom:6px;color:var(--text);font-size:.96rem}
+.callout{background:linear-gradient(160deg,#fff,#F3FAF6);border:1px solid #D8EEE3;border-radius:14px;padding:22px 24px}
+.callout h3{color:var(--green6)}
+table{width:100%;border-collapse:collapse;margin-top:10px;font-size:.92rem}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line)}
+th{font-family:'Plus Jakarta Sans';color:var(--navy);font-size:.8rem;text-transform:uppercase;letter-spacing:.05em}
+.foot{color:var(--muted);font-size:.85rem;padding:30px 0 50px;text-align:center}
+code{background:#EEF3F8;padding:2px 6px;border-radius:5px;font-size:.88em}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="wrap">
+    <span class="tag">Website Audit · August 2026</span>
+    <h1>Advanced Solar Tech — Website Audit</h1>
+    <p>A review of advancedsolartec.com.au covering SEO, AI-search readiness (AIO), and front-end lead generation, with a prioritised action plan.</p>
+    <div class="scorebar">
+      <div class="score"><b>1 critical</b><span>Broken quote form losing leads</span></div>
+      <div class="score"><b>SEO: weak</b><span>No meta descriptions or schema</span></div>
+      <div class="score"><b>AIO: minimal</b><span>Little AI engines can cite</span></div>
+      <div class="score"><b>69 pages</b><span>Many thin / duplicate</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+<div class="section">
+  <h2>Executive summary</h2>
+  <p>The site has a solid foundation — WordPress with the Yoast SEO plugin already installed, a crawlable structure, a sitemap, and a permissive <code>robots.txt</code>. But the fundamentals aren't switched on: there are no meta descriptions, no local-business structured data, and images have no alt text, so search engines and AI assistants have very little to work with. Most importantly, <b>the "Get a Quote" form is currently broken</b> ("Error: Contact form not found"), which means your single most valuable action — capturing a lead — is failing right now. Fixing that one thing is the highest-return change on the whole site.</p>
+  <p>Below, issues are grouped by area and tagged <span class="badge b-crit">Critical</span> <span class="badge b-high">High</span> <span class="badge b-med">Medium</span>, followed by a step-by-step action plan.</p>
+</div>
+
+<div class="section">
+  <h2>1 · Critical — fix immediately</h2>
+
+  <div class="issue crit">
+    <h3><span class="badge b-crit">Critical</span> The quote form is broken</h3>
+    <p>The <code>/get-a-quote/</code> page shows <b>"Error: Contact form not found"</b>, and the homepage contact form errors too. Every visitor who tries to request a quote right now hits a dead end — this is directly losing you leads and sales.</p>
+    <p class="fix"><b>Fix:</b> Re-link or rebuild the form (the referenced form was likely deleted or its ID changed in the form plugin). Test a real submission end-to-end and confirm the enquiry email actually arrives.</p>
+  </div>
+
+  <div class="issue crit">
+    <h3><span class="badge b-crit">Critical</span> The quote form is far too long (40+ fields)</h3>
+    <p>Even once fixed, the form asks for 40+ fields — rebate eligibility, roof material, roof shape, tilt, meter type, photo uploads, bill copies — before a person has any reason to trust you. This level of friction causes the vast majority of visitors to abandon it.</p>
+    <p class="fix"><b>Fix:</b> Cut the first step to 4–6 fields (name, phone, email, suburb/postcode, property type). Collect the technical detail later, after they've made contact. This alone typically multiplies completed enquiries.</p>
+  </div>
+</div>
+
+<div class="section">
+  <h2>2 · SEO issues</h2>
+
+  <div class="issue high">
+    <h3><span class="badge b-high">High</span> No meta descriptions</h3>
+    <p>Yoast is installed but meta descriptions are empty, so Google writes its own snippet for your listings — hurting click-through from search results.</p>
+    <p class="fix"><b>Fix:</b> Write a unique, benefit-led meta description (≈150 chars) for every key page, with location keywords (e.g. "solar panels in Victoria").</p>
+  </div>
+
+  <div class="issue high">
+    <h3><span class="badge b-high">High</span> Weak, keyword-free page titles</h3>
+    <p>Titles like <code>Home - Advanced Solar Tech</code> and <code>SERVICES - Advanced Solar Tech</code> contain no search terms or location. Nobody searches "home" — they search "solar installer Melbourne", "solar battery Victoria".</p>
+    <p class="fix"><b>Fix:</b> Rewrite titles around real search terms + location, e.g. <code>Solar Panel Installation in Victoria | Advanced Solar Tech</code>.</p>
+  </div>
+
+  <div class="issue high">
+    <h3><span class="badge b-high">High</span> No Local Business structured data (schema)</h3>
+    <p>There's no <code>LocalBusiness</code> JSON-LD, no address, and no opening hours. This is a major miss for a local installer — it weakens Google Maps / local pack visibility and blocks rich results.</p>
+    <p class="fix"><b>Fix:</b> Add <code>LocalBusiness</code> schema with name, address, phone, hours, service area and accreditations. Create/optimise a Google Business Profile.</p>
+  </div>
+
+  <div class="issue high">
+    <h3><span class="badge b-high">High</span> Images have no alt text</h3>
+    <p>Site-wide, images lack descriptive <code>alt</code> attributes — losing image-search traffic and failing accessibility (WCAG) standards.</p>
+    <p class="fix"><b>Fix:</b> Add descriptive alt text to every meaningful image (panels, installs, brands, icons).</p>
+  </div>
+
+  <div class="issue med">
+    <h3><span class="badge b-med">Medium</span> Thin &amp; duplicate content</h3>
+    <p>Most pages carry only ~600–800 words, all three services sit on one page, and there are many near-duplicate brand pages (e.g. <code>solaredge</code>, <code>solaredge-2</code>, <code>solaredge-3</code>; <code>huawei</code>/<code>huawei-2</code>). Duplicates cause keyword cannibalisation and waste crawl budget.</p>
+    <p class="fix"><b>Fix:</b> Consolidate duplicate brand pages (redirect extras), and expand each service into its own richer page targeting local keywords.</p>
+  </div>
+
+  <div class="issue med">
+    <h3><span class="badge b-med">Medium</span> Default WordPress "sample page" still live</h3>
+    <p>The starter page <code>/sample-page/</code> is still published and in your sitemap — it looks unfinished and adds indexable junk.</p>
+    <p class="fix"><b>Fix:</b> Delete <code>/sample-page/</code> and any other placeholder/test pages (e.g. <code>/check-form/</code>).</p>
+  </div>
+
+  <div class="issue med">
+    <h3><span class="badge b-med">Medium</span> No blog / no content marketing</h3>
+    <p>The sitemap contains only pages — no articles. There's nothing ranking for the questions buyers actually search ("how much does solar cost in Victoria?", "is a solar battery worth it?"), so you miss a large stream of free, high-intent traffic.</p>
+    <p class="fix"><b>Fix:</b> Start a small, focused article program answering real buyer questions with local specifics.</p>
+  </div>
+
+  <div class="issue med">
+    <h3><span class="badge b-med">Medium</span> Inconsistent NAP &amp; small errors</h3>
+    <p>The phone is formatted oddly (<code>0061403657585</code>), there's no consistent address, and there are spelling slips in the menu (e.g. "Residrntal"). Inconsistent name/address/phone hurts local trust and rankings.</p>
+    <p class="fix"><b>Fix:</b> Standardise NAP everywhere (<code>+61 403 657 585</code>), fix spelling, and use a clickable <code>tel:</code> link.</p>
+  </div>
+</div>
+
+<div class="section">
+  <h2>3 · AIO — AI-search readiness</h2>
+  <p style="margin-top:-6px;color:var(--muted)">How well ChatGPT, Google AI Overviews, Perplexity, Gemini and Claude can understand and <i>recommend</i> your business. Today the site gives them very little to work with.</p>
+
+  <div class="issue high">
+    <h3><span class="badge b-high">High</span> No structured facts for AI to extract</h3>
+    <p>With no schema, no stated address/service-area, and thin copy, AI engines can't reliably answer "who installs solar in [suburb]?" with your business. AI answers favour sites with clear, factual, well-structured information.</p>
+    <p class="fix"><b>Fix:</b> Add <code>LocalBusiness</code>, <code>Service</code> and <code>FAQPage</code> schema, and state key facts plainly (service areas, accreditations, brands, warranties) as clear sentences.</p>
+  </div>
+
+  <div class="issue high">
+    <h3><span class="badge b-high">High</span> No answer-style / FAQ content</h3>
+    <p>AI assistants love concise question-and-answer content they can quote directly. The site has none with proper FAQ markup.</p>
+    <p class="fix"><b>Fix:</b> Add FAQ sections (cost, rebates, install time, warranties, battery ROI) using <code>FAQPage</code> schema.</p>
+  </div>
+
+  <div class="issue med">
+    <h3><span class="badge b-med">Medium</span> No <code>llms.txt</code> &amp; undefined AI-crawler policy</h3>
+    <p>There's no <code>llms.txt</code> (an emerging file that guides AI models to your key content), and no explicit decision on AI crawlers (GPTBot, PerplexityBot, ClaudeBot, Google-Extended). Your <code>robots.txt</code> currently allows everything — fine if you <i>want</i> AI visibility, which for lead-gen you do.</p>
+    <p class="fix"><b>Fix:</b> Add an <code>llms.txt</code> pointing to your services, service areas and contact page; keep AI crawlers allowed.</p>
+  </div>
+</div>
+
+<div class="section">
+  <h2>4 · Front-end, UX &amp; lead generation</h2>
+
+  <div class="issue high">
+    <h3><span class="badge b-high">High</span> No instant value for high-intent visitors</h3>
+    <p>Someone ready to buy has no way to get a ballpark price or estimate without committing to a giant form. That's exactly the gap your planned instant roof-quote calculator fills (see next section).</p>
+    <p class="fix"><b>Fix:</b> Offer an instant estimate / short "get my quote" path so hot leads don't bounce.</p>
+  </div>
+
+  <div class="issue high">
+    <h3><span class="badge b-high">High</span> Weak trust signals</h3>
+    <p>Little social proof is surfaced: no prominent reviews/testimonials, no accreditation badges (CEC), no real project photos, case studies or physical address. Solar is a high-consideration purchase — trust drives conversion.</p>
+    <p class="fix"><b>Fix:</b> Add real reviews, star ratings, CEC/accreditation badges, before/after install photos, and a clear service area.</p>
+  </div>
+
+  <div class="issue med">
+    <h3><span class="badge b-med">Medium</span> E-commerce clutter distracts from the goal</h3>
+    <p>The navigation exposes Shop, Cart, Checkout, Login and Register. For a quote-and-install business this splits attention and confuses visitors about what to do next.</p>
+    <p class="fix"><b>Fix:</b> Make "Get a Quote" the single, obvious primary action; hide or de-emphasise the store/account clutter unless it's genuinely used.</p>
+  </div>
+
+  <div class="issue med">
+    <h3><span class="badge b-med">Medium</span> Weak, buried calls-to-action &amp; mobile friction</h3>
+    <p>CTAs aren't prominent within content, there's no persistent/sticky "Get a Quote", and no click-to-call bar on mobile — where most local traffic comes from. The long forms are especially painful on a phone.</p>
+    <p class="fix"><b>Fix:</b> Add a sticky header CTA and a mobile click-to-call bar; repeat a clear CTA after each section.</p>
+  </div>
+
+  <div class="issue med">
+    <h3><span class="badge b-med">Medium</span> Presentation &amp; readability</h3>
+    <p>Headings are in ALL CAPS and copy is generic, which reads as dated and less professional. (This is what the redesign we built already addresses.)</p>
+    <p class="fix"><b>Fix:</b> Apply the refreshed, consistent design with sentence-case headings, clear hierarchy and benefit-led copy.</p>
+  </div>
+</div>
+
+<div class="section">
+  <h2>Prioritised action plan</h2>
+
+  <div class="plan">
+    <span class="when">Step 1 · This week — quick wins</span>
+    <h3>Stop the bleeding &amp; switch on the basics</h3>
+    <ul>
+      <li>Fix the broken quote form and test a real submission end-to-end.</li>
+      <li>Shorten the first-step form to 4–6 fields.</li>
+      <li>Add meta descriptions + rewrite page titles with location keywords (in Yoast).</li>
+      <li>Add a clickable <code>tel:</code> and a mobile click-to-call bar.</li>
+      <li>Delete <code>/sample-page/</code> and placeholder pages; fix menu spelling.</li>
+      <li>Add alt text to key images.</li>
+    </ul>
+  </div>
+
+  <div class="plan">
+    <span class="when">Step 2 · Weeks 2–4 — trust &amp; structure</span>
+    <h3>Build credibility and clean up the site</h3>
+    <ul>
+      <li>Add <code>LocalBusiness</code> + <code>Service</code> + <code>FAQPage</code> schema and set up / optimise Google Business Profile.</li>
+      <li>Add reviews, CEC accreditation badges, real project photos and a service-area statement.</li>
+      <li>Consolidate duplicate brand pages; build dedicated, richer service pages.</li>
+      <li>Declutter navigation around the "Get a Quote" goal.</li>
+      <li>Roll out the refreshed, consistent design.</li>
+    </ul>
+  </div>
+
+  <div class="plan">
+    <span class="when">Step 3 · Ongoing — growth &amp; AI visibility</span>
+    <h3>Attract and convert more traffic</h3>
+    <ul>
+      <li>Publish buyer-question articles (cost, rebates, battery ROI) with local detail.</li>
+      <li>Add FAQ content + <code>llms.txt</code> for AI-search visibility.</li>
+      <li>Launch the instant roof-quote calculator (below).</li>
+    </ul>
+  </div>
+</div>
+
+<div class="section">
+  <h2>Phase 3 · Instant roof-quote calculator</h2>
+  <div class="callout">
+    <h3>Your "instant quote from a roof image" idea — it's very buildable</h3>
+    <p>The plan: a visitor enters their address, we pull their roof from Google, estimate usable roof area / solar potential, then apply your price list to produce an on-the-spot ballpark quote — and capture the lead.</p>
+    <p style="margin-top:10px"><b>How it works technically:</b> Google offers a <b>Solar API</b> (part of Google Maps Platform) that returns roof size, roof segments, orientation and solar potential from an address, plus a <b>Static Maps / aerial image</b> of the roof. We combine that with your price list and calculator logic to output an estimated system size, expected savings, rebate, and price range.</p>
+    <table>
+      <tr><th>What it needs</th><th>Notes</th></tr>
+      <tr><td>Google Maps Platform account + API key</td><td>Solar API is billed per lookup (small cost); has a free monthly credit.</td></tr>
+      <tr><td>Your itemised price list</td><td>Panels, inverters, batteries, install costs, margins.</td></tr>
+      <tr><td>Your calculator logic</td><td>The formulas/rules you already use to price a job.</td></tr>
+      <tr><td>Lead capture</td><td>Show estimate → ask for contact details to send the full quote.</td></tr>
+    </table>
+    <p style="margin-top:12px"><b>Next:</b> send me your price list and how your quote calculator works, and I'll build a working version and wire it into the new site.</p>
+  </div>
+</div>
+
+<div class="foot">
+  Prepared for Advanced Solar Tech · Findings verified against the live site, August 2026.<br>
+  Note: Core Web Vitals / page-speed and full mobile testing should be confirmed with Google PageSpeed Insights &amp; Search Console.
+</div>
+
+</div>
+</body>
+</html>

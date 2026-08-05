@@ -1,0 +1,70 @@
+---
+/**
+ * Gallery — a strip of recent work.
+ *
+ * For a trade business this is the highest-value block on the site after the
+ * phone number: people buy an installer on the evidence of previous installs,
+ * not on adjectives. Each item carries its own alt text, which doubles as the
+ * caption, so describing the job well serves both accessibility and the reader.
+ */
+import Figure from "./Figure.astro";
+
+const { items = [], columns = 4 } = Astro.props;
+---
+
+{
+  items.length > 0 && (
+    <ul class:list={["gallery", `gallery--${columns}`]} role="list">
+      {items.map((item) => (
+        <li class="gallery__item" data-reveal>
+          <Figure
+            name={item.image}
+            alt={item.alt ?? ""}
+            ratio="4 / 3"
+            sizes="(max-width: 600px) 50vw, (max-width: 960px) 33vw, 280px"
+            widths={[360, 560]}
+          />
+          {item.label && <p class="gallery__label">{item.label}</p>}
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+<style>
+  .gallery {
+    display: grid;
+    gap: var(--s-4);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .gallery--3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .gallery--4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .gallery__label {
+    margin-top: var(--s-3);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-medium);
+    color: var(--c-navy);
+  }
+
+  @media (max-width: 960px) {
+    .gallery--4 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 600px) {
+    .gallery--3,
+    .gallery--4 {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--s-3);
+    }
+  }
+</style>

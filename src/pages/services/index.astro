@@ -1,0 +1,55 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import InnerHero from "../../components/InnerHero.astro";
+import SectionHeader from "../../components/SectionHeader.astro";
+import FeatureCardGrid from "../../components/FeatureCardGrid.astro";
+import StepsProcess from "../../components/StepsProcess.astro";
+import LogoStrip from "../../components/LogoStrip.astro";
+import { services, business, getProcess } from "../../lib/site.js";
+import { breadcrumbSchema, serviceSchema } from "../../lib/schema.js";
+
+const crumbs = [{ label: "Services", href: "/services/" }];
+const process = getProcess("standard-install");
+
+const cards = services.map((s) => ({
+  title: s.title,
+  summary: s.summary,
+  icon: s.icon,
+  href: `/services/${s.slug}/`,
+}));
+---
+
+<BaseLayout
+  title={`Solar, Battery & EV Charging Services | ${business.name}`}
+  description="Solar panel, battery storage, EV charger and commercial solar installation across Victoria. Every system sized from your actual usage rather than a standard package."
+  path="/services/"
+  schemas={[breadcrumbSchema(crumbs), ...services.map((s) => serviceSchema(s))]}
+>
+  <InnerHero
+    kicker="Services"
+    heading="What we design, supply and install"
+    body="Four services that work best specified together — because each one changes what the others are worth."
+    crumbs={crumbs}
+    ctaLabel="Get a Quote"
+    ctaHref="/quote/"
+  />
+
+  <section class="section">
+    <div class="container">
+      <FeatureCardGrid items={cards} columns={2} level={2} />
+    </div>
+  </section>
+
+  <section class="section section--surface">
+    <div class="container">
+      <SectionHeader
+        kicker="How it works"
+        heading="The same process for every install"
+        body="Whichever service you start with, the path from enquiry to switched-on system is the same."
+      />
+      <StepsProcess steps={process.steps} level={3} />
+    </div>
+  </section>
+
+  <LogoStrip />
+</BaseLayout>

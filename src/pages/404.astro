@@ -1,0 +1,38 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import InnerHero from "../components/InnerHero.astro";
+import FeatureCardGrid from "../components/FeatureCardGrid.astro";
+import SectionHeader from "../components/SectionHeader.astro";
+import { services, business } from "../lib/site.js";
+---
+
+<BaseLayout
+  title={`Page not found | ${business.name}`}
+  description="The page you were looking for could not be found. Browse our solar, battery and EV charging services instead."
+  path="/404/"
+  noindex
+>
+  <InnerHero
+    kicker="404"
+    heading="We couldn't find that page"
+    body="It may have moved when we reorganised the site. Here is where most people were heading."
+    ctaLabel="Get a Quote"
+    ctaHref="/quote/"
+  />
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader heading="Our services" level={2} />
+      <FeatureCardGrid
+        items={services.map((s) => ({
+          title: s.title,
+          summary: s.summary,
+          icon: s.icon,
+          href: `/services/${s.slug}/`,
+        }))}
+        columns={4}
+        level={3}
+      />
+    </div>
+  </section>
+</BaseLayout>

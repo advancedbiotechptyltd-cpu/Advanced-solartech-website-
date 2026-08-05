@@ -1,0 +1,285 @@
+---
+/**
+ * SiteFooter — NAP, link columns, serviced areas and legal.
+ *
+ * The name, address-area and phone here are read from business.json, the same
+ * source as the LocalBusiness JSON-LD. Keeping them identical everywhere is
+ * what makes the entity legible to both search engines and AI crawlers.
+ */
+import { business, nav, locations, telHref, href, getAccreditations, getInstallerStatement } from "../lib/site.js";
+
+const year = new Date().getFullYear();
+const accreditations = getAccreditations();
+const installerStatement = getInstallerStatement();
+const servicedStates = locations.filter((l) => l.serviced);
+const partnerStates = locations.filter((l) => !l.serviced);
+---
+
+<footer class="footer">
+  <div class="container footer__grid">
+    <div class="footer__brand">
+      <a href={href("/")} aria-label={`${business.name} — home`}>
+        <img
+          class="footer__logo"
+          src={business.logo.src}
+          alt={business.logo.alt}
+          width={business.logo.width}
+          height={business.logo.height}
+          loading="lazy"
+          onerror="this.style.display='none';this.nextElementSibling.hidden=false"
+        />
+        <span class="footer__wordmark" hidden>Advanced Solar Tech</span>
+      </a>
+
+      <p class="footer__tagline">{business.tagline}</p>
+
+      {
+        accreditations.length > 0 && (
+          <ul class="footer__accred" role="list">
+            {accreditations.map((item) => (
+              <li>{item.title}</li>
+            ))}
+          </ul>
+        )
+      }
+
+      {installerStatement && <p class="footer__installer">{installerStatement}</p>}
+
+      <address class="footer__nap">
+        <span class="footer__napName">{business.name}</span>
+        <a href={telHref()}>{business.phoneDisplay}</a>
+        <a href={`mailto:${business.email}`}>{business.email}</a>
+        <span>{business.areaServed}</span>
+      </address>
+
+      {
+        business.social?.length > 0 && (
+          <ul class="footer__social">
+            {business.social.map((url) => (
+              <li>
+                <a href={url} rel="noopener noreferrer" target="_blank">
+                  {url.includes("facebook") ? "Facebook" : "Social"}
+                </a>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </div>
+
+    {
+      nav.footer.map((col) => (
+        <nav class="footer__col" aria-label={col.heading}>
+          <h2 class="footer__heading">{col.heading}</h2>
+          <ul>
+            {col.links.map((l) => (
+              <li>
+                <a href={href(l.href)}>{l.label}</a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      ))
+    }
+
+    <nav class="footer__col" aria-label="Service areas">
+      <h2 class="footer__heading">Direct Install</h2>
+      <ul>
+        {
+          servicedStates.map((l) => (
+            <li>
+              <a href={href(`/locations/${l.slug}/`)}>{l.state}</a>
+            </li>
+          ))
+        }
+      </ul>
+      {
+        partnerStates.length > 0 && (
+          <>
+            <h2 class="footer__heading footer__heading--sub">Partner Network</h2>
+            <ul>
+              {partnerStates.map((l) => (
+                <li>
+                  <a href={href(`/locations/${l.slug}/`)}>{l.abbr}</a>
+                </li>
+              ))}
+            </ul>
+          </>
+        )
+      }
+    </nav>
+  </div>
+
+  <div class="footer__bar">
+    <div class="container footer__barInner">
+      <p>© {year} {business.name}. All rights reserved.</p>
+      <ul class="footer__legal">
+        {
+          nav.legal.map((l) => (
+            <li>
+              <a href={href(l.href)}>{l.label}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    margin-top: auto;
+    background: var(--c-navy);
+    color: var(--c-on-dark-muted);
+  }
+
+  .footer__grid {
+    display: grid;
+    grid-template-columns: 1.5fr repeat(4, 1fr);
+    gap: var(--s-7) var(--s-5);
+    padding-block: var(--s-9) var(--s-7);
+  }
+
+  .footer__logo {
+    height: 42px;
+    width: auto;
+    object-fit: contain;
+    /* The supplied logo is dark-on-transparent; lift it on the navy footer. */
+    filter: brightness(0) invert(1);
+  }
+
+  .footer__wordmark {
+    font-family: var(--font-heading);
+    font-weight: var(--fw-heading);
+    font-size: var(--fs-xl);
+    color: var(--c-on-dark);
+  }
+
+  .footer__tagline {
+    margin-top: var(--s-4);
+    font-size: var(--fs-sm);
+    max-width: 34ch;
+  }
+
+  /*
+   * Names only, no detail line: the footer repeats on all 42 pages, and the
+   * full claim with its explanation lives on the home, about and service
+   * pages where there is room to substantiate it.
+   */
+  .footer__accred {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2) var(--s-4);
+    list-style: none;
+    margin: var(--s-4) 0 0;
+    padding: 0;
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-semibold);
+    color: var(--c-gold);
+  }
+
+  .footer__installer {
+    margin: var(--s-3) 0 0;
+    font-size: var(--fs-xs);
+    color: var(--c-on-dark-muted);
+    max-width: 46ch;
+  }
+
+  .footer__nap {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-1);
+    margin-top: var(--s-5);
+    font-style: normal;
+    font-size: var(--fs-sm);
+  }
+
+  .footer__napName {
+    font-weight: var(--fw-semibold);
+    color: var(--c-on-dark);
+  }
+
+  .footer__social {
+    display: flex;
+    gap: var(--s-4);
+    margin-top: var(--s-5);
+    padding: 0;
+    list-style: none;
+    font-size: var(--fs-sm);
+  }
+
+  .footer__heading {
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-bold);
+    text-transform: uppercase;
+    letter-spacing: var(--ls-wide);
+    color: var(--c-on-dark);
+    margin-bottom: var(--s-4);
+  }
+
+  .footer__heading--sub {
+    margin-top: var(--s-5);
+  }
+
+  .footer__col ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-2);
+  }
+
+  .footer a {
+    color: var(--c-on-dark-muted);
+    font-size: var(--fs-sm);
+    text-decoration: none;
+  }
+
+  .footer a:hover {
+    color: var(--c-gold);
+    text-decoration: underline;
+  }
+
+  .footer__bar {
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .footer__barInner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-4);
+    padding-block: var(--s-5);
+    font-size: var(--fs-xs);
+  }
+
+  .footer__legal {
+    display: flex;
+    gap: var(--s-5);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  @media (max-width: 960px) {
+    .footer__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .footer__brand {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .footer__grid {
+      grid-template-columns: 1fr;
+      gap: var(--s-6);
+    }
+    .footer__barInner {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>

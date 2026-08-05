@@ -1,0 +1,73 @@
+---
+/**
+ * LogoStrip — brands we supply, as text rather than logo images.
+ *
+ * Text avoids shipping third-party trademarks we may not have licence to use,
+ * costs nothing in page weight, and links each brand to its own page — which
+ * is worth more for internal linking than a row of images would be.
+ */
+import { brands, href } from "../lib/site.js";
+
+const { items = brands, heading = "Brands we supply and install", level = 2 } = Astro.props;
+const Heading = `h${level}`;
+---
+
+{
+  items.length > 0 && (
+    <section class="logos section--tight" data-reveal>
+      <div class="container">
+        <Heading class="logos__heading">{heading}</Heading>
+        <ul class="logos__list" role="list">
+          {items.map((b) => (
+            <li>
+              <a class="logos__item" href={href(`/brands/${b.slug}/`)}>
+                {b.name}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .logos__heading {
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-bold);
+    text-transform: uppercase;
+    letter-spacing: var(--ls-wide);
+    color: var(--c-muted);
+    text-align: center;
+    margin-bottom: var(--s-5);
+  }
+
+  .logos__list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--s-3);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .logos__item {
+    display: inline-block;
+    padding: var(--s-3) var(--s-5);
+    background: var(--c-surface);
+    border: 1px solid var(--c-line);
+    border-radius: var(--r-pill);
+    font-family: var(--font-heading);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-bold);
+    color: var(--c-navy);
+    text-decoration: none;
+    transition: border-color var(--t-fast), color var(--t-fast);
+  }
+
+  .logos__item:hover {
+    border-color: var(--c-gold);
+    color: var(--c-gold-text);
+  }
+</style>

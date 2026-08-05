@@ -1,0 +1,234 @@
+---
+/**
+ * FeatureCardGrid — the site's workhorse grid. Used for services, benefits,
+ * product categories and article listings. Cards become links when `href` is
+ * present, and the whole card is clickable via a stretched pseudo-element.
+ */
+import Icon from "./Icon.astro";
+import Figure from "./Figure.astro";
+import { href } from "../lib/site.js";
+
+const { items = [], columns = 3, level = 3, variant = "default" } = Astro.props;
+const Heading = `h${level}`;
+
+// Any card carrying an `image` turns the whole grid into the photo variant, so
+// a mixed row cannot end up with some cards taller than others.
+const hasImages = items.some((i) => i.image);
+---
+
+<ul
+  class:list={["cards", `cards--${columns}`, `cards--${variant}`, hasImages && "cards--photo"]}
+  role="list"
+>
+  {
+    items.map((item) => (
+      <li class:list={["cards__item", item.href && "is-link"]} data-reveal>
+        {hasImages && (
+          <div class="cards__media">
+            <Figure
+              name={item.image}
+              alt={item.imageAlt ?? ""}
+              ratio="16 / 10"
+              rounded={false}
+              sizes="(max-width: 600px) 100vw, (max-width: 960px) 50vw, 300px"
+              widths={[380, 620]}
+            />
+          </div>
+        )}
+
+        {item.icon && !hasImages && (
+          <span class="cards__icon">
+            <Icon name={item.icon} size={22} />
+          </span>
+        )}
+
+        <Heading class="cards__title">
+          {item.href ? (
+            <a class="cards__link" href={href(item.href)}>
+              {item.title}
+            </a>
+          ) : (
+            item.title
+          )}
+        </Heading>
+
+        {(item.body || item.summary) && (
+          <p class="cards__body">{item.body ?? item.summary}</p>
+        )}
+
+        {item.meta && <p class="cards__meta">{item.meta}</p>}
+
+        {item.href && (
+          <span class="cards__cue" aria-hidden="true">
+            Learn more →
+          </span>
+        )}
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .cards {
+    display: grid;
+    gap: var(--s-5);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .cards--2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .cards--3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .cards--4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  /* For counts that do not divide evenly — five services, for instance —
+     auto-fit keeps every card the same width instead of leaving a ragged row. */
+  /*
+   * auto-fit fills the row and leaves whatever is left over stranded at the
+   * left edge — with five services on a wide screen that is a 4 + 1 orphan.
+   * Centring the track set puts the short final row under the middle of the
+   * grid, which reads as deliberate rather than as a layout that ran out.
+   */
+  .cards--auto {
+    grid-template-columns: repeat(auto-fit, minmax(205px, 260px));
+    justify-content: center;
+  }
+
+  .cards__item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: var(--s-6);
+    background: var(--c-surface);
+    border: 1px solid var(--c-line);
+    border-radius: var(--r-lg);
+    box-shadow: var(--sh-sm);
+    transition: box-shadow var(--t-base), transform var(--t-base),
+      border-color var(--t-base);
+  }
+
+  .cards__item.is-link:hover {
+    box-shadow: var(--sh-lg);
+    transform: translateY(-3px);
+    border-color: var(--c-gold);
+  }
+
+  .cards--plain .cards__item {
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    padding: 0;
+  }
+
+  /* Photo cards: the image is flush to the card edge, so the padding moves
+     from the card onto the text block below it. */
+  .cards--photo .cards__item {
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .cards--photo .cards__title,
+  .cards--photo .cards__body,
+  .cards--photo .cards__meta,
+  .cards--photo .cards__cue {
+    padding-inline: var(--s-5);
+  }
+
+  .cards--photo .cards__title {
+    padding-top: var(--s-5);
+  }
+
+  .cards--photo .cards__cue {
+    padding-bottom: var(--s-5);
+  }
+
+  .cards__media {
+    overflow: hidden;
+  }
+
+  .cards__media :global(.fig__img),
+  .cards__media :global(.fig__placeholder) {
+    transition: transform var(--t-slow);
+  }
+
+  .cards__item.is-link:hover .cards__media :global(.fig__img),
+  .cards__item.is-link:hover .cards__media :global(.fig__placeholder) {
+    transform: scale(1.04);
+  }
+
+  .cards__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    margin-bottom: var(--s-4);
+    border-radius: var(--r-md);
+    background: var(--c-gold-100);
+    color: var(--c-gold-text);
+  }
+
+  .cards__title {
+    font-size: var(--fs-h4);
+  }
+
+  /* Stretched link: the heading anchor stays the accessible name while the
+     whole card becomes the click target. */
+  .cards__link {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .cards__link::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: var(--r-lg);
+  }
+
+  .cards__body {
+    margin-top: var(--s-3);
+    font-size: var(--fs-sm);
+    color: var(--c-muted);
+  }
+
+  .cards__meta {
+    margin-top: var(--s-3);
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: var(--ls-wide);
+    color: var(--c-muted);
+  }
+
+  .cards__cue {
+    margin-top: auto;
+    padding-top: var(--s-5);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-semibold);
+    color: var(--c-navy);
+  }
+
+  .cards__item.is-link:hover .cards__cue {
+    color: var(--c-gold-text);
+  }
+
+  @media (max-width: 960px) {
+    .cards--3,
+    .cards--4 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 600px) {
+    .cards--2,
+    .cards--3,
+    .cards--4 {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,122 @@
+[
+  {
+    "id": "solar-system-size",
+    "question": "What size solar system do I need?",
+    "answer": "System size is set by your annual consumption, your roof area and orientation, and your network's export limit — not by a standard package. Most Victorian homes land between 6.6kW and 13.2kW. We size from your bill and interval data where it is available, so more of what you generate is used on site rather than exported at a low feed-in rate."
+  },
+  {
+    "id": "solar-payback",
+    "question": "How long does a solar system take to pay for itself?",
+    "answer": "Payback depends on how much of the generation you use on site, your electricity tariff, and the rebates applied to your quote. Self-consumption is the dominant variable: energy you use directly is worth your full retail rate, while exported energy earns only the feed-in tariff. Your quote states the assumptions behind its payback figure so you can check them."
+  },
+  {
+    "id": "solar-roof-types",
+    "question": "Can you install on my roof type?",
+    "answer": "We install on tile, Colorbond and metal deck, and most common Australian roof types. Roof condition matters as much as material — if tiles are brittle or the roof is near the end of its life, it is usually cheaper to address that before the array goes on rather than removing and refitting panels later."
+  },
+  {
+    "id": "solar-install-time",
+    "question": "How long does installation take?",
+    "answer": "Most residential installations are completed in a single day on site. The full timeline from signed quote to switched-on system is longer, because it includes network connection approval and, where applicable, rebate processing. We give you the expected dates for each step when you order."
+  },
+  {
+    "id": "battery-cost",
+    "question": "How much does a solar battery cost?",
+    "answer": "Installed battery cost depends on capacity, whether backup circuits are included, and whether your existing inverter can be reused. The federal battery rebate reduces installed cost by roughly 30% and applies nationally. In Victoria that federal rebate is the only battery incentive — Solar Victoria's rebates and interest-free loans cover solar panels, not batteries. Your quote shows the price before and after it."
+  },
+  {
+    "id": "battery-size",
+    "question": "What size battery should I get?",
+    "answer": "Battery capacity should be set by your evening and overnight consumption, not by the largest unit that fits the budget. A battery only earns a return on the energy it actually cycles, so capacity that never gets used is capital sitting idle. Common residential sizes run from 10kWh to 20kWh."
+  },
+  {
+    "id": "battery-blackout",
+    "question": "Will a battery keep my power on during a blackout?",
+    "answer": "Only if the system is specified for it. Backup requires a compatible inverter and a dedicated backup circuit, and it usually covers selected circuits rather than the whole house. We agree which circuits stay live — typically lights, fridge, internet and a few power points — before the design is finalised."
+  },
+  {
+    "id": "battery-retrofit",
+    "question": "Can I add a battery to my existing solar system?",
+    "answer": "Yes. An AC-coupled battery works alongside your existing inverter, so the solar system stays as it is. Alternatively a hybrid inverter can replace the existing one, which is usually neater and often better value if the current inverter is approaching end of life. We assess which applies to your system before quoting."
+  },
+  {
+    "id": "ev-charger-speed",
+    "question": "How fast will a home EV charger charge my car?",
+    "answer": "A 7kW single-phase charger adds roughly 40km of range per hour for a typical EV, which fully charges most cars overnight. A three-phase 22kW charger is faster, but only if your property has three-phase supply and your car's onboard charger can accept it — many cannot."
+  },
+  {
+    "id": "ev-charger-solar",
+    "question": "Can my EV charge from my solar panels?",
+    "answer": "Yes, with a solar-aware charger. These modulate charging current to track your surplus generation, so the car draws from the roof rather than the grid. It is the difference between charging on energy worth a low feed-in tariff and buying the same energy back at the full retail rate."
+  },
+  {
+    "id": "ev-switchboard",
+    "question": "Will I need a switchboard upgrade for an EV charger?",
+    "answer": "Sometimes. It depends on your existing switchboard capacity, mains cable size and total connected load. We check this before quoting so any upgrade is priced in from the start rather than raised on installation day."
+  },
+  {
+    "id": "commercial-size",
+    "question": "What size commercial solar system does my business need?",
+    "answer": "Commercial sizing is driven by your daytime consumption profile and your network's export limit, then constrained by usable roof area and structural capacity. A business that consumes most of its power during daylight hours gets a far stronger return than one that runs at night, and we model that before proposing a size."
+  },
+  {
+    "id": "commercial-payback",
+    "question": "How is commercial solar payback calculated?",
+    "answer": "On your actual tariff, including demand charges. For many commercial sites demand charges move the numbers more than the energy rate does, because reducing peak demand can be worth more than reducing total consumption. Our proposals state every assumption they rely on."
+  },
+  {
+    "id": "commercial-export-limit",
+    "question": "Can my business export excess solar to the grid?",
+    "answer": "Within the limit your distribution network sets for your connection, which varies by network and by site. Some commercial connections are approved with zero export, meaning the system must be sized entirely to on-site consumption. We confirm your limit with the network before finalising the design."
+  },
+  {
+    "id": "rebate-eligibility",
+    "question": "Which solar rebates am I eligible for?",
+    "answer": "Federal STCs apply nationally and are taken off the system price up front. The federal battery rebate reduces installed battery cost by roughly 30%, also nationally. Some states add their own schemes on top — Victoria, for example, offers Solar Victoria rebates and interest-free loans on solar panel systems, though not on batteries. Your quote lists exactly which apply to your address and property."
+  },
+  {
+    "id": "warranty-coverage",
+    "question": "What warranties come with the system?",
+    "answer": "There are three separate warranties and they are not the same length: the panel product warranty, the panel performance warranty, and the inverter warranty — all set by their manufacturers — plus our workmanship warranty on the installation itself. Each is stated in writing on your quote."
+  },
+  {
+    "id": "heat-pump-how",
+    "question": "How does a heat pump hot water system work?",
+    "answer": "It works like a fridge in reverse. Instead of generating heat with an element, it uses a small compressor to pull warmth out of the surrounding air and move it into the water tank. Because it is moving existing heat rather than creating it, it delivers roughly three units of heat for every unit of electricity — where an old resistive element delivers one."
+  },
+  {
+    "id": "heat-pump-savings",
+    "question": "How much will a heat pump save on my hot water bill?",
+    "answer": "The saving depends on what you are replacing, how much hot water your household uses, and your tariff. Against an old electric resistive storage system the reduction in energy used for water heating is substantial — typically around two thirds. Against gas the comparison depends on your gas rate and whether removing the appliance lets you drop the daily supply charge. We model your actual situation rather than quoting an average."
+  },
+  {
+    "id": "heat-pump-solar",
+    "question": "Should I run my heat pump on solar?",
+    "answer": "Yes, and it is the main reason to fit one alongside solar. Set on a timer to heat during the middle of the day, the tank fills using generation you would otherwise export for a low feed-in tariff. The tank then holds that heat into the evening — in effect a hot water battery, at a fraction of the cost of an electrical one."
+  },
+  {
+    "id": "heat-pump-cold",
+    "question": "Do heat pumps still work in cold weather?",
+    "answer": "Yes, though efficiency drops as the air gets colder, which matters more in Ballarat than in Bendigo. Units sold in Australia are rated for local conditions and most include a backup element for extreme cold snaps. In colder parts of Victoria we check the unit's performance at low temperatures rather than relying on the headline efficiency figure, which is measured in mild conditions."
+  },
+  {
+    "id": "heat-pump-noise",
+    "question": "Are heat pump hot water systems noisy?",
+    "answer": "They have a fan and a compressor, so they are not silent — roughly comparable to an outdoor air conditioning unit, and only while heating. Placement matters more than the specification: we site the unit away from bedroom windows and your neighbour's, and running it during the day on solar means it is not operating overnight."
+  },
+  {
+    "id": "heat-pump-rebate",
+    "question": "Am I eligible for a heat pump rebate?",
+    "answer": "Most Victorian households replacing an older electric or gas hot water system can access federal STCs, and in many cases a Victorian Energy Upgrades discount as well. Both come off the quoted price rather than arriving later as a cheque. Eligibility depends on the property, the system being replaced and the unit installed, so we confirm exactly what you qualify for before you commit."
+  },
+  {
+    "id": "heat-pump-brand",
+    "question": "Which heat pump brand is best for me?",
+    "answer": "It depends on your household size, climate zone and budget — there is no single best unit. We install Reclaim Energy, iStore, Rheem, Chromagen, Emerald, Midea and Enviroheat, which means we can recommend the right fit rather than the one brand we happen to stock."
+  },
+  {
+    "id": "heat-pump-changeover",
+    "question": "Do you remove and replace my old hot water system?",
+    "answer": "Yes. Our accredited installers handle the full changeover — removing and disposing of the old unit and installing the new heat pump to Australian Standards. For most straightforward replacements that is a single visit."
+  }
+]

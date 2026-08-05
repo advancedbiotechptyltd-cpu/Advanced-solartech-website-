@@ -1,0 +1,77 @@
+---
+/**
+ * SectionHeader — kicker + h2 + intro for a page section.
+ *
+ * `level` exists so a section that sits under an h2 can render an h3 without
+ * breaking heading order, which is an accessibility requirement rather than a
+ * style choice.
+ */
+const {
+  kicker,
+  heading,
+  body,
+  align = "left", // left | center
+  level = 2,
+  onDark = false,
+} = Astro.props;
+
+const Heading = `h${level}`;
+---
+
+<div class:list={["sectionHeader", `sectionHeader--${align}`, onDark && "is-onDark"]}>
+  {kicker && <p class="sectionHeader__kicker">{kicker}</p>}
+  <Heading class="sectionHeader__heading">{heading}</Heading>
+  {body && <p class="sectionHeader__body">{body}</p>}
+</div>
+
+<style>
+  .sectionHeader {
+    margin-bottom: var(--s-7);
+  }
+
+  .sectionHeader--center {
+    text-align: center;
+    margin-inline: auto;
+    max-width: 62ch;
+  }
+
+  .sectionHeader__kicker {
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-bold);
+    text-transform: uppercase;
+    letter-spacing: var(--ls-wide);
+    color: var(--c-gold-text);
+    margin-bottom: var(--s-3);
+  }
+
+  .sectionHeader__heading {
+    max-width: 26ch;
+  }
+
+  .sectionHeader--center .sectionHeader__heading {
+    max-width: none;
+  }
+
+  .sectionHeader__body {
+    margin-top: var(--s-4);
+    max-width: 62ch;
+    font-size: var(--fs-lg);
+    color: var(--c-muted);
+  }
+
+  .sectionHeader--center .sectionHeader__body {
+    margin-inline: auto;
+  }
+
+  .is-onDark .sectionHeader__heading {
+    color: var(--c-on-dark);
+  }
+
+  .is-onDark .sectionHeader__body {
+    color: var(--c-on-dark-muted);
+  }
+
+  .is-onDark .sectionHeader__kicker {
+    color: var(--c-gold);
+  }
+</style>

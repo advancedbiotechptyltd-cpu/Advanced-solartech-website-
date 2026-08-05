@@ -1,0 +1,127 @@
+---
+/**
+ * ArticleTemplate — resources/guides. Body is a block array rather than raw
+ * HTML so content stays portable to a CMS and cannot inject markup.
+ */
+import BaseLayout from "../layouts/BaseLayout.astro";
+import InnerHero from "../components/InnerHero.astro";
+import FAQAccordion from "../components/FAQAccordion.astro";
+import SectionHeader from "../components/SectionHeader.astro";
+import FeatureCardGrid from "../components/FeatureCardGrid.astro";
+import { getFaqs, articles } from "../lib/site.js";
+import { articleSchema, faqSchema, breadcrumbSchema } from "../lib/schema.js";
+
+const { article } = Astro.props;
+
+const faqs = getFaqs(article.relatedFaqs);
+const related = articles
+  .filter((a) => a.slug !== article.slug)
+  .slice(0, 3)
+  .map((a) => ({
+    title: a.title,
+    summary: a.description,
+    meta: a.category,
+    href: `/resources/${a.slug}/`,
+  }));
+
+const crumbs = [
+  { label: "Resources", href: "/resources/" },
+  { label: article.title, href: `/resources/${article.slug}/` },
+];
+
+const publishedLabel = new Date(article.published).toLocaleDateString("en-AU", {
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+});
+---
+
+<BaseLayout
+  title={article.metaTitle}
+  description={article.metaDescription}
+  path={`/resources/${article.slug}/`}
+  ogType="article"
+  schemas={[articleSchema(article), faqSchema(faqs), breadcrumbSchema(crumbs)]}
+>
+  <InnerHero
+    kicker={article.category}
+    heading={article.title}
+    body={article.summary}
+    crumbs={crumbs}
+    variant="compact"
+  />
+
+  <article class="section">
+    <div class="container container--narrow">
+      <p class="meta">
+        <time datetime={article.published}>{publishedLabel}</time>
+        <span aria-hidden="true">·</span>
+        <span>{article.readingMinutes} min read</span>
+      </p>
+
+      <div class="prose">
+        {
+          article.body.map((block) => {
+            if (block.type === "h2") return <h2>{block.text}</h2>;
+            if (block.type === "h3") return <h3>{block.text}</h3>;
+            if (block.type === "callout")
+              return <aside class="callout">{block.text}</aside>;
+            if (block.type === "ul")
+              return (
+                <ul>
+                  {block.items.map((i) => (
+                    <li>{i}</li>
+                  ))}
+                </ul>
+              );
+            return <p>{block.text}</p>;
+          })
+        }
+      </div>
+    </div>
+  </article>
+
+  {
+    faqs.length > 0 && (
+      <section class="section section--surface">
+        <div class="container container--narrow">
+          <FAQAccordion faqs={faqs} heading="Related questions" id={`faq-${article.slug}`} />
+        </div>
+      </section>
+    )
+  }
+
+  {
+    related.length > 0 && (
+      <section class="section">
+        <div class="container">
+          <SectionHeader heading="More guides" level={2} />
+          <FeatureCardGrid items={related} columns={3} level={3} />
+        </div>
+      </section>
+    )
+  }
+</BaseLayout>
+
+<style>
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-3);
+    margin-bottom: var(--s-6);
+    padding-bottom: var(--s-5);
+    border-bottom: 1px solid var(--c-line);
+    font-size: var(--fs-sm);
+    color: var(--c-muted);
+  }
+
+  .callout {
+    margin-block: var(--s-6);
+    padding: var(--s-5);
+    background: var(--c-gold-100);
+    border-left: 3px solid var(--c-gold);
+    border-radius: var(--r-md);
+    font-size: var(--fs-lg);
+    color: var(--c-text);
+  }
+</style>

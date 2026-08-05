@@ -1,0 +1,336 @@
+[
+  {
+    "slug": "solar-panels",
+    "title": "Solar Panels",
+    "shortTitle": "Solar Panels",
+    "summary": "Rooftop solar design, supply and installation for Victorian homes — sized to your actual usage, not a generic package.",
+    "icon": "sun",
+    "metaTitle": "Solar Panel Installation in Victoria | Advanced Solar Tech",
+    "metaDescription": "Solar panel design, supply and installation across Victoria. Systems sized to your usage, with STCs and Victorian rebates applied to your quote.",
+    "heroKicker": "Residential solar",
+    "heroHeading": "Solar panels sized to how you actually use power",
+    "heroBody": "Most quotes start from a package and work backwards. We start from your bill, your roof and your daily usage pattern, then specify the system that pays for itself fastest.",
+    "intro": "A solar system is only as good as its design. Two houses on the same street with the same 6.6kW system can see very different bills, because the difference is in panel placement, shading, inverter sizing and how much of the generation is actually used on site rather than exported at a low feed-in tariff.\n\nWe design around your consumption profile first. That means reading your interval data where it is available, looking at the roof orientation and shading you actually have, and sizing the array and inverter to match — including headroom if a battery or EV charger is likely later.",
+    "benefits": [
+      {
+        "title": "Designed from your bill, not a package",
+        "body": "System size, panel layout and inverter capacity are set by your usage pattern and roof, so more of what you generate is used on site instead of exported."
+      },
+      {
+        "title": "Shade and orientation modelled up front",
+        "body": "String layout and inverter or optimiser choice account for the shading you actually have, rather than assuming a clear roof."
+      },
+      {
+        "title": "Rebate paperwork handled",
+        "body": "Federal STCs are applied as an up-front discount. Where a state scheme applies, we tell you what you qualify for and what the process involves."
+      },
+      {
+        "title": "Built with an upgrade path",
+        "body": "If a battery or EV charger is likely within a few years, the switchboard, inverter and cable runs are specified now so the upgrade is not a rebuild."
+      }
+    ],
+    "process": "standard-install",
+    "faqs": [
+      "solar-system-size",
+      "solar-payback",
+      "solar-roof-types",
+      "solar-install-time"
+    ],
+    "relatedBrandCategory": "panels",
+    "relatedServices": [
+      "battery-storage",
+      "ev-chargers"
+    ],
+    "keyFacts": [
+      {
+        "label": "Typical residential system",
+        "value": "6.6kW – 13.2kW"
+      },
+      {
+        "label": "Install time on site",
+        "value": "Most homes: one day"
+      },
+      {
+        "label": "Panel product warranty",
+        "value": "Per manufacturer — stated on your quote"
+      },
+      {
+        "label": "Workmanship warranty",
+        "value": "Stated in writing on your quote"
+      }
+    ]
+  },
+  {
+    "slug": "battery-storage",
+    "title": "Battery Storage",
+    "shortTitle": "Batteries",
+    "summary": "Store the solar you generate during the day and use it through the evening peak instead of buying it back.",
+    "icon": "battery",
+    "metaTitle": "Solar Battery Storage in Victoria | Advanced Solar Tech",
+    "metaDescription": "Solar battery storage design and installation across Victoria. Cut evening peak costs, add blackout backup, and use the federal battery rebate.",
+    "heroKicker": "Battery storage",
+    "heroHeading": "Use your solar at night instead of buying it back",
+    "heroBody": "Exported solar earns a feed-in tariff. The same energy bought back after sunset costs several times more. A correctly sized battery closes that gap.",
+    "intro": "The economics of storage changed when the federal battery rebate arrived, and again as feed-in tariffs fell. For most households the question is no longer whether a battery pays back, but what size makes sense.\n\nOversizing is the common mistake. A battery only earns its keep on the energy it actually cycles, so the right capacity comes from your evening and overnight load — not from the largest unit that fits the budget. We model your usage before recommending a size, and we are direct when a smaller battery, or none yet, is the better answer.",
+    "benefits": [
+      {
+        "title": "Sized to your evening load",
+        "body": "Capacity is set by what you actually draw after sunset. A battery that never fully cycles is capital doing nothing."
+      },
+      {
+        "title": "Blackout backup where you need it",
+        "body": "Backup circuits are specified deliberately — which lights, which power points, whether the fridge and internet stay up."
+      },
+      {
+        "title": "Rebates applied properly",
+        "body": "The federal battery rebate takes roughly 30% off installed cost, nationally. Victoria does not currently add a state battery rebate or loan on top — we will tell you that plainly rather than let you expect one."
+      },
+      {
+        "title": "Retrofit or new install",
+        "body": "We add storage to an existing solar system as well as installing both together, including AC-coupled options where the existing inverter stays."
+      }
+    ],
+    "process": "standard-install",
+    "faqs": [
+      "battery-cost",
+      "battery-size",
+      "battery-blackout",
+      "battery-retrofit"
+    ],
+    "relatedBrandCategory": "batteries",
+    "relatedServices": [
+      "solar-panels",
+      "ev-chargers"
+    ],
+    "keyFacts": [
+      {
+        "label": "Common residential capacity",
+        "value": "10kWh – 20kWh"
+      },
+      {
+        "label": "Retrofit to existing solar",
+        "value": "Yes — AC-coupled or hybrid inverter"
+      },
+      {
+        "label": "Blackout backup",
+        "value": "Available on most systems — confirm per product"
+      },
+      {
+        "label": "Federal battery rebate",
+        "value": "Applies nationally — the only battery incentive in VIC"
+      }
+    ]
+  },
+  {
+    "slug": "heat-pump-hot-water",
+    "title": "Hot Water Heat Pumps",
+    "shortTitle": "Heat Pumps",
+    "quoteNoun": "hot water heat pump",
+    "summary": "Replace an electric or gas hot water system with a heat pump, and run it on your own daytime solar.",
+    "icon": "bolt",
+    "metaTitle": "Hot Water Heat Pump Installation Victoria | Advanced Solar Tech",
+    "metaDescription": "Cut water heating costs with a hot water heat pump. Rebate-eligible, solar-friendly, CEC Approved Retailer. Free quotes across Victoria — call 0403 657 585.",
+    "heroKicker": "Hot water",
+    "heroHeading": "Hot Water Heat Pumps",
+    "heroBody": "Cut one of your home's biggest energy costs. A hot water heat pump uses up to 70% less electricity than a conventional electric system — and paired with your solar, it heats your water for next to nothing. Rebate-eligible; we handle the paperwork.",
+    "intro": "Hot water is usually the second-largest load in an Australian home after heating and cooling, and it is the easiest one to move. An old electric storage system heats with a resistive element — one unit of electricity in, one unit of heat out. A heat pump moves heat rather than making it, so the same tank of hot water takes roughly a third of the power.\n\nThe bigger win is timing. A heat pump on a timer that runs in the middle of the day uses solar you would otherwise export at a low feed-in rate. That combination — a third of the energy, and most of it from your own roof — is why heat pumps and solar are worth quoting together rather than separately.",
+    "benefits": [
+      {
+        "title": "Slashes your hot water bills",
+        "body": "Water heating is often a quarter of a home's power use. A heat pump uses up to 70% less electricity than a conventional electric system, which is the single largest efficiency gain available in most homes."
+      },
+      {
+        "title": "Runs on your daytime solar",
+        "body": "We set the timer to heat during peak generation, so the tank fills with energy that would otherwise export for a few cents. The tank then holds that heat into the evening."
+      },
+      {
+        "title": "Federal STCs and Victorian incentives",
+        "body": "Hot water heat pumps qualify for federal STCs, and Victorian households can usually access a Victorian Energy Upgrades discount as well. Both come off the quoted price, and we handle the paperwork."
+      },
+      {
+        "title": "Lower emissions",
+        "body": "A cleaner all-electric replacement for an old electric or gas system — and genuinely emissions-free for the hours it runs on your own solar."
+      },
+      {
+        "title": "Reliable in Victorian conditions",
+        "body": "Efficiency drops as the air gets colder, which matters more in Ballarat than in Bendigo. We check the unit's rated performance at low temperatures rather than the headline figure, which is measured in mild conditions."
+      },
+      {
+        "title": "A simple replacement, not a renovation",
+        "body": "A straightforward changeover for your existing tank. Our accredited installers remove and dispose of the old unit and fit the new one to Australian Standards, usually in a single visit."
+      },
+      {
+        "title": "Gas disconnection where it stacks up",
+        "body": "If hot water is your last gas appliance, removing it can retire the daily supply charge entirely. We will tell you whether it does in your case."
+      }
+    ],
+    "process": "heat-pump-install",
+    "faqs": [
+      "heat-pump-how",
+      "heat-pump-savings",
+      "heat-pump-rebate",
+      "heat-pump-solar",
+      "heat-pump-brand",
+      "heat-pump-changeover",
+      "heat-pump-cold",
+      "heat-pump-noise"
+    ],
+    "relatedBrandCategory": "heat-pumps",
+    "brandsInstalled": {
+      "_note": "Owner-confirmed list of brands the business installs. Plain names, not brand pages: a brand page needs real product and performance detail, and inventing that would be worse than a list.",
+      "heading": "Hot water heat pump brands we install",
+      "body": "We install trusted hot water heat pump brands, matched to your home and budget. We recommend the right unit for your household size, climate zone and solar setup rather than fitting the same model to every house.",
+      "names": [
+        "Reclaim Energy",
+        "iStore",
+        "Rheem",
+        "Chromagen",
+        "Emerald",
+        "Midea",
+        "Enviroheat"
+      ]
+    },
+    "relatedServices": [
+      "solar-panels",
+      "battery-storage"
+    ],
+    "keyFacts": [
+      {
+        "label": "Typical tank size",
+        "value": "170L – 300L"
+      },
+      {
+        "label": "Efficiency vs resistive element",
+        "value": "Roughly 3× (varies with climate)"
+      },
+      {
+        "label": "Install time on site",
+        "value": "Usually half a day"
+      },
+      {
+        "label": "Incentives",
+        "value": "Federal STCs + Victorian VEU"
+      }
+    ]
+  },
+  {
+    "slug": "ev-chargers",
+    "title": "EV Chargers",
+    "shortTitle": "EV Charging",
+    "summary": "Home and workplace EV charger installation, wired so the car charges from your solar rather than the grid.",
+    "icon": "ev",
+    "metaTitle": "EV Charger Installation in Victoria | Advanced Solar Tech",
+    "metaDescription": "Home and workplace EV charger installation across Victoria. Solar-aware charging, load management and compliant switchboard work.",
+    "heroKicker": "EV charging",
+    "heroHeading": "Charge the car on sunshine, not peak-rate grid power",
+    "heroBody": "A charger wired to follow your solar generation turns midday export into kilometres. One wired without that logic just adds a large new grid load.",
+    "intro": "An EV is the single biggest load most households will ever add. Where that load lands — midday on your own solar, or 6pm on peak-rate grid power — makes a larger difference to the bill than the charger brand.\n\nWe install chargers that can follow solar generation, and we check the supply before quoting. A switchboard or mains upgrade is sometimes needed, and it is better to know that before the car arrives than after.",
+    "benefits": [
+      {
+        "title": "Solar-aware charging",
+        "body": "Compatible chargers modulate to soak up surplus solar, so daytime charging comes from the roof rather than the grid."
+      },
+      {
+        "title": "Supply checked before you commit",
+        "body": "We confirm switchboard capacity and mains size up front, so an upgrade is priced in the quote rather than discovered on install day."
+      },
+      {
+        "title": "Load management for multi-car homes",
+        "body": "Where two chargers or a large existing load share a supply, dynamic load balancing prevents nuisance tripping."
+      },
+      {
+        "title": "Workplace and fleet installs",
+        "body": "Multi-bay installations with access control and usage reporting for commercial sites."
+      }
+    ],
+    "process": "ev-install",
+    "faqs": [
+      "ev-charger-speed",
+      "ev-charger-solar",
+      "ev-switchboard"
+    ],
+    "relatedBrandCategory": "ev-chargers",
+    "relatedServices": [
+      "solar-panels",
+      "battery-storage"
+    ],
+    "keyFacts": [
+      {
+        "label": "Typical home charger",
+        "value": "7kW single-phase / 22kW three-phase"
+      },
+      {
+        "label": "Solar-following charging",
+        "value": "Supported on compatible units"
+      },
+      {
+        "label": "Switchboard upgrade",
+        "value": "Assessed before quote"
+      },
+      {
+        "label": "Workplace installs",
+        "value": "Multi-bay with load management"
+      }
+    ]
+  },
+  {
+    "slug": "commercial-solar",
+    "title": "Commercial Solar",
+    "shortTitle": "Commercial",
+    "summary": "Commercial rooftop solar for businesses with daytime load — warehouses, workshops, retail and light industrial.",
+    "icon": "building",
+    "metaTitle": "Commercial Solar Installation in Victoria | Advanced Solar Tech",
+    "metaDescription": "Commercial solar design and installation for Victorian businesses. Systems sized to daytime load, with clear payback modelling before you commit.",
+    "heroKicker": "Commercial solar",
+    "heroHeading": "Solar for businesses that use power while the sun is up",
+    "heroBody": "Commercial solar has the strongest case when the load profile matches the generation curve. We model that first and tell you plainly if it does not.",
+    "intro": "Commercial solar is a straightforward investment decision, and it should be presented as one. The variables that matter are your daytime consumption, your tariff structure including demand charges, available roof area and structural capacity, and the network's export limit for your connection.\n\nWe model those before proposing a system size, and the proposal states the assumptions it depends on. A business that runs mainly at night, or that is about to relocate, is usually better served by hearing that early.",
+    "benefits": [
+      {
+        "title": "Sized to load, capped by export limits",
+        "body": "System size is set by your daytime consumption and what the network will actually let you export, not by available roof area alone."
+      },
+      {
+        "title": "Payback modelled on your tariff",
+        "body": "Including demand charges, which often move the numbers more than the energy rate does."
+      },
+      {
+        "title": "Structural and compliance checks",
+        "body": "Roof structure, penetration method and access are assessed before install, with the documentation your insurer will ask for."
+      },
+      {
+        "title": "Large-scale certificates handled",
+        "body": "Systems above the small-scale threshold use LGCs rather than STCs. We explain which applies to yours and what it is worth."
+      }
+    ],
+    "process": "commercial-install",
+    "faqs": [
+      "commercial-size",
+      "commercial-payback",
+      "commercial-export-limit"
+    ],
+    "relatedBrandCategory": "panels",
+    "relatedServices": [
+      "solar-panels",
+      "battery-storage"
+    ],
+    "keyFacts": [
+      {
+        "label": "Typical commercial range",
+        "value": "30kW – 500kW+"
+      },
+      {
+        "label": "Certificate scheme",
+        "value": "STCs under 100kW, LGCs above"
+      },
+      {
+        "label": "Export limits",
+        "value": "Set by your network — confirmed pre-design"
+      },
+      {
+        "label": "Structural assessment",
+        "value": "Included before install"
+      }
+    ]
+  }
+]

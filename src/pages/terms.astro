@@ -1,0 +1,56 @@
+---
+import LegalTemplate from "../templates/LegalTemplate.astro";
+import { business } from "../lib/site.js";
+
+const blocks = [
+  {
+    type: "p",
+    text: `These terms cover your use of this website. They are not the terms of a contract for supply or installation — those are set out in the written quote and contract you receive from ${business.name}, and that document prevails over anything on this site.`,
+  },
+  { type: "h2", text: "Information on this site" },
+  {
+    type: "p",
+    text: "We aim to keep the information here accurate and current, but rebate programs, product availability, pricing and network rules change. Nothing on this site is an offer, a quote, or advice about your specific property. Rely on your written quote, not on this website.",
+  },
+  { type: "h2", text: "Estimates and calculators" },
+  {
+    type: "p",
+    text: "Any estimate, saving, payback figure or system size shown on this site is indicative only. Actual results depend on your roof, shading, consumption, tariff, network export limit and rebate eligibility — all of which we assess before issuing a quote.",
+  },
+  { type: "h2", text: "Rebates and incentives" },
+  {
+    type: "p",
+    text: "Rebate and incentive information on this site is a general summary. Eligibility rules and amounts are set by the relevant government scheme and change from time to time. Your eligibility is confirmed as part of the quoting process, not by this website.",
+  },
+  { type: "h2", text: "Your consumer rights" },
+  {
+    type: "p",
+    text: "Nothing in these terms excludes, restricts or modifies any guarantee, right or remedy you have under the Australian Consumer Law that cannot lawfully be excluded.",
+  },
+  { type: "h2", text: "Third-party links" },
+  {
+    type: "p",
+    text: "This site links to third-party sites, including manufacturer and government pages. We do not control those sites and are not responsible for their content.",
+  },
+  { type: "h2", text: "Intellectual property" },
+  {
+    type: "p",
+    text: `Content on this site is owned by ${business.name} or used with permission. Product names and trade marks belong to their respective owners, and their appearance here indicates that we supply and install those products.`,
+  },
+  { type: "h2", text: "Contact" },
+  {
+    type: "p",
+    text: `Questions about these terms: ${business.email} or ${business.phoneDisplay}.`,
+  },
+];
+---
+
+<LegalTemplate
+  title={`Terms of Service | ${business.name}`}
+  description={`Terms covering use of the ${business.name} website, including estimates, rebate information and consumer rights.`}
+  path="/terms/"
+  heading="Terms of Service"
+  updated="2026-08-04"
+  blocks={blocks}
+  noticeText="These terms are a starting structure, not legal advice, and have not been reviewed by a lawyer. Have them checked — alongside the supply and installation contract they refer to — before launch."
+/>

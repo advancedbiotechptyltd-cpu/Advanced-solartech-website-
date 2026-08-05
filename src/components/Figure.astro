@@ -1,0 +1,204 @@
+---
+/**
+ * Figure — the only way an image enters this site.
+ *
+ * Adding a photo is: drop the file into `src/images/`, then reference its
+ * filename. Nothing else. The build resizes it, converts it to WebP, generates
+ * a srcset and sets width/height so it cannot shift the layout.
+ *
+ *   <Figure name="rooftop-melbourne" alt="10kW array on a tiled roof" />
+ *          ↑ resolves src/images/rooftop-melbourne.jpg (or .png/.webp/.avif)
+ *
+ * Three layers, in order:
+ *
+ *   1. src/images/<name>.jpg    a real photograph — always wins
+ *   2. src/illustrations/<name>.svg  a house illustration — the interim
+ *   3. a styled placeholder     when neither exists
+ *
+ * The layering is what makes the photo drop-in trivial: an illustration holds
+ * the slot and looks finished, and the moment a real photo lands under the same
+ * name it takes over with no edit anywhere. Nothing to remove, nothing to
+ * rewire. On staging, a slot with neither names the exact file it is waiting
+ * for, which turns the preview into a shot list.
+ *
+ * `alt` is required whenever an image exists. An empty string is allowed and
+ * correct for purely decorative images, but it has to be a deliberate choice.
+ */
+import { Image } from "astro:assets";
+import Icon from "./Icon.astro";
+
+// Eager globs so the lookup is resolved at build time, not per request.
+const photos = import.meta.glob("../images/**/*.{jpg,jpeg,png,webp,avif}", {
+  eager: true,
+});
+/*
+ * SVG comes through `?url` rather than astro:assets: the image pipeline exists
+ * to resize and re-encode raster photographs, and a vector needs neither. It
+ * ships as-is, a couple of KB, sharp at any size.
+ */
+const illustrations = import.meta.glob("../illustrations/**/*.svg", {
+  eager: true,
+  query: "?url",
+  import: "default",
+});
+
+const stem = (path) => path.split("/").pop().replace(/\.[^.]+$/, "");
+
+/*
+ * Every illustration is authored on this viewBox. Stating it as width/height
+ * gives the browser an intrinsic ratio to reserve before the file arrives — the
+ * same layout-shift protection astro:assets adds to photographs automatically.
+ * The CSS still controls the displayed size.
+ */
+const ILLUSTRATION_W = 640;
+const ILLUSTRATION_H = 400;
+
+const byName = {};
+for (const [path, url] of Object.entries(illustrations)) {
+  byName[stem(path)] = { kind: "illustration", src: url };
+}
+// Photographs are applied second so they overwrite any illustration of the
+// same name — that is the whole upgrade path.
+for (const [path, mod] of Object.entries(photos)) {
+  byName[stem(path)] = { kind: "photo", src: mod.default };
+}
+
+const {
+  name,
+  alt,
+  ratio = "4 / 3",
+  // Set on the one image above the fold. Everything else lazy-loads.
+  priority = false,
+  caption,
+  sizes = "(max-width: 700px) 100vw, (max-width: 1180px) 50vw, 560px",
+  widths = [480, 760, 1120],
+  rounded = true,
+  class: className = "",
+} = Astro.props;
+
+const asset = name ? byName[name] : null;
+const image = asset?.kind === "photo" ? asset.src : null;
+const illustration = asset?.kind === "illustration" ? asset.src : null;
+
+if (asset && alt === undefined) {
+  throw new Error(
+    `Figure "${name}": \`alt\` is required. Use alt="" only if the image is decorative.`
+  );
+}
+
+const isStaging = import.meta.env.PUBLIC_STAGING === "true";
+---
+
+<figure class:list={["fig", rounded && "fig--rounded", className]} style={`--fig-ratio:${ratio}`}>
+  {
+    image ? (
+      <Image
+        class="fig__img"
+        src={image}
+        alt={alt}
+        widths={widths}
+        sizes={sizes}
+        loading={priority ? "eager" : "lazy"}
+        decoding={priority ? "sync" : "async"}
+        fetchpriority={priority ? "high" : "auto"}
+        format="webp"
+        quality={72}
+      />
+    ) : illustration ? (
+      <img
+        class="fig__img fig__img--illustration"
+        src={illustration}
+        alt={alt}
+        width={ILLUSTRATION_W}
+        height={ILLUSTRATION_H}
+        loading={priority ? "eager" : "lazy"}
+        decoding={priority ? "sync" : "async"}
+        fetchpriority={priority ? "high" : "auto"}
+      />
+    ) : (
+      <div class="fig__placeholder" role="img" aria-label={alt || "Photograph coming soon"}>
+        <span class="fig__mark" aria-hidden="true">
+          <Icon name="sun" size={30} />
+        </span>
+        {isStaging && name && (
+          <span class="fig__hint">
+            Add <code>src/images/{name}.jpg</code>
+          </span>
+        )}
+      </div>
+    )
+  }
+
+  {caption && <figcaption class="fig__caption">{caption}</figcaption>}
+</figure>
+
+<style>
+  .fig {
+    margin: 0;
+    width: 100%;
+  }
+
+  /* The aspect-ratio box reserves the space before the image arrives, so a
+     photo dropped in later causes no layout shift — and neither does the
+     placeholder being replaced. */
+  .fig__img,
+  .fig__placeholder {
+    display: block;
+    width: 100%;
+    aspect-ratio: var(--fig-ratio);
+    object-fit: cover;
+    background: var(--c-surface-alt);
+  }
+
+  .fig--rounded .fig__img,
+  .fig--rounded .fig__placeholder {
+    border-radius: var(--r-lg);
+  }
+
+  .fig__placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--s-4);
+    /* Reads as a deliberate graphic panel rather than a broken image. */
+    background: linear-gradient(140deg, #e7eef6 0%, #ffe9bd 100%);
+    border: 1px dashed var(--c-line);
+    color: var(--c-gold-text);
+    text-align: center;
+    padding: var(--s-5);
+  }
+
+  .fig__mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 62px;
+    height: 62px;
+    border-radius: var(--r-pill);
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: var(--sh-sm);
+  }
+
+  .fig__hint {
+    font-size: var(--fs-xs);
+    color: var(--c-muted);
+    line-height: 1.5;
+  }
+
+  .fig__hint code {
+    display: inline-block;
+    margin-top: var(--s-1);
+    padding: 2px 6px;
+    border-radius: var(--r-sm);
+    background: rgba(255, 255, 255, 0.8);
+    font-size: 0.95em;
+    color: var(--c-navy);
+  }
+
+  .fig__caption {
+    margin-top: var(--s-3);
+    font-size: var(--fs-xs);
+    color: var(--c-muted);
+  }
+</style>

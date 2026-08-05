@@ -1,0 +1,15 @@
+---
+import ArticleTemplate from "../../templates/ArticleTemplate.astro";
+import { articles } from "../../lib/site.js";
+
+export function getStaticPaths() {
+  return articles.map((article) => ({
+    params: { slug: article.slug },
+    props: { article },
+  }));
+}
+
+const { article } = Astro.props;
+---
+
+<ArticleTemplate article={article} />

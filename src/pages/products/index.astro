@@ -1,0 +1,67 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import InnerHero from "../../components/InnerHero.astro";
+import SectionHeader from "../../components/SectionHeader.astro";
+import FeatureCardGrid from "../../components/FeatureCardGrid.astro";
+import LogoStrip from "../../components/LogoStrip.astro";
+import { PRODUCT_CATEGORIES, brands, business, getBrandsByCategory } from "../../lib/site.js";
+import { breadcrumbSchema } from "../../lib/schema.js";
+
+const crumbs = [{ label: "Products", href: "/products/" }];
+
+const cards = PRODUCT_CATEGORIES.map((c) => {
+  const count = getBrandsByCategory(c.slug).length;
+  return {
+    title: c.title,
+    summary: c.summary,
+    meta: count ? `${count} brand${count === 1 ? "" : "s"}` : "Enquire for options",
+    href: `/products/${c.slug}/`,
+  };
+});
+---
+
+<BaseLayout
+  title={`Solar Panels, Inverters & Batteries | ${business.name}`}
+  description="The panel, inverter, battery and EV charger brands we supply and install — with the trade-offs of each set out, not just the strengths."
+  path="/products/"
+  schemas={[breadcrumbSchema(crumbs)]}
+>
+  <InnerHero
+    kicker="Products"
+    heading="What we supply and install"
+    body="We are not tied to one manufacturer. The right product depends on your roof, your load and your budget — so here is what each brand is actually good at."
+    crumbs={crumbs}
+    ctaLabel="Get a Quote"
+    ctaHref="/quote/"
+  />
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader heading="Product categories" level={2} />
+      <FeatureCardGrid items={cards} columns={4} level={3} />
+    </div>
+  </section>
+
+  <section class="section section--surface">
+    <div class="container">
+      <SectionHeader
+        kicker="Brands"
+        heading="Every brand we install has a page"
+        body="Each one covers where that product is the right choice and where it is not. Product selection should follow the site assessment, not lead it."
+        level={2}
+      />
+      <FeatureCardGrid
+        items={brands.map((b) => ({
+          title: b.name,
+          summary: b.summary,
+          meta: b.category,
+          href: `/brands/${b.slug}/`,
+        }))}
+        columns={3}
+        level={3}
+      />
+    </div>
+  </section>
+
+  <LogoStrip heading="Quick links" />
+</BaseLayout>

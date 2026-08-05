@@ -1,0 +1,66 @@
+---
+import LegalTemplate from "../templates/LegalTemplate.astro";
+import { business } from "../lib/site.js";
+
+const blocks = [
+  {
+    type: "p",
+    text: `${business.name} collects personal information so we can respond to enquiries, prepare quotes and deliver installations. This page explains what we collect, why, and what you can ask us to do with it.`,
+  },
+  { type: "h2", text: "What we collect" },
+  {
+    type: "ul",
+    items: [
+      "Contact details you give us: name, phone number, email address, suburb or postcode.",
+      "Property information relevant to a quote: property type, roof details, electricity usage and bill information you choose to share.",
+      "Enquiry content: anything you write in a form, email or message to us.",
+      "Basic technical information from your visit, such as pages viewed, used to understand how the site is performing.",
+    ],
+  },
+  { type: "h2", text: "Why we collect it" },
+  {
+    type: "ul",
+    items: [
+      "To respond to your enquiry and prepare a quote.",
+      "To design, supply and install a system if you proceed.",
+      "To meet obligations attached to rebate schemes and network connection approvals.",
+      "To keep records required by law and by the warranties we provide.",
+    ],
+  },
+  { type: "h2", text: "Who we share it with" },
+  {
+    type: "p",
+    text: "We share personal information only where it is needed to deliver what you have asked for — for example, with your electricity distribution network for connection approval, or with a rebate administrator where you are claiming a rebate. We do not sell personal information.",
+  },
+  { type: "h2", text: "How we store it" },
+  {
+    type: "p",
+    text: "We take reasonable steps to protect personal information from misuse, loss and unauthorised access. We keep it only as long as we need it for the purposes above or as required by law.",
+  },
+  { type: "h2", text: "Access, correction and complaints" },
+  {
+    type: "p",
+    text: `You can ask us what personal information we hold about you, ask us to correct it, or ask us to delete it. Contact us at ${business.email} or call ${business.phoneDisplay}. If you are not satisfied with our response, you can complain to the Office of the Australian Information Commissioner at oaic.gov.au.`,
+  },
+  { type: "h2", text: "Marketing" },
+  {
+    type: "p",
+    text: "If we send you marketing messages, every one will include a way to unsubscribe, and we will act on it. You can also tell us at any time that you do not want marketing contact.",
+  },
+  { type: "h2", text: "Changes to this policy" },
+  {
+    type: "p",
+    text: "We may update this policy. The date at the top of this page shows when it last changed.",
+  },
+];
+---
+
+<LegalTemplate
+  title={`Privacy Policy | ${business.name}`}
+  description={`How ${business.name} collects, uses, stores and protects your personal information.`}
+  path="/privacy/"
+  heading="Privacy Policy"
+  updated="2026-08-04"
+  blocks={blocks}
+  noticeText="This policy sets out the structure and the commitments the business intends to make, but it has not been reviewed by a lawyer. Have it checked against the Privacy Act 1988 and the Australian Privacy Principles — and confirm it matches what the business actually does with data — before launch."
+/>

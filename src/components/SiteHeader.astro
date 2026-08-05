@@ -1,0 +1,414 @@
+---
+/**
+ * SiteHeader — logo, primary nav, click-to-call and a persistent Get a Quote.
+ * Sticky on all viewports; on mobile the quote CTA and call button stay in the
+ * bar rather than hiding behind the menu, because they are the two actions the
+ * whole site exists to drive.
+ */
+import { business, nav, telHref, href } from "../lib/site.js";
+
+const currentPath = Astro.url.pathname;
+
+// Compare against the base-prefixed path: under a base of "/new" the current
+// pathname is "/new/services/…", so matching a bare "/services/" would never
+// mark anything current. (Parameter named `path`, not `href` — that would
+// shadow the imported helper.)
+const isActive = (path) => {
+  const target = href(path);
+  return target === href("/") ? currentPath === target : currentPath.startsWith(target);
+};
+---
+
+<header class="header">
+  <div class="header__inner container">
+    <!--
+      No aria-label here: the accessible name comes from the logo's alt text,
+      or from the wordmark when the logo fails to load. An aria-label would
+      override both and stop the visible text matching the accessible name.
+    -->
+    <a class="header__brand" href={href("/")}>
+      <img
+        class="header__logo"
+        src={business.logo.src}
+        alt={business.logo.alt}
+        width={business.logo.width}
+        height={business.logo.height}
+        fetchpriority="high"
+        onerror="this.style.display='none';this.nextElementSibling.hidden=false"
+      />
+      <!-- Text fallback: shown only if the logo fails to load. -->
+      <span class="header__wordmark" hidden>
+        Advanced <strong>Solar</strong> Tech
+      </span>
+    </a>
+
+    <nav class="header__nav" aria-label="Primary">
+      <ul class="header__list">
+        {
+          nav.primary.map((item) => (
+            <li class="header__item">
+              <a
+                class="header__link"
+                href={href(item.href)}
+                aria-current={isActive(item.href) ? "page" : undefined}
+              >
+                {item.label}
+              </a>
+              {item.children && (
+                <ul class="header__sub">
+                  {item.children.map((child) => (
+                    <li>
+                      <a class="header__sublink" href={href(child.href)}>
+                        {child.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="header__actions">
+      <a class="header__phone" href={telHref()}>
+        <svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+          <path d="M6.6 10.8a15.1 15.1 0 006.6 6.6l2.2-2.2a1 1 0 011-.24c1.1.37 2.3.57 3.6.57a1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.3.2 2.5.57 3.6a1 1 0 01-.25 1l-2.2 2.2z" />
+        </svg>
+        <!--
+          Visually hidden rather than display:none below 600px. Hiding it
+          outright leaves the link with no accessible text at all, since the
+          icon is aria-hidden.
+        -->
+        <span class="header__phoneNumber">{business.phoneDisplay}</span>
+      </a>
+
+      <!--
+        "Get a" is visually hidden below 600px so the button fits alongside the
+        burger, but stays in the accessible name — a screen reader still hears
+        "Get a Quote", not a bare "Quote".
+      -->
+      <a class="btn btn--primary header__cta" href={href("/quote/")}><span class="header__ctaLong">Get a </span>Quote</a>
+
+      <button
+        class="header__burger"
+        type="button"
+        data-menu-toggle
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        aria-label="Open menu"
+      >
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="mobile-menu" id="mobile-menu" data-menu>
+    <nav class="container" aria-label="Mobile">
+      <ul class="mobile-menu__list">
+        {
+          nav.primary.map((item) => (
+            <li>
+              <a class="mobile-menu__link" href={href(item.href)}>
+                {item.label}
+              </a>
+              {item.children && (
+                <ul class="mobile-menu__sub">
+                  {item.children.map((child) => (
+                    <li>
+                      <a href={href(child.href)}>{child.label}</a>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          ))
+        }
+      </ul>
+      <a class="btn btn--primary btn--block btn--lg" href={href("/quote/")}>Get a Quote</a>
+      <a class="mobile-menu__call" href={telHref()}>
+        Call {business.phoneDisplay}
+      </a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-header);
+    background: var(--c-surface);
+    border-bottom: 1px solid var(--c-line);
+  }
+
+  .header__inner {
+    display: flex;
+    align-items: center;
+    gap: var(--s-5);
+    min-height: var(--header-h);
+  }
+
+  /* min-width:0 lets the brand give up space on narrow viewports instead of
+     forcing the actions — including the menu button — off screen. */
+  .header__brand {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    /* 44px floor so the tap target stays comfortable even when the logo image
+       fails and the shorter text wordmark takes its place. */
+    min-height: 44px;
+    overflow: hidden;
+    text-decoration: none;
+  }
+
+  .header__logo {
+    width: auto;
+    height: 40px;
+    object-fit: contain;
+  }
+
+  .header__wordmark {
+    font-family: var(--font-heading);
+    font-weight: var(--fw-heading);
+    font-size: var(--fs-lg);
+    color: var(--c-navy);
+    letter-spacing: var(--ls-tight);
+  }
+
+  .header__wordmark strong {
+    color: var(--c-gold-text);
+    font-weight: var(--fw-heading);
+  }
+
+  .header__nav {
+    margin-left: auto;
+  }
+
+  .header__list {
+    display: flex;
+    align-items: center;
+    gap: var(--s-1);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .header__item {
+    position: relative;
+  }
+
+  .header__link {
+    display: block;
+    padding: var(--s-3) var(--s-3);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-medium);
+    color: var(--c-text);
+    text-decoration: none;
+    border-radius: var(--r-sm);
+  }
+
+  .header__link:hover,
+  .header__link[aria-current="page"] {
+    color: var(--c-navy);
+    background: var(--c-surface-alt);
+  }
+
+  .header__sub {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 210px;
+    padding: var(--s-2);
+    margin: 0;
+    list-style: none;
+    background: var(--c-surface);
+    border: 1px solid var(--c-line);
+    border-radius: var(--r-md);
+    box-shadow: var(--sh-lg);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(4px);
+    transition: opacity var(--t-fast), transform var(--t-fast), visibility var(--t-fast);
+  }
+
+  /* Opens on hover and on keyboard focus — hover alone strands keyboard users. */
+  .header__item:hover .header__sub,
+  .header__item:focus-within .header__sub {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .header__sublink {
+    display: block;
+    /* Vertical padding sized so each dropdown row clears the 24px minimum
+       touch target, with room to spare on coarse pointers. */
+    padding: var(--s-3);
+    font-size: var(--fs-sm);
+    color: var(--c-text);
+    text-decoration: none;
+    border-radius: var(--r-sm);
+  }
+
+  .header__sublink:hover {
+    background: var(--c-surface-alt);
+    color: var(--c-navy);
+  }
+
+  .header__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
+    flex-shrink: 0;
+  }
+
+  .header__phone {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-semibold);
+    color: var(--c-navy);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .header__phone:hover {
+    color: var(--c-gold-text);
+  }
+
+  .header__burger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 42px;
+    height: 42px;
+    padding: 0 9px;
+    background: transparent;
+    border: 1px solid var(--c-line);
+    border-radius: var(--r-sm);
+    cursor: pointer;
+  }
+
+  .header__burger span {
+    display: block;
+    height: 2px;
+    background: var(--c-navy);
+    border-radius: var(--r-pill);
+  }
+
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    inset: var(--header-h) 0 0;
+    z-index: var(--z-menu);
+    background: var(--c-surface);
+    overflow-y: auto;
+    padding-block: var(--s-5) var(--s-8);
+  }
+
+  .mobile-menu[data-open] {
+    display: block;
+  }
+
+  .mobile-menu__list {
+    list-style: none;
+    margin: 0 0 var(--s-5);
+    padding: 0;
+  }
+
+  .mobile-menu__link {
+    display: block;
+    padding: var(--s-3) 0;
+    font-family: var(--font-heading);
+    font-size: var(--fs-xl);
+    font-weight: var(--fw-bold);
+    color: var(--c-navy);
+    text-decoration: none;
+    border-bottom: 1px solid var(--c-line);
+  }
+
+  .mobile-menu__sub {
+    list-style: none;
+    margin: var(--s-2) 0 var(--s-4);
+    padding: 0 0 0 var(--s-4);
+  }
+
+  .mobile-menu__sub a {
+    display: block;
+    padding: var(--s-2) 0;
+    font-size: var(--fs-base);
+    color: var(--c-muted);
+    text-decoration: none;
+  }
+
+  .mobile-menu__call {
+    display: block;
+    margin-top: var(--s-4);
+    text-align: center;
+    font-weight: var(--fw-semibold);
+    color: var(--c-navy);
+  }
+
+  @media (max-width: 960px) {
+    .header__nav {
+      display: none;
+    }
+    .header__burger {
+      display: flex;
+    }
+    .header__inner {
+      justify-content: space-between;
+    }
+    .header__actions {
+      margin-left: auto;
+    }
+  }
+
+  /*
+   * Below 600px the bar has to hold brand + call + quote + menu inside ~360px
+   * of content width. Everything shrinks together; the menu button must never
+   * be the thing that gets pushed out, because it is the only way to navigate.
+   */
+  @media (max-width: 600px) {
+    .header__inner {
+      gap: var(--s-2);
+    }
+    .header__actions {
+      gap: var(--s-2);
+    }
+    .header__phoneNumber,
+    .header__ctaLong {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    .header__phone {
+      padding: var(--s-2);
+    }
+    .header__cta {
+      padding: var(--s-3) var(--s-4);
+    }
+    .header__logo {
+      height: 28px;
+    }
+    .header__wordmark {
+      font-size: var(--fs-sm);
+      white-space: nowrap;
+    }
+    .header__burger {
+      width: 40px;
+      height: 40px;
+    }
+  }
+</style>

@@ -1,0 +1,180 @@
+---
+/**
+ * QuoteCalculator — placeholder shell.
+ *
+ * Styled and laid out at final size so the live version drops in without any
+ * layout change, and reserving the height now means adding it later costs no
+ * CLS. Deliberately inert: it collects nothing and estimates nothing.
+ *
+ * Wiring it up (separate task):
+ *   1. Address autocomplete → Google Places.
+ *   2. Roof geometry and annual irradiance → Google Maps Platform Solar API
+ *      (buildingInsights endpoint returns usable roof segments and sunshine
+ *      hours; solarPotential.maxArrayPanelsCount caps the system size).
+ *   3. Apply the price list from `src/data/pricing.json` (to be added) and
+ *      subtract STC value for the postcode's solar zone.
+ *   4. Show the indicative range, then hand off to LeadForm with the address,
+ *      system size and estimate pre-filled.
+ *
+ * Keep the estimate a range, and keep the assumptions visible next to it. A
+ * single confident number that the site visit contradicts costs more trust
+ * than it wins leads.
+ */
+const { heading = "Instant solar estimate", showNotice = true } = Astro.props;
+---
+
+<div class="calc" data-quote-calculator>
+  <div class="calc__head">
+    <h2 class="calc__heading">{heading}</h2>
+    <p class="calc__sub">
+      Enter your address and we'll estimate your roof's solar potential, a system
+      size and an indicative price after rebates.
+    </p>
+  </div>
+
+  <div class="calc__body">
+    <div class="calc__inputRow">
+      <label class="visually-hidden" for="calc-address">Your address</label>
+      <input
+        id="calc-address"
+        class="calc__input"
+        type="text"
+        placeholder="Start typing your address…"
+        disabled
+        aria-describedby="calc-status"
+      />
+      <button class="btn btn--primary" type="button" disabled>Estimate</button>
+    </div>
+
+    <!-- Reserves the final layout height so adding the live result later
+         causes no cumulative layout shift. -->
+    <div class="calc__preview" aria-hidden="true">
+      <div class="calc__previewRow">
+        <span class="calc__skeleton calc__skeleton--label"></span>
+        <span class="calc__skeleton calc__skeleton--value"></span>
+      </div>
+      <div class="calc__previewRow">
+        <span class="calc__skeleton calc__skeleton--label"></span>
+        <span class="calc__skeleton calc__skeleton--value"></span>
+      </div>
+      <div class="calc__previewRow">
+        <span class="calc__skeleton calc__skeleton--label"></span>
+        <span class="calc__skeleton calc__skeleton--value"></span>
+      </div>
+    </div>
+
+    {
+      showNotice && (
+        <p class="calc__notice" id="calc-status">
+          <strong>Coming soon.</strong> The instant estimator is not live yet. In
+          the meantime, send us your details below and we'll do the same
+          calculation properly — using your actual bill and roof rather than an
+          estimate.
+        </p>
+      )
+    }
+  </div>
+</div>
+
+<style>
+  .calc {
+    padding: var(--s-7);
+    background: linear-gradient(160deg, var(--c-navy), var(--c-navy-700));
+    border-radius: var(--r-xl);
+    color: var(--c-on-dark);
+    box-shadow: var(--sh-lg);
+  }
+
+  .calc__heading {
+    color: var(--c-on-dark);
+    font-size: var(--fs-h3);
+  }
+
+  .calc__sub {
+    margin-top: var(--s-3);
+    font-size: var(--fs-sm);
+    color: var(--c-on-dark-muted);
+    max-width: 52ch;
+  }
+
+  .calc__body {
+    margin-top: var(--s-6);
+  }
+
+  .calc__inputRow {
+    display: flex;
+    gap: var(--s-3);
+  }
+
+  .calc__input {
+    flex: 1;
+    padding: var(--s-4);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--r-md);
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--c-on-dark);
+    font-size: var(--fs-base);
+  }
+
+  .calc__input::placeholder {
+    color: var(--c-on-dark-muted);
+  }
+
+  .calc__input:disabled,
+  .calc__inputRow .btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+
+  .calc__preview {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-4);
+    margin-top: var(--s-6);
+    padding: var(--s-5);
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: var(--r-lg);
+  }
+
+  .calc__previewRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-5);
+  }
+
+  .calc__skeleton {
+    display: block;
+    height: 12px;
+    border-radius: var(--r-pill);
+    background: rgba(255, 255, 255, 0.14);
+  }
+
+  .calc__skeleton--label {
+    width: 40%;
+  }
+
+  .calc__skeleton--value {
+    width: 22%;
+    background: rgba(255, 176, 32, 0.28);
+  }
+
+  .calc__notice {
+    margin-top: var(--s-5);
+    font-size: var(--fs-sm);
+    color: var(--c-on-dark-muted);
+  }
+
+  .calc__notice strong {
+    color: var(--c-gold);
+  }
+
+  @media (max-width: 600px) {
+    .calc {
+      padding: var(--s-5);
+    }
+    .calc__inputRow {
+      flex-direction: column;
+    }
+  }
+</style>

@@ -1,0 +1,42 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import InnerHero from "../../components/InnerHero.astro";
+import FeatureCardGrid from "../../components/FeatureCardGrid.astro";
+import { articles, business } from "../../lib/site.js";
+import { breadcrumbSchema } from "../../lib/schema.js";
+
+const crumbs = [{ label: "Resources", href: "/resources/" }];
+
+const sorted = [...articles].sort(
+  (a, b) => new Date(b.published) - new Date(a.published)
+);
+---
+
+<BaseLayout
+  title={`Solar Guides & Resources | ${business.name}`}
+  description="Plain-English guides to solar sizing, battery economics and Australian rebates — written to help you check a quote rather than to sell you one."
+  path="/resources/"
+  schemas={[breadcrumbSchema(crumbs)]}
+>
+  <InnerHero
+    kicker="Resources"
+    heading="Guides that help you check a quote"
+    body="Including ours. If a recommendation does not survive the arithmetic in these guides, it is worth asking about."
+    crumbs={crumbs}
+  />
+
+  <section class="section">
+    <div class="container">
+      <FeatureCardGrid
+        items={sorted.map((a) => ({
+          title: a.title,
+          summary: a.description,
+          meta: `${a.category} · ${a.readingMinutes} min read`,
+          href: `/resources/${a.slug}/`,
+        }))}
+        columns={3}
+        level={2}
+      />
+    </div>
+  </section>
+</BaseLayout>

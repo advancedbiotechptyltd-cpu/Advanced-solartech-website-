@@ -1,0 +1,145 @@
+---
+/**
+ * RebateCards — per-state incentive breakdown.
+ *
+ * Each card is tagged National or state-specific, because conflating the two is
+ * the single most common source of confusion when people compare quotes across
+ * borders. No dollar figures are hard-coded here: schemes change, and a stale
+ * number on a live page is worse than no number.
+ */
+import Icon from "./Icon.astro";
+
+const { rebates = [], level = 2, heading = "Rebates and incentives that apply here", lastReviewed } = Astro.props;
+const Heading = `h${level}`;
+
+// Showing the verification date is the honest version of a rebate disclaimer:
+// it tells the reader how much to trust the page without them having to guess.
+const reviewedLabel = lastReviewed
+  ? new Date(lastReviewed).toLocaleDateString("en-AU", { day: "numeric", month: "long", year: "numeric" })
+  : null;
+---
+
+{
+  rebates.length > 0 && (
+    <div class="rebates" data-reveal>
+      <Heading class="rebates__heading">{heading}</Heading>
+
+      <ul class="rebates__list" role="list">
+        {rebates.map((r) => (
+          <li class="rebates__card">
+            <div class="rebates__top">
+              <span class="rebates__icon">
+                <Icon name="bolt" size={18} />
+              </span>
+              <span
+                class:list={[
+                  "rebates__scope",
+                  r.scope === "National" && "is-national",
+                ]}
+              >
+                {r.scope}
+              </span>
+            </div>
+            <h3 class="rebates__name">{r.name}</h3>
+            <p class="rebates__detail">{r.detail}</p>
+          </li>
+        ))}
+      </ul>
+
+      <p class="rebates__disclaimer">
+        Rebate programs and their eligibility rules change, sometimes at short
+        notice — schemes get wound back as well as introduced. Confirm current
+        terms at the time you buy; your quote will show exactly which incentives
+        have been applied to your address.
+        {reviewedLabel && (
+          <>
+            {" "}
+            <strong>This page was last checked on <time datetime={lastReviewed}>{reviewedLabel}</time>.</strong>
+          </>
+        )}
+      </p>
+    </div>
+  )
+}
+
+<style>
+  .rebates__heading {
+    margin-bottom: var(--s-6);
+  }
+
+  .rebates__list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--s-5);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .rebates__card {
+    padding: var(--s-6);
+    background: var(--c-surface);
+    border: 1px solid var(--c-line);
+    border-left: 3px solid var(--c-gold);
+    border-radius: var(--r-lg);
+    box-shadow: var(--sh-sm);
+  }
+
+  .rebates__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-3);
+    margin-bottom: var(--s-4);
+  }
+
+  .rebates__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--r-md);
+    background: var(--c-gold-100);
+    color: var(--c-gold-text);
+  }
+
+  .rebates__scope {
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-bold);
+    text-transform: uppercase;
+    letter-spacing: var(--ls-wide);
+    padding: var(--s-1) var(--s-3);
+    border-radius: var(--r-pill);
+    background: var(--c-surface-alt);
+    color: var(--c-navy);
+  }
+
+  .rebates__scope.is-national {
+    background: var(--c-green-100);
+    color: #087a55;
+  }
+
+  .rebates__name {
+    font-size: var(--fs-h4);
+  }
+
+  .rebates__detail {
+    margin-top: var(--s-3);
+    font-size: var(--fs-sm);
+    color: var(--c-muted);
+  }
+
+  .rebates__disclaimer {
+    margin-top: var(--s-5);
+    font-size: var(--fs-xs);
+    color: var(--c-muted);
+    max-width: 70ch;
+  }
+
+  @media (max-width: 760px) {
+    .rebates__list {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

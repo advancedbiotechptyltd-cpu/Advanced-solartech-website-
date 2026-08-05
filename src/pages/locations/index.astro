@@ -1,0 +1,97 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import InnerHero from "../../components/InnerHero.astro";
+import SectionHeader from "../../components/SectionHeader.astro";
+import FeatureCardGrid from "../../components/FeatureCardGrid.astro";
+import { locations, cities, business, getCoverage } from "../../lib/site.js";
+import { breadcrumbSchema } from "../../lib/schema.js";
+
+const crumbs = [{ label: "Service Areas", href: "/locations/" }];
+
+const serviced = locations.filter((l) => l.serviced);
+const partnerStates = locations.filter((l) => !l.serviced);
+const coverage = getCoverage();
+---
+
+<BaseLayout
+  title={`Solar Service Areas & State Rebates | ${business.name}`}
+  description="Where Advanced Solar Tech installs, and what solar and battery rebates apply in each Australian state — federal schemes versus state-specific ones."
+  path="/locations/"
+  schemas={[breadcrumbSchema(crumbs)]}
+>
+  <InnerHero
+    kicker="Service areas"
+    heading="Where we install, and what you can claim"
+    body="Federal incentives apply everywhere. State schemes do not — and that difference changes the price you pay more than most people expect."
+    crumbs={crumbs}
+    ctaLabel="Get a Quote"
+    ctaHref="/quote/"
+  />
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader
+        kicker="Direct install"
+        heading="Where our own teams work"
+        body={coverage.directSummary}
+        level={2}
+      />
+      <FeatureCardGrid
+        items={serviced.map((l) => ({
+          title: l.state,
+          summary: l.rebateSummary,
+          icon: "pin",
+          href: `/locations/${l.slug}/`,
+        }))}
+        columns={2}
+        level={3}
+      />
+    </div>
+  </section>
+
+  {
+    cities.length > 0 && (
+      <section class="section section--surface">
+        <div class="container">
+          <SectionHeader
+            kicker="Local areas"
+            heading="Area guides"
+            body="What changes locally — network export limits, roof stock, climate and the constraints each brings."
+            level={2}
+          />
+          <FeatureCardGrid
+            items={cities.map((c) => ({
+              title: c.name,
+              summary: c.metaDescription,
+              icon: "home",
+              href: `/locations/${c.state}/${c.slug}/`,
+            }))}
+            columns={4}
+            level={3}
+          />
+        </div>
+      </section>
+    )
+  }
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader
+        kicker="Partner network"
+        heading="Every other state and territory"
+        body={`${coverage.partnerSummary} Send us your details the same way — the incentive picture differs between these states, and each page sets out what applies.`}
+        level={2}
+      />
+      <FeatureCardGrid
+        items={partnerStates.map((l) => ({
+          title: l.state,
+          summary: l.rebateSummary,
+          meta: l.abbr,
+          href: `/locations/${l.slug}/`,
+        }))}
+        columns={3}
+        level={3}
+      />
+    </div>
+  </section>
+</BaseLayout>

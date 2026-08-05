@@ -1,0 +1,155 @@
+{
+  "primary": [
+    {
+      "label": "Services",
+      "href": "/services/",
+      "children": [
+        {
+          "label": "Solar Panels",
+          "href": "/services/solar-panels/"
+        },
+        {
+          "label": "Battery Storage",
+          "href": "/services/battery-storage/"
+        },
+        {
+          "label": "Heat Pump Hot Water",
+          "href": "/services/heat-pump-hot-water/"
+        },
+        {
+          "label": "EV Chargers",
+          "href": "/services/ev-chargers/"
+        },
+        {
+          "label": "Commercial Solar",
+          "href": "/services/commercial-solar/"
+        }
+      ]
+    },
+    {
+      "label": "Products",
+      "href": "/products/",
+      "children": [
+        {
+          "label": "Panels",
+          "href": "/products/panels/"
+        },
+        {
+          "label": "Inverters",
+          "href": "/products/inverters/"
+        },
+        {
+          "label": "Batteries",
+          "href": "/products/batteries/"
+        },
+        {
+          "label": "EV Chargers",
+          "href": "/products/ev-chargers/"
+        }
+      ]
+    },
+    {
+      "label": "Service Areas",
+      "href": "/locations/"
+    },
+    {
+      "label": "Resources",
+      "href": "/resources/"
+    },
+    {
+      "label": "About",
+      "href": "/about/"
+    },
+    {
+      "label": "Contact",
+      "href": "/contact/"
+    }
+  ],
+  "footer": [
+    {
+      "heading": "Services",
+      "links": [
+        {
+          "label": "Solar Panels",
+          "href": "/services/solar-panels/"
+        },
+        {
+          "label": "Battery Storage",
+          "href": "/services/battery-storage/"
+        },
+        {
+          "label": "Heat Pump Hot Water",
+          "href": "/services/heat-pump-hot-water/"
+        },
+        {
+          "label": "EV Chargers",
+          "href": "/services/ev-chargers/"
+        },
+        {
+          "label": "Commercial Solar",
+          "href": "/services/commercial-solar/"
+        }
+      ]
+    },
+    {
+      "heading": "Products",
+      "links": [
+        {
+          "label": "Solar Panels",
+          "href": "/products/panels/"
+        },
+        {
+          "label": "Inverters",
+          "href": "/products/inverters/"
+        },
+        {
+          "label": "Batteries",
+          "href": "/products/batteries/"
+        },
+        {
+          "label": "Heat Pumps",
+          "href": "/products/heat-pumps/"
+        },
+        {
+          "label": "EV Chargers",
+          "href": "/products/ev-chargers/"
+        }
+      ]
+    },
+    {
+      "heading": "Company",
+      "links": [
+        {
+          "label": "About Us",
+          "href": "/about/"
+        },
+        {
+          "label": "Service Areas",
+          "href": "/locations/"
+        },
+        {
+          "label": "Resources",
+          "href": "/resources/"
+        },
+        {
+          "label": "Contact",
+          "href": "/contact/"
+        },
+        {
+          "label": "Get a Quote",
+          "href": "/quote/"
+        }
+      ]
+    }
+  ],
+  "legal": [
+    {
+      "label": "Privacy Policy",
+      "href": "/privacy/"
+    },
+    {
+      "label": "Terms of Service",
+      "href": "/terms/"
+    }
+  ]
+}

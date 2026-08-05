@@ -1,0 +1,114 @@
+{
+  "_note": "Home page copy, extracted from the template so staff can edit it in the CMS at /admin/ without touching code. Layout, colours and the logo stay developer-controlled.",
+  "hero": {
+    "kicker": "Solar · Batteries · Heat pumps · EV charging",
+    "heading": "Solar that's sized to your bill, not to a package",
+    "body": "We design, supply and install solar, battery storage, heat pump hot water and EV charging for Victorian homes and businesses — and we show you the arithmetic behind every recommendation.",
+    "primaryLabel": "Get a Quote",
+    "reassurance": "Free quote · No obligation · Rebates applied up front",
+    "image": "hero-install",
+    "imageAlt": "Installers fitting a solar array on a tiled roof",
+    "imageAltOwn": "Advanced Solar Tech installers fitting a rooftop solar array"
+  },
+  "servicesSection": {
+    "kicker": "What we do",
+    "heading": "Five services, one system that has to work together",
+    "body": "Solar, storage, hot water and EV charging are usually bought separately and then made to fit. Specified together, each one makes the others worth more."
+  },
+  "workSection": {
+    "items": [
+      {
+        "image": "work-1",
+        "alt": "A solar array on a tiled suburban roof",
+        "label": "Residential solar",
+        "ownAlt": "Solar array installed by Advanced Solar Tech on a tiled suburban roof"
+      },
+      {
+        "image": "work-2",
+        "alt": "A wall-mounted home battery beside a switchboard",
+        "label": "Battery storage",
+        "ownAlt": "Home battery installed by Advanced Solar Tech beside a switchboard"
+      },
+      {
+        "image": "work-3",
+        "alt": "A heat pump hot water unit installed beside a house",
+        "label": "Heat pump hot water",
+        "ownAlt": "Heat pump hot water unit installed by Advanced Solar Tech"
+      },
+      {
+        "image": "work-4",
+        "alt": "A large solar array on a commercial warehouse roof",
+        "label": "Commercial solar",
+        "ownAlt": "Commercial solar array installed by Advanced Solar Tech"
+      }
+    ],
+    "_ownPhotosNote": "Wording is chosen by business.photos.own in business.json — one switch covering every photograph on the site. `own` copy is used when that is true, `generic` until then.",
+    "own": {
+      "kicker": "Recent work",
+      "heading": "Installs across Victoria",
+      "body": "Every job on this page is ours. We would rather show you the work than describe it."
+    },
+    "generic": {
+      "kicker": "What we install",
+      "heading": "The work, in four pictures",
+      "body": "Solar, storage, hot water and commercial — the four things we are asked for most."
+    }
+  },
+  "whyUsSection": {
+    "kicker": "Why us",
+    "heading": "Three things we do differently",
+    "items": [
+      {
+        "icon": "chart",
+        "title": "Sized from your data, not a package",
+        "body": "We read your bill and interval data before proposing a system, so the design matches how you actually use power rather than an average household."
+      },
+      {
+        "icon": "doc",
+        "title": "Quotes that show their working",
+        "body": "System size, product list, each rebate as a separate line, and the assumptions behind the payback figure. All of it checkable."
+      },
+      {
+        "icon": "pin",
+        "title": "Victorian networks understood",
+        "body": "Five distribution networks with five different export limits. We confirm yours before finalising system size, not after installation."
+      }
+    ]
+  },
+  "processSection": {
+    "kicker": "How it works",
+    "heading": "From first call to switched-on system",
+    "body": "You send a recent bill. We come back with a design, a price after rebates, and the assumptions behind the payback figure.\n\nIf the numbers do not work for your property, we tell you that instead of selling you a system anyway.",
+    "ctaLabel": "Start with a quote",
+    "image": "team-install",
+    "imageAlt": "An electrician working on a home switchboard",
+    "bullets": [
+      {
+        "title": "Send your bill",
+        "body": "Or your interval data if you have it — it makes the sizing exact rather than estimated."
+      },
+      {
+        "title": "Get a design and a price",
+        "body": "System size, product list, each rebate itemised, and payback with its assumptions shown."
+      },
+      {
+        "title": "Install and commission",
+        "body": "Most homes are done in a day, then we set up monitoring and show you how to read it."
+      }
+    ],
+    "imageAltOwn": "An Advanced Solar Tech installer working on a switchboard"
+  },
+  "faqSection": {
+    "heading": "Questions we get asked most",
+    "faqIds": [
+      "solar-system-size",
+      "battery-cost",
+      "heat-pump-savings",
+      "rebate-eligibility"
+    ]
+  },
+  "seo": {
+    "title": "Solar, Batteries & EV Chargers Victoria | Advanced Solar Tech",
+    "description": "Solar panel, battery storage, heat pump and EV charger installation across Victoria. Systems sized to your actual usage, with every rebate itemised on your quote."
+  }
+}

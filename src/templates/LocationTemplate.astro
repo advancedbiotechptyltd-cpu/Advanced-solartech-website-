@@ -1,0 +1,218 @@
+---
+/**
+ * LocationTemplate — serves both state pages and city pages.
+ *
+ * The template is shared; the content is not. Every location entry carries its
+ * own intro, rebate set and localNotes, and `npm run check:content` fails the
+ * build if any of those are missing or duplicated across locations. That guard
+ * exists because near-identical location pages with the place name swapped are
+ * the fastest way to get a site classified as doorway pages.
+ */
+import BaseLayout from "../layouts/BaseLayout.astro";
+import InnerHero from "../components/InnerHero.astro";
+import SectionHeader from "../components/SectionHeader.astro";
+import RebateCards from "../components/RebateCards.astro";
+import FeatureCardGrid from "../components/FeatureCardGrid.astro";
+import SplitFeature from "../components/SplitFeature.astro";
+import FAQAccordion from "../components/FAQAccordion.astro";
+import KeyFacts from "../components/KeyFacts.astro";
+import LeadForm from "../components/LeadForm.astro";
+import { services, getFaqs, getCitiesForState, business, getCoverage } from "../lib/site.js";
+import { localAreaSchema, faqSchema, breadcrumbSchema, serviceSchema } from "../lib/schema.js";
+
+const { location, parentState = null, isCity = false } = Astro.props;
+
+const areaName = isCity ? location.name : location.state;
+const basePath = isCity
+  ? `/locations/${parentState.slug}/${location.slug}/`
+  : `/locations/${location.slug}/`;
+
+const rebates = isCity ? parentState.rebates : location.rebates;
+const rebateSummary = isCity ? parentState.rebateSummary : location.rebateSummary;
+const serviced = isCity ? parentState.serviced : location.serviced;
+const coverage = getCoverage();
+
+const childCities = isCity ? [] : getCitiesForState(location.slug);
+const faqs = getFaqs(["rebate-eligibility", "solar-system-size", "battery-cost"]);
+
+const serviceCards = services.map((s) => ({
+  title: `${s.title} in ${areaName}`,
+  summary: s.summary,
+  icon: s.icon,
+  href: `/services/${s.slug}/`,
+}));
+
+const crumbs = isCity
+  ? [
+      { label: "Service Areas", href: "/locations/" },
+      { label: parentState.state, href: `/locations/${parentState.slug}/` },
+      { label: location.name, href: basePath },
+    ]
+  : [
+      { label: "Service Areas", href: "/locations/" },
+      { label: location.state, href: basePath },
+    ];
+
+const keyFacts = [
+  { label: "Area", value: areaName },
+  {
+    label: "Installation",
+    value: serviced ? coverage.directLabel : coverage.partnerLabel,
+  },
+  { label: "Federal incentives", value: "STCs + battery rebate" },
+  {
+    label: "State incentives",
+    value: rebates.some((r) => r.scope !== "National") ? "Yes — see below" : "Federal schemes only",
+  },
+];
+
+const schemas = [
+  localAreaSchema(isCity ? { name: location.name, metaDescription: location.metaDescription } : location),
+  faqSchema(faqs),
+  breadcrumbSchema(crumbs),
+  ...services.map((s) => serviceSchema(s, areaName)),
+];
+---
+
+<BaseLayout
+  title={location.metaTitle}
+  description={location.metaDescription}
+  path={basePath}
+  schemas={schemas}
+>
+  <InnerHero
+    kicker={isCity ? `${parentState.state} · ${location.name}` : "Service area"}
+    heading={location.heroHeading}
+    crumbs={crumbs}
+    ctaLabel="Get a Quote"
+    ctaHref="/quote/"
+  />
+
+  {
+    !serviced && (
+      <div class="container">
+        <p class="notice">
+          <strong>How your installation happens in {areaName}:</strong>{" "}
+          {coverage.partnerMessage}
+        </p>
+      </div>
+    )
+  }
+
+  <section class="section">
+    <div class="container">
+      <SplitFeature heading={`Solar in ${areaName}`} body={location.intro} level={2}>
+        <KeyFacts slot="media" facts={keyFacts} level={2} />
+      </SplitFeature>
+    </div>
+  </section>
+
+  <section class="section section--surface">
+    <div class="container">
+      <SectionHeader kicker="Incentives" heading={`What you can claim in ${areaName}`} body={rebateSummary} />
+      <RebateCards rebates={rebates} heading={`${areaName} rebates in detail`} level={3} lastReviewed={isCity ? parentState.lastReviewed : location.lastReviewed} />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SplitFeature
+        kicker="Local conditions"
+        heading={`What's different about installing in ${areaName}`}
+        body={location.localNotes}
+        level={2}
+      />
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="container">
+      <SectionHeader heading={`Our services in ${areaName}`} level={2} />
+      <FeatureCardGrid items={serviceCards} columns={4} level={3} />
+    </div>
+  </section>
+
+  {
+    childCities.length > 0 && (
+      <section class="section">
+        <div class="container">
+          <SectionHeader
+            kicker="Areas"
+            heading={`Where we install across ${areaName}`}
+            body="Each area has its own constraints — network limits, roof stock, climate. These pages cover what changes locally."
+            level={2}
+          />
+          <FeatureCardGrid
+            items={childCities.map((c) => ({
+              title: c.name,
+              summary: c.metaDescription,
+              icon: "pin",
+              href: `/locations/${location.slug}/${c.slug}/`,
+            }))}
+            columns={4}
+            level={3}
+          />
+        </div>
+      </section>
+    )
+  }
+
+  <section class="section section--surface">
+    <div class="container quoteRow">
+      <div>
+        <SectionHeader
+          kicker="Next step"
+          heading={`Get a quote for your ${areaName} property`}
+          body={`Send your details and a recent bill. We'll apply every incentive available in ${areaName} and show each one as a separate line.`}
+          level={2}
+        />
+        <p class="quoteRow__phone">
+          Prefer to talk? Call <a href={`tel:${business.phone.replace(/\s+/g, "")}`}>{business.phoneDisplay}</a>.
+        </p>
+      </div>
+      <LeadForm
+        id={`lead-${location.slug}`}
+        heading="Request your quote"
+        body="Two quick steps. We'll be in touch shortly."
+        source={`location:${location.slug}`}
+        compact
+      />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container container--narrow">
+      <FAQAccordion faqs={faqs} heading={`${areaName} solar questions`} id={`faq-${location.slug}`} />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .notice {
+    margin-block: var(--s-6) 0;
+    padding: var(--s-4) var(--s-5);
+    background: var(--c-gold-100);
+    border-left: 3px solid var(--c-gold);
+    border-radius: var(--r-md);
+    font-size: var(--fs-sm);
+    color: var(--c-text);
+  }
+
+  .quoteRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(var(--s-6), 5vw, var(--s-9));
+    align-items: start;
+  }
+
+  .quoteRow__phone {
+    font-size: var(--fs-sm);
+    color: var(--c-muted);
+  }
+
+  @media (max-width: 960px) {
+    .quoteRow {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,521 @@
+# Content editor configuration — Sveltia CMS (Decap-compatible schema).
+#
+# Design rules, so staff cannot accidentally break the site:
+#   * Structured fields only. No raw HTML or markdown-with-embedded-HTML field
+#     anywhere, so a paste from Word cannot inject markup into a page.
+#   * Layout, colours, the logo and page structure are NOT editable here. They
+#     are developer-controlled by design — a CMS that can change the design is a
+#     CMS that can break the design.
+#   * Every image field requires alt text. It is what a blind visitor hears and
+#     what Google reads, so it is a required field, not an optional one.
+#   * SEO title and description carry explicit length hints. Google truncates
+#     around 60 and 160 characters.
+#
+# Editing writes a commit to this repository. See README.md for how that
+# reaches the live site on cPanel.
+
+backend:
+  name: github
+  repo: advancedbiotechptyltd-cpu/Advanced-solartech-website-
+  branch: claude/advanced-solartech-488d5g
+  # No `base_url` on purpose.
+  #
+  # "Sign In with GitHub" needs an OAuth proxy to exchange the code for a token,
+  # and static cPanel hosting cannot run one. Rather than stand up a Cloudflare
+  # Worker for a handful of staff, sign in with "Sign In Using Access Token" —
+  # a fine-grained GitHub token scoped to this one repository, with Contents:
+  # read and write. Setup is in README.md.
+  #
+  # If you later want one-click GitHub login, deploy an OAuth proxy and set:
+  #   base_url: https://your-worker.workers.dev
+  #   auth_endpoint: auth
+
+# Staff can preview a draft before publishing.
+publish_mode: editorial_workflow
+
+# Drag-and-drop uploads land where the build already looks for photos, so a
+# picture added here is resized, converted to WebP and given a srcset
+# automatically — see src/components/Figure.astro.
+media_folder: src/images
+public_folder: /
+
+site_url: https://advancedsolartec.com.au
+display_url: https://advancedsolartec.com.au
+logo_url: https://advancedsolartec.com.au/favicon.svg
+
+collections:
+  # ── Home ────────────────────────────────────────────────────────────────────
+  - name: home
+    label: Home page
+    files:
+      - name: home
+        label: Home page content
+        file: src/data/home.json
+        description: The hero, section headings and home page copy.
+        fields:
+          - { name: _note, label: Developer note, widget: hidden }
+          - name: hero
+            label: Hero (top of the page)
+            widget: object
+            fields:
+              - { name: kicker, label: Small line above the headline, widget: string }
+              - { name: heading, label: Headline, widget: string, hint: "Keep it under about 60 characters so it does not wrap awkwardly on mobile." }
+              - { name: body, label: Intro paragraph, widget: text }
+              - { name: primaryLabel, label: Button text, widget: string }
+              - { name: reassurance, label: Small line under the buttons, widget: string }
+              - { name: image, label: Photo filename (no extension), widget: string, hint: "Upload the photo in Media, then type its name here without .jpg" }
+              - { name: imageAlt, label: Photo description (alt text), widget: string, required: true, hint: "Describe what is in the photo, without saying we did the work. Required." }
+              - { name: imageAltOwn, label: "Photo description once it is our own photo", widget: string, required: false }
+          - name: servicesSection
+            label: "Section: services"
+            widget: object
+            fields:
+              - { name: kicker, label: Small line, widget: string }
+              - { name: heading, label: Heading, widget: string }
+              - { name: body, label: Intro, widget: text }
+          - name: workSection
+            label: "Section: our work"
+            widget: object
+            fields:
+              - { name: _ownPhotosNote, widget: hidden, required: false }
+              - name: own
+                label: "Wording used when the photos are ours"
+                widget: object
+                collapsed: true
+                fields:
+                  - { name: kicker, label: Small line, widget: string }
+                  - { name: heading, label: Heading, widget: string }
+                  - { name: body, label: Intro, widget: text }
+              - name: generic
+                label: "Wording used until then (see Business details → Photographs)"
+                widget: object
+                collapsed: true
+                fields:
+                  - { name: kicker, label: Small line, widget: string }
+                  - { name: heading, label: Heading, widget: string }
+                  - { name: body, label: Intro, widget: text }
+              - name: items
+                label: Photos
+                widget: list
+                fields:
+                  - { name: image, label: Photo filename (no extension), widget: string, hint: "A developer drops the file into src/images/. Until then a placeholder holds the space." }
+                  - { name: alt, label: Photo description (alt text), widget: string, required: true, hint: "Describe what is in the photo. Do not say we installed it — that is what the ownAlt field below is for." }
+                  - { name: ownAlt, label: "Photo description once it is our own install", widget: string, required: false }
+                  - { name: label, label: Caption, widget: string }
+          - name: whyUsSection
+            label: "Section: why us"
+            widget: object
+            fields:
+              - { name: kicker, label: Small line, widget: string }
+              - { name: heading, label: Heading, widget: string }
+              - name: items
+                label: Points
+                widget: list
+                max: 4
+                fields:
+                  - { name: icon, label: Icon, widget: select, options: [sun, battery, ev, building, check, shield, bolt, chart, clock, home, pin, doc] }
+                  - { name: title, label: Title, widget: string }
+                  - { name: body, label: Text, widget: text }
+          - name: processSection
+            label: "Section: how it works"
+            widget: object
+            fields:
+              - { name: kicker, label: Small line, widget: string }
+              - { name: heading, label: Heading, widget: string }
+              - { name: body, label: Text, widget: text }
+              - { name: ctaLabel, label: Button text, widget: string }
+              - { name: image, label: Photo filename, widget: string }
+              - { name: imageAlt, label: Photo description (alt text), widget: string, required: true, hint: "Describe what is in the photo, without saying we did the work." }
+              - { name: imageAltOwn, label: "Photo description once it is our own photo", widget: string, required: false }
+              - name: bullets
+                label: Steps
+                widget: list
+                fields:
+                  - { name: title, label: Step title, widget: string }
+                  - { name: body, label: Step text, widget: text }
+          - name: faqSection
+            label: "Section: FAQs"
+            widget: object
+            fields:
+              - { name: heading, label: Heading, widget: string }
+              - { name: faqIds, label: Which questions to show, widget: list, hint: "Use the IDs from the FAQs collection." }
+          - name: seo
+            label: Search engine listing
+            widget: object
+            fields:
+              - { name: title, label: Page title, widget: string, pattern: ['^.{10,65}$', 'Aim for 10–65 characters — Google cuts off around 60.'] }
+              - { name: description, label: Description, widget: text, pattern: ['^.{70,165}$', 'Aim for 70–165 characters — Google cuts off around 160.'] }
+
+  # ── Services ────────────────────────────────────────────────────────────────
+  - name: services
+    label: Services
+    files:
+      - name: services
+        label: All services
+        file: src/data/services.json
+        description: Solar, batteries, heat pumps, EV chargers, commercial. Adding one here creates its page.
+        fields:
+          - name: services
+            label: Services
+            widget: list
+            fields:
+              - { name: slug, label: URL slug, widget: string, pattern: ['^[a-z0-9-]+$', 'Lowercase letters, numbers and hyphens only.'], hint: "Changing this changes the page URL and breaks existing links." }
+              - { name: title, label: Name, widget: string }
+              - { name: shortTitle, label: Short name (for menus), widget: string }
+              - { name: quoteNoun, label: Singular name used in sentences, widget: string, required: false, hint: "Fills the blank in \"Get a ___ quote\". Only needed when the name above is plural — e.g. \"hot water heat pump\"." }
+              - { name: summary, label: One-line summary, widget: text }
+              - { name: icon, label: Icon, widget: select, options: [sun, battery, ev, building, bolt, chart, home, doc] }
+              - { name: metaTitle, label: "SEO: page title", widget: string, pattern: ['^.{10,65}$', 'Aim for 10–65 characters.'] }
+              - { name: metaDescription, label: "SEO: description", widget: text, pattern: ['^.{70,165}$', 'Aim for 70–165 characters.'] }
+              - { name: heroKicker, label: Small line above the headline, widget: string }
+              - { name: heroHeading, label: Page headline, widget: string }
+              - { name: heroBody, label: Intro under the headline, widget: text }
+              - { name: intro, label: Main description, widget: text, hint: "Leave a blank line between paragraphs." }
+              - name: benefits
+                label: "Why us — points"
+                widget: list
+                fields:
+                  - { name: title, label: Title, widget: string }
+                  - { name: body, label: Text, widget: text }
+              - { name: process, label: Install process to show, widget: select, options: [standard-install, ev-install, commercial-install, heat-pump-install] }
+              - { name: faqs, label: FAQ IDs to show, widget: list }
+              - { name: relatedBrandCategory, label: Product category, widget: select, options: [panels, inverters, batteries, heat-pumps, ev-chargers] }
+              - name: brandsInstalled
+                label: Brands we install (names only)
+                widget: object
+                collapsed: true
+                required: false
+                hint: >
+                  For brands with no brand page of their own. Names only — do not
+                  list a brand the business does not actually install.
+                fields:
+                  - { name: _note, widget: hidden, required: false }
+                  - { name: heading, label: Heading, widget: string, required: false }
+                  - { name: body, label: Intro, widget: text, required: false }
+                  - { name: names, label: Brand names, widget: list, required: false }
+              - { name: relatedServices, label: Related service slugs, widget: list }
+              - name: keyFacts
+                label: Key facts box
+                widget: list
+                fields:
+                  - { name: label, label: Label, widget: string }
+                  - { name: value, label: Value, widget: string }
+
+  # ── Locations ───────────────────────────────────────────────────────────────
+  - name: locations
+    label: Service areas
+    files:
+      - name: states
+        label: States & territories
+        file: src/data/locations.json
+        description: >
+          Each state must say something genuinely different. The build FAILS if two
+          locations share the same intro or local notes — near-identical location
+          pages get a site demoted as doorway pages.
+        fields:
+          - name: locations
+            label: States
+            widget: list
+            fields:
+              - { name: slug, label: URL slug, widget: string, pattern: ['^[a-z0-9-]+$', 'Lowercase letters, numbers and hyphens only.'] }
+              - { name: state, label: State name, widget: string }
+              - { name: abbr, label: Abbreviation, widget: string }
+              - { name: serviced, label: "We install here ourselves (direct)", widget: boolean, default: false, hint: "On = our own teams. Off = a trusted accredited partner does the install, and the partner message from Business details is shown. Leads are accepted either way." }
+              - { name: servicedByPartner, label: "Installed by a partner", widget: boolean, default: true, required: false, hint: "The opposite of the tick above — keep the two consistent." }
+              - { name: metaTitle, label: "SEO: page title", widget: string, pattern: ['^.{10,65}$', 'Aim for 10–65 characters.'] }
+              - { name: metaDescription, label: "SEO: description", widget: text, pattern: ['^.{70,165}$', 'Aim for 70–165 characters.'] }
+              - { name: heroHeading, label: Page headline, widget: string }
+              - { name: intro, label: What is different about solar here, widget: text }
+              - { name: rebateSummary, label: Rebate summary, widget: text }
+              - name: rebates
+                label: Rebates
+                widget: list
+                fields:
+                  - { name: name, label: Scheme name, widget: string }
+                  - { name: scope, label: Applies to, widget: string, hint: "'National' or the state name." }
+                  - { name: detail, label: Detail, widget: text, hint: "Avoid dollar figures — they date fast. Describe how it works instead." }
+              - { name: localNotes, label: Local conditions, widget: text }
+              - { name: lastReviewed, label: Rebates last checked, widget: datetime, format: YYYY-MM-DD, date_format: YYYY-MM-DD, time_format: false, hint: "Update this whenever you verify the schemes. The build warns after 6 months." }
+              - { name: cities, label: City slugs, widget: list, required: false }
+      - name: cities
+        label: Cities & regions
+        file: src/data/cities.json
+        fields:
+          - name: cities
+            label: Cities
+            widget: list
+            fields:
+              - { name: slug, label: URL slug, widget: string, pattern: ['^[a-z0-9-]+$', 'Lowercase, numbers and hyphens only.'] }
+              - { name: state, label: State slug, widget: string }
+              - { name: name, label: City name, widget: string }
+              - { name: metaTitle, label: "SEO: page title", widget: string, pattern: ['^.{10,65}$', 'Aim for 10–65 characters.'] }
+              - { name: metaDescription, label: "SEO: description", widget: text, pattern: ['^.{70,165}$', 'Aim for 70–165 characters.'] }
+              - { name: heroHeading, label: Page headline, widget: string }
+              - { name: intro, label: What is different about installing here, widget: text }
+              - { name: localNotes, label: Local conditions, widget: text }
+              - { name: postcodeExamples, label: Example postcodes, widget: list, required: false }
+
+  # ── Products / brands ───────────────────────────────────────────────────────
+  - name: brands
+    label: Product brands
+    files:
+      - name: brands
+        label: Brands we install
+        file: src/data/brands.json
+        description: >
+          Every brand needs a "what to weigh up" as well as strengths. A page that
+          only lists strengths reads as an advert to a customer and as thin
+          promotional content to Google.
+        fields:
+          - name: brands
+            label: Brands
+            widget: list
+            fields:
+              - { name: slug, label: URL slug, widget: string, pattern: ['^[a-z0-9-]+$', 'Lowercase, numbers and hyphens only.'] }
+              - { name: name, label: Brand name, widget: string }
+              - { name: category, label: Category, widget: select, options: [panels, inverters, batteries, heat-pumps, ev-chargers] }
+              - { name: summary, label: One-line summary, widget: text }
+              - { name: metaTitle, label: "SEO: page title", widget: string, pattern: ['^.{10,65}$', 'Aim for 10–65 characters.'] }
+              - { name: metaDescription, label: "SEO: description", widget: text, pattern: ['^.{70,165}$', 'Aim for 70–165 characters.'] }
+              - { name: intro, label: About this brand, widget: text }
+              - { name: strengths, label: Where it is the right choice, widget: list }
+              - { name: considerations, label: What to weigh up, widget: text, required: true }
+              - { name: productTypes, label: Product types, widget: list }
+              - { name: consolidatedFrom, label: Old URLs this replaces, widget: list, required: false }
+
+  # ── FAQs ────────────────────────────────────────────────────────────────────
+  - name: faqs
+    label: FAQs
+    files:
+      - name: faqs
+        label: All questions
+        file: src/data/faqs.json
+        description: These appear on service, location and home pages, and are read by Google and AI search.
+        fields:
+          - name: faqs
+            label: Questions
+            widget: list
+            fields:
+              - { name: id, label: ID, widget: string, pattern: ['^[a-z0-9-]+$', 'Lowercase, numbers and hyphens only.'], hint: "Pages refer to questions by this ID. Changing it removes the question from those pages." }
+              - { name: question, label: Question, widget: string }
+              - { name: answer, label: Answer, widget: text, hint: "Answer it properly in 2–4 sentences. Short, vague answers are skipped by AI search." }
+
+  # ── Resources ───────────────────────────────────────────────────────────────
+  - name: articles
+    label: Guides & resources
+    files:
+      - name: articles
+        label: All guides
+        file: src/data/articles.json
+        fields:
+          - name: articles
+            label: Guides
+            widget: list
+            fields:
+              - { name: slug, label: URL slug, widget: string, pattern: ['^[a-z0-9-]+$', 'Lowercase, numbers and hyphens only.'] }
+              - { name: title, label: Title, widget: string }
+              - { name: description, label: Summary for listings, widget: text }
+              - { name: metaTitle, label: "SEO: page title", widget: string, pattern: ['^.{10,65}$', 'Aim for 10–65 characters.'] }
+              - { name: metaDescription, label: "SEO: description", widget: text, pattern: ['^.{70,165}$', 'Aim for 70–165 characters.'] }
+              - { name: category, label: Category, widget: string }
+              - { name: published, label: Published, widget: datetime, format: YYYY-MM-DD, date_format: YYYY-MM-DD, time_format: false }
+              - { name: updated, label: Last updated, widget: datetime, format: YYYY-MM-DD, date_format: YYYY-MM-DD, time_format: false }
+              - { name: readingMinutes, label: Reading time (minutes), widget: number, value_type: int, min: 1, max: 60 }
+              - { name: summary, label: Opening summary, widget: text }
+              - name: body
+                label: Article body
+                widget: list
+                types:
+                  - name: p
+                    label: Paragraph
+                    widget: object
+                    fields:
+                      - { name: type, widget: hidden, default: p }
+                      - { name: text, label: Text, widget: text }
+                  - name: h2
+                    label: Heading
+                    widget: object
+                    fields:
+                      - { name: type, widget: hidden, default: h2 }
+                      - { name: text, label: Heading, widget: string }
+                  - name: h3
+                    label: Sub-heading
+                    widget: object
+                    fields:
+                      - { name: type, widget: hidden, default: h3 }
+                      - { name: text, label: Sub-heading, widget: string }
+                  - name: callout
+                    label: Highlighted box
+                    widget: object
+                    fields:
+                      - { name: type, widget: hidden, default: callout }
+                      - { name: text, label: Text, widget: text }
+                  - name: ul
+                    label: Bullet list
+                    widget: object
+                    fields:
+                      - { name: type, widget: hidden, default: ul }
+                      - { name: items, label: Bullets, widget: list }
+              - { name: relatedFaqs, label: Related FAQ IDs, widget: list, required: false }
+
+  # ── Business details ────────────────────────────────────────────────────────
+  - name: business
+    label: Business details
+    files:
+      - name: business
+        label: Contact details & claims
+        file: src/data/business.json
+        description: >
+          Phone, email and service area appear in the header, footer and the
+          structured data Google reads — change them once here and every page
+          follows. Testimonials, accreditations and statistics stay switched off
+          until they are real; see the hints on each.
+        fields:
+          - { name: name, label: Business name, widget: string }
+          - { name: legalName, label: Legal name, widget: string }
+          - { name: tagline, label: Tagline, widget: string }
+          - { name: description, label: Description (used in search results), widget: text }
+          - { name: url, label: Website URL, widget: string }
+          - { name: phone, label: "Phone (international, e.g. +61 403 657 585)", widget: string }
+          - { name: phoneDisplay, label: Phone as shown on the page, widget: string }
+          - { name: email, label: Email, widget: string }
+          - { name: areaServed, label: Area served, widget: string }
+          - { name: social, label: Social profile URLs, widget: list }
+          - name: coverage
+            label: Where we install
+            widget: object
+            collapsed: true
+            fields:
+              - { name: _note, widget: hidden, required: false }
+              - { name: directStates, label: "States we install in ourselves (abbreviations)", widget: list, hint: "Must match the 'Direct install' tick on each state in Service areas." }
+              - { name: directLabel, label: "Label for a direct-install state", widget: string }
+              - { name: partnerLabel, label: "Label for a partner-installed state", widget: string }
+              - { name: directSummary, label: "Sentence: where we install directly", widget: text }
+              - { name: partnerSummary, label: "Sentence: everywhere else", widget: text }
+              - name: partnerMessage
+                label: "Message shown to someone in a partner state"
+                widget: text
+                hint: >
+                  Appears on their state page and in the quote form as soon as
+                  they choose that state. Say it plainly — someone is entitled
+                  to know who will be doing the work before they hand over their
+                  phone number.
+
+          - name: photos
+            label: Photographs
+            widget: object
+            collapsed: true
+            fields:
+              - { name: _note, widget: hidden, required: false }
+              - name: own
+                label: "Every photo on the site is our own work"
+                widget: boolean
+                default: false
+                hint: >
+                  Leave OFF while any photo is stock. Turning it on switches
+                  captions and alt text across the whole site to wording that
+                  says we installed what is shown — a false claim over a stock
+                  image. The build refuses to publish if the flag is on while
+                  any photo is still missing.
+          - { name: logo, label: Logo, widget: object, collapsed: true, fields: [
+              { name: src, label: Image URL, widget: string },
+              { name: width, label: Width, widget: number, value_type: int },
+              { name: height, label: Height, widget: number, value_type: int },
+              { name: alt, label: Alt text, widget: string },
+              { name: _note, label: Note, widget: hidden, required: false },
+            ] }
+          - name: accreditations
+            label: Accreditations
+            widget: object
+            collapsed: true
+            fields:
+              - { name: placeholder, label: "Not verified yet (leave ON until you hold the certificate)", widget: boolean, default: true, hint: "While this is on, nothing is shown. Claiming CEC accreditation without the certificate is a false trade claim." }
+              - { name: _note, widget: hidden, required: false }
+              # Hidden rather than omitted: the editor drops keys it does not
+              # know about, so leaving this out would silently erase the date
+              # the claim was last confirmed the first time anyone saves.
+              - { name: _lastConfirmed, widget: hidden, required: false }
+              - { name: _logoNote, widget: hidden, required: false }
+              - name: installerStatement
+                label: "Who carries out the work"
+                widget: string
+                required: false
+                hint: >
+                  One line shown under the badges on the home, quote and service
+                  pages, and in the footer. It answers the question the badges
+                  raise — an approved retailer is not necessarily the party on
+                  the roof.
+              - name: items
+                label: Accreditations
+                widget: list
+                required: false
+                fields:
+                  - { name: title, label: Name, widget: string, hint: "Match the wording on the certificate — \"Approved Retailer\" and \"Accredited Installer\" are different awards." }
+                  - { name: detail, label: Detail, widget: string, required: false }
+                  - { name: icon, label: Icon, widget: select, options: [shield, check, doc, battery, bolt, sun], required: false, hint: "Shown only until a logo file exists." }
+                  - { name: logo, label: Logo filename (no extension), widget: string, required: false, hint: "The file in src/images/accreditations/ — e.g. \"tesla\" for tesla.png. Leave blank to show the icon instead. A developer adds the file; see that folder's README for the trademark rules." }
+          - name: stats
+            label: Numbers (installs, years, kW)
+            widget: object
+            collapsed: true
+            fields:
+              - { name: placeholder, label: "Not evidenced yet (leave ON until you can prove them)", widget: boolean, default: true, hint: "While this is on, nothing is shown." }
+              - { name: _note, widget: hidden, required: false }
+              - name: items
+                label: Numbers
+                widget: list
+                required: false
+                fields:
+                  - { name: value, label: Number, widget: string }
+                  - { name: label, label: Label, widget: string }
+          - name: reviews
+            label: Google rating
+            widget: object
+            collapsed: true
+            fields:
+              - { name: placeholder, label: "Not connected yet", widget: boolean, default: true }
+              - { name: _note, widget: hidden, required: false }
+              - { name: ratingValue, label: Rating, widget: number, required: false, min: 1, max: 5, value_type: float }
+              - { name: reviewCount, label: Number of reviews, widget: number, required: false, value_type: int }
+              - { name: source, label: Source, widget: string, required: false }
+          - { name: _placeholderNote, widget: hidden, required: false }
+
+  # ── Navigation ──────────────────────────────────────────────────────────────
+  - name: navigation
+    label: Menus
+    files:
+      - name: nav
+        label: Header & footer menus
+        file: src/data/nav.json
+        description: Adding a page to the site does not add it to the menu — do that here.
+        fields:
+          - name: primary
+            label: Main menu
+            widget: list
+            fields:
+              - { name: label, label: Label, widget: string }
+              - { name: href, label: Link, widget: string, pattern: ['^/.*/$', 'Must start and end with a slash, e.g. /services/'] }
+              - name: children
+                label: Dropdown items
+                widget: list
+                required: false
+                fields:
+                  - { name: label, label: Label, widget: string }
+                  - { name: href, label: Link, widget: string, pattern: ['^/.*/$', 'Must start and end with a slash.'] }
+          - name: footer
+            label: Footer columns
+            widget: list
+            fields:
+              - { name: heading, label: Column heading, widget: string }
+              - name: links
+                label: Links
+                widget: list
+                fields:
+                  - { name: label, label: Label, widget: string }
+                  - { name: href, label: Link, widget: string, pattern: ['^/.*/$', 'Must start and end with a slash.'] }
+          - name: legal
+            label: Footer legal links
+            widget: list
+            fields:
+              - { name: label, label: Label, widget: string }
+              - { name: href, label: Link, widget: string, pattern: ['^/.*/$', 'Must start and end with a slash.'] }

@@ -1,0 +1,115 @@
+# Builds the Advanced Solar Tech website and deploys it to cPanel over FTP.
+#
+# This is what makes the content editor actually publish. Staff edit at /admin/,
+# Sveltia CMS commits to this branch, this workflow rebuilds and uploads. Without
+# it a git-based CMS just files changes nobody ships — the edit happens, the
+# website does not change, and staff lose faith in the tool within a week.
+#
+# ── Setup (once) ──────────────────────────────────────────────────────────────
+# Add these repository secrets (Settings → Secrets and variables → Actions):
+#   CPANEL_FTP_SERVER    ftp.advancedsolartec.com.au
+#   CPANEL_FTP_USERNAME  the cPanel FTP user
+#   CPANEL_FTP_PASSWORD  that user's password
+#
+# Create a dedicated FTP account in cPanel scoped to the directory it deploys
+# into. Do not use the main cPanel login — these credentials live in GitHub, and
+# a scoped account limits what a leak can reach.
+#
+# ── Where it deploys ──────────────────────────────────────────────────────────
+# Manual runs take a `target` input:
+#   staging (default) → public_html/new/   — the /new preview, noindex
+#   production        → public_html/       — the live site
+#
+# Commits deploy to STAGING automatically. Production is manual only, because a
+# CMS edit should never reach the live site without someone choosing to publish.
+
+name: Deploy website
+
+on:
+  push:
+    branches: [claude/advanced-solartech-488d5g]
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "Where to deploy"
+        required: true
+        default: staging
+        type: choice
+        options: [staging, production]
+
+concurrency:
+  # A burst of CMS commits should produce one deploy, not five racing uploads.
+  group: deploy-site-${{ github.event.inputs.target || 'staging' }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Build and upload
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install
+        run: npm ci
+
+      - name: Build
+        run: |
+          if [ "${{ github.event.inputs.target }}" = "production" ]; then
+            echo "Building for the domain root"
+            npm run build
+          else
+            echo "Building for the /new staging subfolder"
+            npm run build:staging
+          fi
+
+      # Never upload a build that fails its own checks — a broken canonical or a
+      # link to a page that does not exist is easier to catch here than after
+      # it is live.
+      - name: Verify the build
+        run: |
+          if [ "${{ github.event.inputs.target }}" = "production" ]; then
+            npm run check:html
+          else
+            npm run check:staging
+          fi
+
+      - name: Report content warnings
+        # Placeholder testimonials and stale rebate dates are warnings, not
+        # blockers — they should be visible on every deploy without stopping it.
+        continue-on-error: true
+        run: npm run check:content
+
+      - name: Upload to cPanel
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.CPANEL_FTP_SERVER }}
+          username: ${{ secrets.CPANEL_FTP_USERNAME }}
+          password: ${{ secrets.CPANEL_FTP_PASSWORD }}
+          local-dir: ./dist/
+          server-dir: >-
+            ${{ github.event.inputs.target == 'production'
+                && '/public_html/'
+                || '/public_html/new/' }}
+          # Only changed files are transferred, so a routine content edit uploads
+          # a handful of files rather than the whole site.
+          dangerous-clean-slate: false
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+
+      - name: Summary
+        run: |
+          TARGET="${{ github.event.inputs.target || 'staging' }}"
+          if [ "$TARGET" = "production" ]; then
+            echo "Deployed to https://advancedsolartec.com.au/" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "Deployed to https://advancedsolartec.com.au/new/" >> $GITHUB_STEP_SUMMARY
+          fi

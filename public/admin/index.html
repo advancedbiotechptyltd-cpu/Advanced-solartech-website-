@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Staff tool: keep it out of search results entirely. -->
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Content editor — Advanced Solar Tech</title>
+    <style>
+      body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+      #cms-fallback {
+        max-width: 640px; margin: 12vh auto; padding: 0 24px; color: #1e2a38; line-height: 1.6;
+      }
+      #cms-fallback h1 { color: #0a2540; font-size: 22px; }
+      #cms-fallback code { background: #eef4fa; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+    </style>
+  </head>
+  <body>
+    <!--
+      Shown only if the CMS bundle fails to load, so staff get an explanation
+      rather than a blank white page.
+    -->
+    <div id="cms-fallback">
+      <h1>Content editor didn't load</h1>
+      <p>
+        The editor script could not start. This is usually one of two things:
+        the site was deployed without <code>/admin/sveltia-cms.js</code>, or you
+        are offline.
+      </p>
+      <p>Nothing is broken on the live site — only this editor.</p>
+    </div>
+
+    <!--
+      Self-hosted rather than loaded from a CDN. A CDN script would be a
+      third-party dependency sitting in front of the tool that edits the whole
+      site, and it would break the moment that CDN has a bad day.
+    -->
+    <script src="/admin/sveltia-cms.js"></script>
+    <script>
+      // The CMS replaces the whole body when it boots. If it does, the fallback
+      // goes with it; if it doesn't, the message above stays visible.
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          const el = document.getElementById('cms-fallback')
+          if (el && document.querySelector('.sui, #nc-root, .sveltia-cms')) el.remove()
+        }, 1500)
+      })
+    </script>
+  </body>
+</html>

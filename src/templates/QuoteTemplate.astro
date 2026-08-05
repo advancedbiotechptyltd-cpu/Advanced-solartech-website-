@@ -1,0 +1,173 @@
+---
+/**
+ * QuoteTemplate — the primary conversion page.
+ *
+ * The calculator shell sits above the form at its final size, so dropping in
+ * the live version later shifts nothing. Until then the form is the path, and
+ * the shell says plainly that the estimator is not live rather than teasing a
+ * feature that does nothing.
+ */
+import BaseLayout from "../layouts/BaseLayout.astro";
+import InnerHero from "../components/InnerHero.astro";
+import QuoteCalculator from "../components/QuoteCalculator.astro";
+import LeadForm from "../components/LeadForm.astro";
+import StepsProcess from "../components/StepsProcess.astro";
+import TrustBar from "../components/TrustBar.astro";
+import FAQAccordion from "../components/FAQAccordion.astro";
+import { business, telHref, getFaqs } from "../lib/site.js";
+import { breadcrumbSchema, faqSchema } from "../lib/schema.js";
+
+const crumbs = [{ label: "Get a Quote", href: "/quote/" }];
+const faqs = getFaqs(["solar-system-size", "solar-payback", "rebate-eligibility", "warranty-coverage"]);
+
+const whatHappens = [
+  { title: "You send your details", body: "Six fields to start. Add a recent bill if you have one handy — it makes the sizing exact instead of estimated." },
+  { title: "We check the site remotely", body: "Roof orientation, usable area, shading and your distribution network's export limit." },
+  { title: "You get a written quote", body: "System size, product list, each rebate itemised, and payback with its assumptions written down." },
+  { title: "You decide", body: "No pressure, and no follow-up campaign. If the numbers do not work we will say so." },
+];
+---
+
+<BaseLayout
+  title={`Get a Solar Quote | ${business.name}`}
+  description="Request a free, no-obligation solar, battery or EV charger quote. We size the system from your actual usage and show every rebate as a separate line."
+  path="/quote/"
+  schemas={[breadcrumbSchema(crumbs), faqSchema(faqs)]}
+  showCtaBand={false}
+>
+  <InnerHero
+    kicker="Free quote"
+    heading="Find out what solar would actually save you"
+    body="No obligation, no sales pressure, and a quote that shows its working."
+    crumbs={crumbs}
+    variant="accent"
+  />
+
+  <section class="section">
+    <div class="container quote">
+      <div class="quote__main">
+        <QuoteCalculator />
+
+        <div class="quote__formWrap">
+          <LeadForm
+            id="quote-form"
+            heading="Request your quote"
+            body="Start with these six fields. We'll ask a couple more on the next step, then get back to you."
+            source="quote-page"
+          />
+        </div>
+      </div>
+
+      <aside class="quote__aside">
+        <div class="quote__card">
+          <h2 class="quote__cardHeading">Rather talk it through?</h2>
+          <a class="quote__phone" href={telHref()}>{business.phoneDisplay}</a>
+          <p class="quote__note">
+            Call and we'll answer the sizing questions directly. No form needed.
+          </p>
+        </div>
+
+        <div class="quote__card quote__card--list">
+          <h2 class="quote__cardHeading">What your quote includes</h2>
+          <ul role="list">
+            <li>System size and panel layout for your roof</li>
+            <li>Full product list — panels, inverter, mounting, any battery</li>
+            <li>Each rebate as a separate line, not a bundled total</li>
+            <li>Payback figure with the assumptions behind it</li>
+            <li>Warranty terms in writing</li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <TrustBar />
+
+  <section class="section section--surface">
+    <div class="container">
+      <StepsProcess heading="What happens after you hit send" steps={whatHappens} level={2} />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container container--narrow">
+      <FAQAccordion faqs={faqs} heading="Questions before you enquire" id="faq-quote" />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .quote {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: clamp(var(--s-6), 5vw, var(--s-8));
+    align-items: start;
+  }
+
+  .quote__formWrap {
+    margin-top: var(--s-6);
+  }
+
+  .quote__aside {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-5);
+    position: sticky;
+    top: calc(var(--header-h) + var(--s-6));
+  }
+
+  .quote__card {
+    padding: var(--s-6);
+    background: var(--c-surface);
+    border: 1px solid var(--c-line);
+    border-radius: var(--r-lg);
+    box-shadow: var(--sh-sm);
+  }
+
+  .quote__cardHeading {
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-bold);
+    text-transform: uppercase;
+    letter-spacing: var(--ls-wide);
+    color: var(--c-muted);
+    margin-bottom: var(--s-3);
+  }
+
+  .quote__phone {
+    display: inline-block;
+    font-family: var(--font-heading);
+    font-size: var(--fs-h3);
+    font-weight: var(--fw-heading);
+    color: var(--c-navy);
+    text-decoration: none;
+  }
+
+  .quote__phone:hover {
+    color: var(--c-gold-text);
+  }
+
+  .quote__note {
+    margin-top: var(--s-3);
+    font-size: var(--fs-sm);
+    color: var(--c-muted);
+  }
+
+  .quote__card--list ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+    margin: 0;
+    padding-left: var(--s-5);
+    font-size: var(--fs-sm);
+    color: var(--c-text);
+  }
+
+  @media (max-width: 960px) {
+    .quote {
+      grid-template-columns: 1fr;
+    }
+    .quote__aside {
+      position: static;
+    }
+  }
+</style>

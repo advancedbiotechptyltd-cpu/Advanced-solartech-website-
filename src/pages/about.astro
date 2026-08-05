@@ -1,0 +1,118 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import InnerHero from "../components/InnerHero.astro";
+import SplitFeature from "../components/SplitFeature.astro";
+import SectionHeader from "../components/SectionHeader.astro";
+import FeatureCardGrid from "../components/FeatureCardGrid.astro";
+import StatsBand from "../components/StatsBand.astro";
+import TrustBar from "../components/TrustBar.astro";
+import KeyFacts from "../components/KeyFacts.astro";
+import Figure from "../components/Figure.astro";
+import { business, services, photoAlt } from "../lib/site.js";
+import { breadcrumbSchema } from "../lib/schema.js";
+
+const crumbs = [{ label: "About", href: "/about/" }];
+
+const principles = [
+  {
+    icon: "chart",
+    title: "Show the arithmetic",
+    body: "Every quote sets out its assumptions — self-consumption rate, tariff, generation estimate. If we cannot show how we got to a payback figure, we should not be quoting it.",
+  },
+  {
+    icon: "shield",
+    title: "Say when it does not stack up",
+    body: "Some roofs, some load profiles and some budgets do not suit solar or storage yet. Saying so costs a sale and saves a complaint.",
+  },
+  {
+    icon: "doc",
+    title: "Itemise, do not bundle",
+    body: "System price, then each rebate as its own line. A bundled 'after rebates' figure makes it impossible to check whether everything you qualify for was applied.",
+  },
+];
+
+const facts = [
+  { label: "Business", value: business.name },
+  { label: "Services", value: "Solar, battery, EV charging" },
+  { label: "Customers", value: "Residential and commercial" },
+  { label: "Service area", value: business.areaServed },
+  { label: "Phone", value: business.phoneDisplay },
+  { label: "Email", value: business.email },
+];
+---
+
+<BaseLayout
+  title={`About ${business.name} | Solar Installers in Victoria`}
+  description="Advanced Solar Tech designs, supplies and installs solar, battery storage and EV charging across Victoria — with quotes that show their working."
+  path="/about/"
+  schemas={[breadcrumbSchema(crumbs)]}
+>
+  <InnerHero
+    kicker="About us"
+    heading="Solar advice you can check"
+    body="We design, supply and install solar, battery storage and EV charging for Victorian homes and businesses."
+    crumbs={crumbs}
+  />
+
+  <section class="section">
+    <div class="container">
+      <SplitFeature
+        heading="What we do"
+        body={"Advanced Solar Tech designs, supplies and installs solar panel systems, battery storage and EV chargers for homes and businesses across Victoria.\n\nWe are not tied to a single manufacturer, which means the product recommendation follows the site assessment rather than whatever we have in the warehouse. On a shaded roof that means optimisers; on a clear one it usually means a straightforward string inverter and the saving spent on more panels."}
+        level={2}
+      >
+        <div slot="media" class="aboutMedia">
+          <Figure
+            name="team-install"
+            alt={photoAlt(
+              "An installation team at work on a rooftop solar system",
+              `The ${business.name} team at work on an installation`
+            )}
+            ratio="4 / 3"
+          />
+          <KeyFacts facts={facts} heading="Business details" level={2} />
+        </div>
+      </SplitFeature>
+    </div>
+  </section>
+
+  <TrustBar />
+
+  <section class="section section--surface">
+    <div class="container">
+      <SectionHeader
+        kicker="How we work"
+        heading="Three principles behind every quote"
+        align="center"
+        level={2}
+      />
+      <FeatureCardGrid items={principles} columns={3} level={3} />
+    </div>
+  </section>
+
+  <StatsBand heading="Advanced Solar Tech in numbers" />
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader heading="What we install" level={2} />
+      <FeatureCardGrid
+        items={services.map((s) => ({
+          title: s.title,
+          summary: s.summary,
+          icon: s.icon,
+          href: `/services/${s.slug}/`,
+        }))}
+        columns={4}
+        level={3}
+      />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .aboutMedia {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-5);
+  }
+</style>

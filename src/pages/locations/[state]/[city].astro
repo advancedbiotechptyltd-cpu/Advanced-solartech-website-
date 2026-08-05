@@ -1,0 +1,28 @@
+---
+/**
+ * Optional city pages. Only cities present in cities.json are generated, and
+ * the content check requires each to carry its own intro and localNotes — a
+ * city page that is the state page with the name swapped is a doorway page.
+ */
+import LocationTemplate from "../../../templates/LocationTemplate.astro";
+import { cities, locations } from "../../../lib/site.js";
+
+export function getStaticPaths() {
+  return cities.map((city) => {
+    const parentState = locations.find((l) => l.slug === city.state);
+    if (!parentState) {
+      throw new Error(
+        `cities.json: "${city.slug}" references state "${city.state}", which is not in locations.json`
+      );
+    }
+    return {
+      params: { state: city.state, city: city.slug },
+      props: { location: city, parentState, isCity: true },
+    };
+  });
+}
+
+const { location, parentState, isCity } = Astro.props;
+---
+
+<LocationTemplate location={location} parentState={parentState} isCity={isCity} />

@@ -1,0 +1,27 @@
+{
+  "placeholder": true,
+  "_note": "STRUCTURE ONLY — these are not real customer reviews. Replace every entry with verbatim text from a verified source (Google Business Profile, Product Review) and set placeholder to false. `npm run check:content` fails while this stays true, and AggregateRating JSON-LD is suppressed until business.json reviews.placeholder is false. Publishing invented testimonials is a misrepresentation under the Australian Consumer Law.",
+  "items": [
+    {
+      "quote": "SAMPLE CONTENT — replace with a verified customer review before launch.",
+      "author": "Customer name",
+      "location": "Suburb, VIC",
+      "service": "Solar Panels",
+      "source": "Google Business Profile"
+    },
+    {
+      "quote": "SAMPLE CONTENT — replace with a verified customer review before launch.",
+      "author": "Customer name",
+      "location": "Suburb, VIC",
+      "service": "Battery Storage",
+      "source": "Google Business Profile"
+    },
+    {
+      "quote": "SAMPLE CONTENT — replace with a verified customer review before launch.",
+      "author": "Customer name",
+      "location": "Suburb, VIC",
+      "service": "EV Chargers",
+      "source": "Google Business Profile"
+    }
+  ]
+}

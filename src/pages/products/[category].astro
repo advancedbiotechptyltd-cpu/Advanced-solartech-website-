@@ -1,0 +1,106 @@
+---
+/** Product category listing — one page per entry in PRODUCT_CATEGORIES. */
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import InnerHero from "../../components/InnerHero.astro";
+import SectionHeader from "../../components/SectionHeader.astro";
+import FeatureCardGrid from "../../components/FeatureCardGrid.astro";
+import LeadForm from "../../components/LeadForm.astro";
+import { PRODUCT_CATEGORIES, getBrandsByCategory, business, services } from "../../lib/site.js";
+import { breadcrumbSchema } from "../../lib/schema.js";
+
+export function getStaticPaths() {
+  return PRODUCT_CATEGORIES.map((category) => ({
+    params: { category: category.slug },
+    props: { category },
+  }));
+}
+
+const { category } = Astro.props;
+
+const categoryBrands = getBrandsByCategory(category.slug);
+const relatedService = services.find((s) => s.relatedBrandCategory === category.slug);
+
+const crumbs = [
+  { label: "Products", href: "/products/" },
+  { label: category.title, href: `/products/${category.slug}/` },
+];
+---
+
+<BaseLayout
+  title={`${category.title} We Supply & Install | ${business.name}`}
+  description={category.metaDescription}
+  path={`/products/${category.slug}/`}
+  schemas={[breadcrumbSchema(crumbs)]}
+>
+  <InnerHero
+    kicker="Products"
+    heading={category.title}
+    body={category.summary}
+    crumbs={crumbs}
+    variant="compact"
+    ctaLabel="Get a Quote"
+    ctaHref="/quote/"
+  />
+
+  {
+    categoryBrands.length > 0 ? (
+      <section class="section">
+        <div class="container">
+          <SectionHeader heading={`${category.title} brands we install`} level={2} />
+          <FeatureCardGrid
+            items={categoryBrands.map((b) => ({
+              title: b.name,
+              summary: b.summary,
+              href: `/brands/${b.slug}/`,
+            }))}
+            columns={3}
+            level={3}
+          />
+        </div>
+      </section>
+    ) : (
+      <section class="section">
+        <div class="container container--narrow">
+          <SectionHeader
+            heading={`${category.title} options`}
+            body={`We supply and install a range of ${category.title.toLowerCase()}. Product selection depends on your site, so rather than list brands here we recommend the right one after the assessment.`}
+            level={2}
+          />
+        </div>
+      </section>
+    )
+  }
+
+  {
+    relatedService && (
+      <section class="section section--surface">
+        <div class="container">
+          <SectionHeader heading="The service behind these products" level={2} />
+          <FeatureCardGrid
+            items={[
+              {
+                title: relatedService.title,
+                summary: relatedService.summary,
+                icon: relatedService.icon,
+                href: `/services/${relatedService.slug}/`,
+              },
+            ]}
+            columns={2}
+            level={3}
+          />
+        </div>
+      </section>
+    )
+  }
+
+  <section class="section section--alt">
+    <div class="container container--narrow">
+      <LeadForm
+        id={`lead-${category.slug}`}
+        heading={`Ask which ${category.title.toLowerCase().replace(/s$/, "")} suits your site`}
+        body="Send your details and we'll recommend the right product for your roof and load — with the reasoning."
+        source={`product:${category.slug}`}
+      />
+    </div>
+  </section>
+</BaseLayout>
