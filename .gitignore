@@ -8,6 +8,9 @@ dist/
 # Staging upload artifact — rebuilt by `npm run build:staging`.
 *.zip
 
+# Generated worklist — rebuilt by `npm run gaps`.
+catalogue-gaps.csv
+
 # Hand-off copies of build output, made when sending files to whoever does the
 # cPanel upload. Generated from src/data/redirects.json by the build — a copy
 # committed here would drift from that source and go stale without anyone

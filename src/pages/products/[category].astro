@@ -57,7 +57,7 @@ const crumbs = [
           <ul class="brandStrip" role="list">
             {categoryBrands.map((b, i) => (
               <li>
-                <a class="brandStrip__link" href={href(`/brands/${b.slug}/`)}>
+                <a class="brandStrip__link" href={href(`/brands/${b.slug}/#${category.slug}`)}>
                   <BrandLogo brand={b} priority={i < 8} decorative />
                   <span class="visually-hidden">
                     {b.name} — {b.productCount}{" "}

@@ -136,3 +136,22 @@ soon" panel repeated across 245 pages.
 **Editing.** The CMS has a Products collection over `catalogue.json`, filtered
 by availability, with a per-row summary — the owner will mostly toggle
 availability and paste document links.
+
+## Filling the catalogue in
+
+`npm run gaps` reports what is missing and writes `catalogue-gaps.csv`, a row
+per product. It ranks brand logos by how many product pages each would fix —
+the top ten brands cover 162 of the 245 pages, so that is where an hour goes
+furthest.
+
+Current state: specifications complete for all 245; datasheets on 16; no brand
+logos or product photos yet.
+
+Logos go in `src/images/brands/{brand_slug}.svg`, photos in
+`src/images/products/product-{slug}.jpg`. Both folders have a README covering
+where to source them and the trademark rules that come with using a
+manufacturer's mark as a reseller.
+
+The research itself has to be done by a person with a browser: this build
+environment's network policy blocks every manufacturer site, so nothing here
+can fetch a logo, an image or a datasheet.

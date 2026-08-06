@@ -165,3 +165,24 @@ const CATEGORY_ILLUSTRATION = {
 };
 
 export const categoryIllustration = (categorySlug) => CATEGORY_ILLUSTRATION[categorySlug];
+
+/**
+ * A brand's products grouped into category sections, largest group first.
+ *
+ * Fronius sells inverters, batteries and EV chargers. Listing all 28 in one
+ * run put batteries above inverters purely because "batteries" sorts before
+ * "inverters" — so somebody browsing inverters clicked through to a page whose
+ * first items were not inverters at all. Sections make the grouping explicit
+ * and give each one an anchor to link into.
+ */
+export function brandProductGroups(brandSlug) {
+  const items = getProductsByBrand(brandSlug);
+  return [...new Set(items.map((p) => p.categorySlug))]
+    .map((categorySlug) => ({
+      categorySlug,
+      title: categoryTitle(categorySlug),
+      noun: categoryNounPlural(categorySlug),
+      items: items.filter((p) => p.categorySlug === categorySlug),
+    }))
+    .sort((a, b) => b.items.length - a.items.length);
+}

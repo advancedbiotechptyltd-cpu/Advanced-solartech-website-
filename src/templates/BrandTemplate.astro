@@ -23,6 +23,7 @@ import BrandLogo from "../components/BrandLogo.astro";
 import { PRODUCT_CATEGORIES, business } from "../lib/site.js";
 import {
   getProductsByBrand,
+  brandProductGroups,
   productPath,
   categoryTitle,
   brandsForCategory,
@@ -37,11 +38,20 @@ const m = brand.marketing;
 const category = PRODUCT_CATEGORIES.find((c) => c.slug === brand.category);
 
 const items = getProductsByBrand(brand.slug);
-const productCards = items.map((p) => ({
-  title: p.model,
-  summary: [p.power_or_capacity, p.specs].filter(Boolean).join(" · "),
-  meta: p.available ? categoryTitle(p.categorySlug) : "Temporarily unavailable",
-  href: productPath(p),
+
+/*
+ * One section per category rather than one list. A brand selling inverters,
+ * batteries and chargers otherwise interleaves them, and someone who arrived
+ * from the inverter page lands on batteries.
+ */
+const groups = brandProductGroups(brand.slug).map((g) => ({
+  ...g,
+  cards: g.items.map((p) => ({
+    title: p.model,
+    summary: [p.power_or_capacity, p.specs].filter(Boolean).join(" · "),
+    meta: p.available ? undefined : "Temporarily unavailable",
+    href: productPath(p),
+  })),
 }));
 
 const siblings = brandsForCategory(brand.category)
@@ -119,7 +129,7 @@ const summary =
   </section>
 
   {
-    productCards.length > 0 && (
+    groups.length > 0 && (
       <section class="section section--surface">
         <div class="container">
           <SectionHeader
@@ -128,7 +138,17 @@ const summary =
             body="Specifications and documents come from the manufacturer. Anything marked temporarily unavailable is not being ordered right now — ask and we will suggest an equivalent."
             level={2}
           />
-          <FeatureCardGrid items={productCards} columns={3} level={3} />
+          {groups.map((g) => (
+            <div class="brandGroup" id={g.categorySlug}>
+              <h3 class="brandGroup__heading">
+                {brand.name} {g.noun}
+                <span class="brandGroup__count">
+                  {g.items.length} {g.items.length === 1 ? "model" : "models"}
+                </span>
+              </h3>
+              <FeatureCardGrid items={g.cards} columns={3} level={4} />
+            </div>
+          ))}
         </div>
       </section>
     )
@@ -184,6 +204,34 @@ const summary =
 </BaseLayout>
 
 <style>
+  .brandGroup + .brandGroup {
+    margin-top: var(--s-9);
+  }
+
+  .brandGroup__heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--s-3);
+    margin: 0 0 var(--s-5);
+    padding-bottom: var(--s-3);
+    border-bottom: 1px solid var(--c-line);
+    font-size: var(--fs-lg);
+    color: var(--c-navy);
+  }
+
+  /* Scrolling to #inverters must not tuck the heading under the sticky header. */
+  .brandGroup {
+    scroll-margin-top: calc(var(--header-h) + var(--s-6));
+  }
+
+  .brandGroup__count {
+    font-family: var(--ff-body);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-regular);
+    color: var(--c-muted);
+  }
+
   .brandMedia {
     display: flex;
     flex-direction: column;
