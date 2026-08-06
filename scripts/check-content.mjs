@@ -25,6 +25,15 @@ const read = async (f) => JSON.parse(await readFile(data(f), "utf8"));
  * missing when a perfectly good `.webp` is sitting right there.
  */
 const imagesDir = resolve(here, "..", "src/images");
+
+/*
+ * Two files with the same name and different extensions — hero-install.jpg and
+ * hero-install.png — both resolve to the same slot, and one wins silently. It
+ * is exactly what happens when somebody replaces a photo with a different
+ * format instead of overwriting it, and the symptom is "I uploaded it and
+ * nothing changed". Better to say so than to pick one.
+ */
+const stemPaths = new Map();
 const EXTS = ["jpg", "jpeg", "png", "webp", "avif"];
 const imageStems = new Set();
 const collect = (dir) => {
@@ -32,15 +41,29 @@ const collect = (dir) => {
     if (entry.isDirectory()) collect(resolve(dir, entry.name));
     else {
       const [, stem, ext] = entry.name.match(/^(.*)\.([^.]+)$/) ?? [];
-      if (ext && EXTS.includes(ext.toLowerCase())) imageStems.add(stem);
+      if (ext && EXTS.includes(ext.toLowerCase())) {
+        imageStems.add(stem);
+        stemPaths.set(stem, [...(stemPaths.get(stem) ?? []), entry.name]);
+      }
     }
   }
 };
 if (existsSync(imagesDir)) collect(imagesDir);
+
 const image = (name) => (imageStems.has(name) ? imagesDir : "");
 
 const errors = [];
 const warnings = [];
+for (const [stem, files] of stemPaths) {
+  if (files.length > 1) {
+    errors.push(
+      `src/images has ${files.length} files for the same slot "${stem}" (${files.join(", ")}). ` +
+        `Only one is used and which one is not predictable — delete the others. ` +
+        `Replacing a photo means overwriting it, or removing the old file if the format changed.`
+    );
+  }
+}
+
 // Neither a problem nor a to-do — a decision worth restating so nobody
 // "fixes" it by inventing a number.
 const notes = [];
