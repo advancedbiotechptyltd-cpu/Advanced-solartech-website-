@@ -10,6 +10,7 @@ dist/
 
 # Generated worklist — rebuilt by `npm run gaps`.
 catalogue-gaps.csv
+image-slots.csv
 
 # Hand-off copies of build output, made when sending files to whoever does the
 # cPanel upload. Generated from src/data/redirects.json by the build — a copy

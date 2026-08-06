@@ -79,11 +79,63 @@ if (logosMissing.length) {
   console.log();
 }
 
-/*
- * CSV rather than a printout for the per-product work: it is 245 rows, and
- * whoever fills it in will want to sort and tick things off.
- */
 const esc = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
+
+/*
+ * Every image slot on the site in one file — page photos, accreditation marks,
+ * brand logos and product shots. "Where do I put a photo of X" is the question
+ * that keeps coming up, and answering it once in a spreadsheet beats answering
+ * it per section forever.
+ */
+const home = JSON.parse(await readFile(resolve(root, "src/data/home.json"), "utf8"));
+const businessData = JSON.parse(await readFile(resolve(root, "src/data/business.json"), "utf8"));
+const services = JSON.parse(await readFile(resolve(root, "src/data/services.json"), "utf8"));
+const siteImages = await stems("src/images");
+const accredImages = await stems("src/images/accreditations");
+
+const slotRows = [
+  ["where_it_appears", "folder", "filename", "have_it"],
+  ["Home page hero", "src/images/", `${home.hero.image}.jpg`, siteImages.has(home.hero.image) ? "yes" : ""],
+  ["Home 'how it works' + About page", "src/images/", `${home.processSection.image}.jpg`, siteImages.has(home.processSection.image) ? "yes" : ""],
+  ...home.workSection.items.map((it, i) => [
+    `Home work gallery ${i + 1} (${it.label})`,
+    "src/images/",
+    `${it.image}.jpg`,
+    siteImages.has(it.image) ? "yes" : "",
+  ]),
+  ...services.map((sv) => [
+    `${sv.title} page + home card`,
+    "src/images/",
+    `service-${sv.slug}.jpg`,
+    siteImages.has(`service-${sv.slug}`) ? "yes" : "",
+  ]),
+  ...(businessData.accreditations?.items ?? []).map((a) => [
+    `Accreditation badge — ${a.title}`,
+    "src/images/accreditations/",
+    `${a.logo}.png`,
+    accredImages.has(a.logo) ? "yes" : "",
+  ]),
+  ...ranked.map((b) => [
+    `Brand logo — ${b.name} (${b.count} product pages)`,
+    "src/images/brands/",
+    `${b.slug}.svg`,
+    b.hasLogo ? "yes" : "",
+  ]),
+  ...products.map((p) => [
+    `Product photo — ${p.brand} ${p.model}`,
+    "src/images/products/",
+    `product-${p.slug}.jpg`,
+    productImages.has(`product-${p.slug}`) ? "yes" : "",
+  ]),
+];
+
+await writeFile(
+  resolve(root, "image-slots.csv"),
+  slotRows.map((r) => r.map(esc).join(",")).join("\n") + "\n",
+  "utf8"
+);
+console.log(`Every image slot listed in image-slots.csv (${slotRows.length - 1} rows).`);
+
 const rows = [
   ["brand", "model", "category", "page", "needs_image", "needs_specs", "needs_datasheet", "needs_manual", "needs_warranty"],
   ...products.map((p) => [

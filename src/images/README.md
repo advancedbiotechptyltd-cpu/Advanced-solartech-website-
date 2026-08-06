@@ -11,6 +11,21 @@ The build automatically: resizes to 480/760/1120px wide, converts to WebP,
 generates a `srcset` so phones download the small version, and stamps
 width/height so the image cannot shift the layout as it loads.
 
+## Every slot in one place
+
+`npm run gaps` writes **image-slots.csv** — every image slot on the site, its
+exact filename, which folder it goes in, and whether it is filled. 311 rows,
+sortable. That is the answer to "where does a photo of X go".
+
+Four folders, and which is which:
+
+| Folder | What goes in it | Named after |
+|---|---|---|
+| `src/images/` | Page photos — hero, gallery, service pages, team | the slot |
+| `src/images/brands/` | Manufacturer logos | `brand_slug` |
+| `src/images/products/` | Product shots | `product-{slug}` |
+| `src/images/accreditations/` | Accreditation marks | the `logo` field |
+
 ## The filenames the site is currently waiting for
 
 Every one of these currently shows an interim illustration from
